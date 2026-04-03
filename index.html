@@ -1,0 +1,2866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>期货学院 · 研究版</title>
+  <style>
+    :root {
+      --bg: #f8f5ef;
+      --bg-deep: #f2eee6;
+      --surface: #fbf8f2;
+      --surface-strong: #fffdfa;
+      --surface-soft: #f5f1e9;
+      --ink: #22252b;
+      --muted: #6f706a;
+      --muted-2: #97958c;
+      --line: rgba(34, 37, 43, 0.1);
+      --brand: #a4632c;
+      --brand-soft: rgba(164, 99, 44, 0.08);
+      --brand-strong: #8f5423;
+      --blue: #5f6f8f;
+      --blue-soft: rgba(95, 111, 143, 0.08);
+      --green: #5f7c66;
+      --green-soft: rgba(95, 124, 102, 0.08);
+      --red: #a1463c;
+      --shadow: 0 0 0 rgba(0, 0, 0, 0);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        linear-gradient(180deg, #fbf8f2 0%, #f8f5ef 38%, #f4f1ea 100%);
+      color: var(--ink);
+      font-family: "SF Pro Text", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+    }
+
+    button, input, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 460px;
+      min-height: 100vh;
+      position: relative;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    .safe-top { height: env(safe-area-inset-top); }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      padding: 12px 20px 12px;
+      background: rgba(251, 248, 242, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .topbar-title {
+      font-family: "Songti SC", "Source Han Serif SC", serif;
+      font-size: 26px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .topbar-sub {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .edition {
+      flex: 0 0 auto;
+      padding: 0;
+      border-radius: 0;
+      border: 0;
+      background: transparent;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      text-align: right;
+      line-height: 1.5;
+    }
+
+    main {
+      padding: 0 20px calc(98px + env(safe-area-inset-bottom));
+    }
+
+    .hero {
+      padding: 28px 0 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-label {
+      display: inline-block;
+      padding: 0 0 8px;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      color: var(--brand);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(164, 99, 44, 0.18);
+    }
+
+    .hero-info {
+      margin-top: 14px;
+      color: var(--muted-2);
+      font-size: 12px;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-title {
+      margin: 14px 0 0;
+      font-family: "Songti SC", "Source Han Serif SC", serif;
+      font-size: 37px;
+      line-height: 1.14;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .hero-title .accent {
+      color: var(--brand-strong);
+    }
+
+    .hero-copy {
+      margin-top: 18px;
+      max-width: none;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.86;
+    }
+
+    .cover-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .cover-btn {
+      height: 42px;
+      border-radius: 999px;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .metrics {
+      display: flex;
+      gap: 0;
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .metric {
+      flex: 1;
+      padding: 0 14px 0 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      min-width: 0;
+    }
+
+    .metric + .metric {
+      padding-left: 14px;
+      border-left: 1px solid var(--line);
+    }
+
+    .metric-k {
+      font-size: 11px;
+      color: var(--muted-2);
+      margin-bottom: 8px;
+    }
+
+    .metric-v {
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 730;
+      letter-spacing: -0.02em;
+    }
+
+    .metric-note {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .section {
+      padding-top: 26px;
+    }
+
+    .page-nav {
+      position: sticky;
+      top: 63px;
+      z-index: 25;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px 0 10px;
+      background: linear-gradient(180deg, rgba(248, 245, 239, 0.96) 76%, rgba(248, 245, 239, 0));
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(34, 37, 43, 0.06);
+      scrollbar-width: none;
+    }
+
+    .page-nav::-webkit-scrollbar { display: none; }
+
+    .page-nav-link {
+      padding: 8px 12px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .page-nav-link.active {
+      color: var(--brand-strong);
+      background: var(--brand-soft);
+      border-color: rgba(164, 99, 44, 0.12);
+    }
+
+    .page-nav-link.active::after {
+      display: none;
+    }
+
+    .content-panel {
+      display: none;
+    }
+
+    .content-panel.active {
+      display: block;
+    }
+
+    .section-head {
+      display: block;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: "Songti SC", "Source Han Serif SC", serif;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .section-sub {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .report-strip,
+    .chip-strip,
+    .tab-strip,
+    .path-strip {
+      display: block;
+      overflow: visible;
+      padding-bottom: 0;
+      scrollbar-width: none;
+    }
+
+    .report-card {
+      display: block;
+      width: 100%;
+      padding: 14px 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      position: relative;
+      overflow: visible;
+      text-align: left;
+      border-top: 1px solid var(--line);
+    }
+
+    .report-card::after {
+      display: none;
+    }
+
+    .report-date {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--brand);
+      letter-spacing: 0.06em;
+    }
+
+    .report-title {
+      margin-top: 8px;
+      font-size: 18px;
+      line-height: 1.45;
+      font-weight: 730;
+    }
+
+    .report-copy {
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .report-foot {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .report-link {
+      padding: 0;
+      border-radius: 0;
+      border: 0;
+      background: transparent;
+      font-weight: 700;
+      color: var(--brand);
+    }
+
+    .path-item {
+      display: block;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      border-radius: 0;
+    }
+
+    .path-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--brand);
+    }
+
+    .path-title {
+      margin-top: 8px;
+      font-size: 18px;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .path-copy {
+      margin-top: 6px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .featured {
+      padding: 18px 0 20px;
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink);
+      box-shadow: none;
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .featured::before {
+      display: none;
+    }
+
+    .featured-kicker {
+      position: relative;
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--brand);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .featured-title {
+      position: relative;
+      margin-top: 10px;
+      font-size: 28px;
+      line-height: 1.38;
+      font-weight: 730;
+      letter-spacing: 0;
+      font-family: "Songti SC", "Source Han Serif SC", serif;
+    }
+
+    .featured-copy {
+      position: relative;
+      margin-top: 12px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .featured-meta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .meta-pill::after {
+      content: "·";
+      margin-left: 8px;
+      color: var(--muted-2);
+    }
+
+    .meta-pill:last-child::after {
+      display: none;
+    }
+
+    .featured-actions {
+      position: relative;
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .catalog-page {
+      margin-top: 12px;
+      padding-top: 28px;
+      border-top: 10px solid rgba(34, 37, 43, 0.03);
+    }
+
+    .catalog-masthead {
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .catalog-masthead-kicker {
+      font-size: 11px;
+      color: var(--brand);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .catalog-masthead-title {
+      margin-top: 6px;
+      font-family: "Songti SC", "Source Han Serif SC", serif;
+      font-size: 28px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    .catalog-masthead-copy {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .primary-btn,
+    .ghost-btn,
+    .bookmark-btn,
+    .catalog-btn {
+      height: 42px;
+      border-radius: 999px;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .primary-btn {
+      background: var(--brand);
+      border: 1px solid var(--brand);
+      color: #fffaf3;
+    }
+
+    .ghost-btn {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .tab {
+      padding: 8px 12px 10px 0;
+      border: 0;
+      background: transparent;
+      color: var(--muted-2);
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .tab.active {
+      color: var(--ink);
+    }
+
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 12px;
+      bottom: 0;
+      height: 1.5px;
+      border-radius: 0;
+      background: var(--brand);
+    }
+
+    .tab-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 10px;
+    }
+
+    .chip-strip {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 0 0 4px;
+      margin-bottom: 6px;
+    }
+
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .chip.active {
+      background: var(--brand-soft);
+      color: var(--brand-strong);
+      border-color: rgba(164, 99, 44, 0.14);
+    }
+
+    .catalog {
+      border-top: 1px solid var(--line);
+      margin-top: 6px;
+      padding-top: 0;
+    }
+
+    .catalog-group {
+      padding-top: 10px;
+    }
+
+    .catalog-group + .catalog-group {
+      margin-top: 4px;
+    }
+
+    .catalog-group-head {
+      width: 100%;
+      text-align: left;
+      padding: 14px 0 10px;
+      border-bottom: 1px solid rgba(34, 37, 43, 0.06);
+      border-top: 0;
+      border-left: 0;
+      border-right: 0;
+      background: transparent;
+      position: relative;
+    }
+
+    .catalog-group-head::after {
+      content: "展开";
+      position: absolute;
+      right: 0;
+      top: 18px;
+      font-size: 12px;
+      color: var(--muted-2);
+      font-weight: 600;
+    }
+
+    .catalog-group.open .catalog-group-head::after {
+      content: "收起";
+    }
+
+    .catalog-group-kicker {
+      font-size: 11px;
+      color: var(--brand);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .catalog-group-title {
+      margin-top: 5px;
+      font-family: "Songti SC", "Source Han Serif SC", serif;
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .catalog-group-copy {
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .catalog-group-body {
+      display: none;
+    }
+
+    .catalog-group.open .catalog-group-body {
+      display: block;
+    }
+
+    .catalog-row {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: start;
+      cursor: pointer;
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    .catalog-row:active {
+      transform: scale(0.992);
+    }
+
+    .catalog-index {
+      width: 28px;
+      padding-top: 3px;
+      color: var(--muted-2);
+      font-size: 11px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .catalog-main {
+      min-width: 0;
+    }
+
+    .catalog-kickers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .tiny-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 0;
+      border-radius: 0;
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .tiny-tag.brand {
+      color: var(--brand);
+      background: transparent;
+    }
+
+    .tiny-tag.blue {
+      color: var(--blue);
+      background: transparent;
+    }
+
+    .tiny-tag.green {
+      color: var(--green);
+      background: transparent;
+    }
+
+    .tiny-tag::before {
+      content: "·";
+      margin-right: 6px;
+      color: var(--muted-2);
+    }
+
+    .tiny-tag:first-child::before {
+      display: none;
+    }
+
+    .catalog-title {
+      font-size: 18px;
+      line-height: 1.55;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .catalog-desc {
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.72;
+      color: var(--muted);
+    }
+
+    .catalog-right {
+      text-align: right;
+      min-width: 64px;
+    }
+
+    .catalog-time {
+      font-size: 12px;
+      color: var(--muted-2);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .catalog-state {
+      margin-top: 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--brand);
+    }
+
+    .catalog-state.dim {
+      color: var(--muted-2);
+    }
+
+    .empty {
+      padding: 28px 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .sources {
+      border-top: 1px solid var(--line);
+      padding-top: 6px;
+    }
+
+    .editor-note {
+      padding: 16px 0 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .fold {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .fold-toggle {
+      width: 100%;
+      padding: 16px 0;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      position: relative;
+    }
+
+    .fold-toggle::after {
+      content: "展开";
+      position: absolute;
+      right: 0;
+      top: 16px;
+      font-size: 12px;
+      color: var(--muted-2);
+      font-weight: 600;
+    }
+
+    .fold.open .fold-toggle::after {
+      content: "收起";
+    }
+
+    .fold-body {
+      display: none;
+      padding-bottom: 16px;
+    }
+
+    .fold.open .fold-body {
+      display: block;
+    }
+
+    .editor-note-title {
+      font-size: 15px;
+      font-weight: 740;
+    }
+
+    .editor-note-copy {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .source-link {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .source-name {
+      font-size: 14px;
+      font-weight: 720;
+      line-height: 1.4;
+    }
+
+    .source-note {
+      margin-top: 5px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .source-action {
+      flex: 0 0 auto;
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      padding-top: 2px;
+    }
+
+    .disclaimer {
+      padding: 18px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0;
+      z-index: 45;
+      width: 100%;
+      max-width: 460px;
+      padding: 10px 20px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(251, 248, 242, 0.97);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--line);
+    }
+
+    .bottom-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .bottom-left {
+      min-width: 0;
+    }
+
+    .bottom-k {
+      font-size: 11px;
+      color: var(--muted-2);
+    }
+
+    .bottom-v {
+      margin-top: 4px;
+      font-size: 14px;
+      font-weight: 720;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .catalog-btn {
+      flex: 0 0 auto;
+      background: var(--brand);
+      color: #fff9f2;
+      box-shadow: none;
+      border: 1px solid var(--brand);
+    }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 20, 24, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+      z-index: 70;
+    }
+
+    .backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%) translateY(102%);
+      bottom: 0;
+      z-index: 80;
+      width: 100%;
+      max-width: 460px;
+      height: min(94vh, 920px);
+      background: #fbf8f2;
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      box-shadow: 0 -10px 28px rgba(18, 20, 24, 0.08);
+      transition: transform 260ms cubic-bezier(0.2, 0.9, 0.22, 1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .drawer-handle {
+      width: 34px;
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(49, 45, 38, 0.12);
+      margin: 8px auto 4px;
+    }
+
+    .drawer-scroll {
+      overflow-y: auto;
+      padding: 0 20px calc(28px + env(safe-area-inset-bottom));
+      scrollbar-width: none;
+    }
+
+    .drawer-scroll::-webkit-scrollbar { display: none; }
+
+    .drawer-head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 0 0 14px;
+      background: linear-gradient(180deg, #fbf8f2 82%, rgba(251, 248, 242, 0));
+    }
+
+    .drawer-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 10px;
+    }
+
+    .drawer-label {
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: var(--brand);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .drawer-title {
+      font-family: "Songti SC", "Source Han Serif SC", serif;
+      font-size: 28px;
+      line-height: 1.46;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .drawer-close {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: transparent;
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .drawer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .drawer-intro {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.92;
+    }
+
+    .drawer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+      margin-top: 16px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .drawer-cell {
+      padding: 12px 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+    }
+
+    .drawer-cell + .drawer-cell {
+      padding-left: 14px;
+      border-left: 1px solid var(--line);
+    }
+
+    .drawer-cell-k {
+      font-size: 11px;
+      color: var(--muted-2);
+    }
+
+    .drawer-cell-v {
+      margin-top: 6px;
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 680;
+    }
+
+    .detail-section {
+      padding: 18px 0 0;
+      border-top: 1px solid var(--line);
+      margin-top: 18px;
+    }
+
+    .detail-title {
+      font-size: 17px;
+      font-weight: 760;
+      letter-spacing: 0.02em;
+      font-family: "Songti SC", "Source Han Serif SC", serif;
+    }
+
+    .detail-list {
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .detail-list li {
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.92;
+      position: relative;
+      padding-left: 14px;
+    }
+
+    .detail-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+
+    .tag-list,
+    .tool-list,
+    .source-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .soft-tag {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(34, 37, 43, 0.04);
+      font-size: 12px;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .tool-pill {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(164, 99, 44, 0.08);
+      color: var(--brand-strong);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .source-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: transparent;
+      font-size: 12px;
+      color: var(--ink);
+    }
+
+    .drawer-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+      padding-bottom: 8px;
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(251, 248, 242, 0), #fbf8f2 28%);
+      padding-top: 18px;
+    }
+
+    .bookmark-btn {
+      flex: 1;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .bookmark-btn.active {
+      background: rgba(164, 99, 44, 0.08);
+      color: var(--brand-strong);
+    }
+
+    @media (max-width: 380px) {
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .cover-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .metric + .metric {
+        padding-left: 0;
+        border-left: 0;
+      }
+
+      .drawer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .drawer-cell + .drawer-cell {
+        padding-left: 0;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .catalog-row {
+        grid-template-columns: 1fr;
+      }
+
+      .catalog-right {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="safe-top"></div>
+
+    <header class="topbar">
+      <div class="topbar-row">
+        <div>
+          <div class="topbar-title">期货学院</div>
+          <div class="topbar-sub">研究型课程流，面向有交易经验的期货用户</div>
+        </div>
+        <div class="edition">研究版<br />更新至 2026/04/03</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-label">期货研究进阶课</div>
+        <h1 class="hero-title">先理解市场在<span class="accent">交易什么</span>，再谈仓位与节奏。</h1>
+        <div class="hero-info">共 24 讲 · 盘面理解 / 品种研究 / 工具应用 / 复盘训练</div>
+        <div class="hero-copy">
+          这不是入门教程，也不是喊单流。24 节课程全部围绕一个核心目标展开：把新闻、库存、持仓、期限结构和产业变量重新放回同一张交易语言地图里，让用户更快识别驱动、阶段和失效。
+        </div>
+        <div class="cover-actions">
+          <button class="cover-btn primary-btn" id="goCatalogBtn">查看课程目录</button>
+          <button class="cover-btn ghost-btn" id="goFeaturedBtn">从今日主线开始</button>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-k">课程总数</div>
+            <div class="metric-v">24</div>
+            <div class="metric-note">4 条学习主线</div>
+          </div>
+          <div class="metric">
+            <div class="metric-k">品种覆盖</div>
+            <div class="metric-v">6</div>
+            <div class="metric-note">黑色、油脂油料、有色、能化</div>
+          </div>
+          <div class="metric">
+            <div class="metric-k">研究来源</div>
+            <div class="metric-v">11+</div>
+            <div class="metric-note">官方报告与交易所资料</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="page-nav" id="pageNav">
+        <button class="page-nav-link active" data-panel="recommendPanel">推荐</button>
+        <button class="page-nav-link" data-panel="reportPanel">报告窗口</button>
+        <button class="page-nav-link" data-panel="pathPanel">学习路径</button>
+        <button class="page-nav-link" data-panel="catalogPanel">课程目录</button>
+        <button class="page-nav-link" data-panel="sourcesPanel">研究依据</button>
+      </div>
+
+      <section class="section content-panel" id="reportPanel">
+        <div class="section-head">
+          <div class="section-title">报告窗口</div>
+          <div class="section-sub">以官方发布时间为准<br />点击可直达相关课程</div>
+        </div>
+        <div class="report-strip" id="reportStrip"></div>
+      </section>
+
+      <section class="section content-panel" id="pathPanel">
+        <div class="section-head">
+          <div class="section-title">学习路径</div>
+          <div class="section-sub">先拆盘面语言，再回到品种与工具</div>
+        </div>
+        <div class="path-strip">
+          <div class="path-item">
+            <div class="path-tag">01 · 盘面理解</div>
+            <div class="path-title">先解释“为什么消息和价格不一致”</div>
+            <div class="path-copy">把预期差、兑现交易、情绪切换和持仓调整放回一个可观察的框架。</div>
+          </div>
+          <div class="path-item">
+            <div class="path-tag">02 · 品种研究</div>
+            <div class="path-title">再把变量放回产业链里</div>
+            <div class="path-copy">围绕黑色、油脂油料、有色和能化，强调变量如何传导，不做单点解读。</div>
+          </div>
+          <div class="path-item">
+            <div class="path-tag">03 · 工具应用</div>
+            <div class="path-title">工具解决的是识别，不是代替判断</div>
+            <div class="path-copy">订单流、量价分布、期限结构都必须有边界，不能被机械使用。</div>
+          </div>
+          <div class="path-item">
+            <div class="path-tag">04 · 复盘训练</div>
+            <div class="path-title">复盘要写驱动、验证与失效</div>
+            <div class="path-copy">真正提升节奏感的，不是记涨跌，而是知道市场为什么相信、为什么不信。</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section content-panel active" id="recommendPanel">
+        <div class="section-head">
+          <div class="section-title">今日主线</div>
+          <div class="section-sub">适合先打开的课程</div>
+        </div>
+        <div class="featured" id="featuredCard"></div>
+      </section>
+
+      <section class="section catalog-page content-panel" id="catalogPanel">
+        <div class="catalog-masthead">
+          <div class="catalog-masthead-kicker">Course Catalog</div>
+          <div class="catalog-masthead-title">课程目录</div>
+          <div class="catalog-masthead-copy">这一页承担完整目录功能。你可以按章节顺序连续学习，也可以按分类和赛道快速定位到需要的那一讲。</div>
+        </div>
+        <div class="section-head" style="margin-top:16px;">
+          <div class="section-title">全部课程</div>
+          <div class="section-sub">支持分类、赛道筛选与收藏</div>
+        </div>
+        <div class="tab-strip" id="categoryTabs"></div>
+        <div class="chip-strip" id="trackChips" style="margin-top: 10px;"></div>
+        <div class="catalog" id="courseCatalog"></div>
+      </section>
+
+      <section class="section sources content-panel" id="sourcesPanel">
+        <div class="section-head">
+          <div class="section-title">研究依据</div>
+          <div class="section-sub">课程内容强调框架与理解<br />不构成投资建议</div>
+        </div>
+        <div class="fold open" id="editorFold">
+          <button class="fold-toggle">
+            <div class="editor-note-title">编辑说明</div>
+          </button>
+          <div class="fold-body">
+            <div class="editor-note-copy">
+              本产品采用“问题引入 → 核心逻辑 → 常见误区 → 观察框架 → 小结”的统一结构。所用资料主要来自 USDA、MPOB、EIA、OPEC、LME、CME Group、worldsteel 等官方页面或交易所教育资料，用于校准变量定义、报告窗口与产业观察路径。课程中的例子仅用于说明传导链条，不对应任何具体交易建议。
+            </div>
+          </div>
+        </div>
+        <div class="fold" id="sourceFold">
+          <button class="fold-toggle">
+            <div class="editor-note-title">官方来源</div>
+          </button>
+          <div class="fold-body" id="sourceLinks"></div>
+        </div>
+        <div class="fold" id="disclaimerFold">
+          <button class="fold-toggle">
+            <div class="editor-note-title">风险提示</div>
+          </button>
+          <div class="fold-body">
+            <div class="disclaimer">
+              内容仅供研究与学习使用，不构成任何投资建议或买卖依据。期货与衍生品交易具有高波动与高风险特征，用户应结合自身风险承受能力、交易制度与实时信息独立判断。
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="bottom-bar">
+      <div class="bottom-inner">
+        <div class="bottom-left">
+          <div class="bottom-k">上次学习到</div>
+          <div class="bottom-v" id="lastReadLabel">事件驱动行情怎么分辨“预期交易”还是“现实交易”</div>
+        </div>
+        <button class="catalog-btn" id="resumeBtn">继续学习</button>
+      </div>
+    </div>
+
+    <div class="backdrop" id="drawerBackdrop"></div>
+    <aside class="drawer" id="courseDrawer" aria-hidden="true">
+      <div class="drawer-handle"></div>
+      <div class="drawer-scroll">
+        <div class="drawer-head">
+          <div class="drawer-top">
+            <div style="min-width:0;">
+              <div class="drawer-label" id="drawerLabel"></div>
+              <div class="drawer-title" id="drawerTitle"></div>
+              <div class="drawer-meta" id="drawerMeta"></div>
+            </div>
+            <button class="drawer-close" id="drawerClose" aria-label="关闭">×</button>
+          </div>
+          <div class="drawer-intro" id="drawerIntro"></div>
+          <div class="drawer-grid">
+            <div class="drawer-cell">
+              <div class="drawer-cell-k">核心问题</div>
+              <div class="drawer-cell-v" id="drawerQuestion"></div>
+            </div>
+            <div class="drawer-cell">
+              <div class="drawer-cell-k">适合人群</div>
+              <div class="drawer-cell-v" id="drawerAudience"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">问题引入</div>
+          <ul class="detail-list" id="introList"></ul>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">核心逻辑</div>
+          <ul class="detail-list" id="logicList"></ul>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">常见误区</div>
+          <ul class="detail-list" id="mistakeList"></ul>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">观察框架</div>
+          <ul class="detail-list" id="frameworkList"></ul>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">小结</div>
+          <ul class="detail-list" id="summaryList"></ul>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">关键知识点</div>
+          <div class="tag-list" id="keywordTags"></div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">适合联看的数据与工具</div>
+          <div class="tool-list" id="toolTags"></div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">研究来源</div>
+          <div class="source-list" id="drawerSources"></div>
+        </div>
+
+        <div class="drawer-actions">
+          <button class="bookmark-btn" id="bookmarkBtn">加入书架</button>
+          <button class="primary-btn" id="nextBtn" style="flex:1;">下一节</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const sourceMap = {
+      usdaWasde: {
+        name: "USDA｜WASDE 历史与发布页面",
+        url: "https://www.usda.gov/oce/commodity/wasde",
+        note: "用于校准豆系、油脂油料与报告窗口课程中的月度供需估计框架。"
+      },
+      usdaCrop: {
+        name: "USDA｜Crop Progress",
+        url: "https://usda.library.cornell.edu/concern/publications/8336h188j",
+        note: "用于解释农产品阶段性预热、天气与生长进度如何进入预期交易。"
+      },
+      usdaExport: {
+        name: "USDA FAS｜Export Sales Reporting Program",
+        url: "https://www.fas.usda.gov/data/export-sales-reporting-program",
+        note: "用于豆粕、豆系外需与出口销售观察框架。"
+      },
+      usdaOilseeds: {
+        name: "USDA FAS｜Oilseeds: World Markets and Trade",
+        url: "https://www.fas.usda.gov/data/oilseeds-world-markets-and-trade",
+        note: "用于豆系全球供需、南美与美豆传导线索。"
+      },
+      mpob: {
+        name: "MPOB｜Monthly Palm Oil Statistics",
+        url: "https://bepi.mpob.gov.my/",
+        note: "用于棕榈油产量、出口、库存与月度报告窗口。"
+      },
+      eiaWpsr: {
+        name: "EIA｜Weekly Petroleum Status Report",
+        url: "https://www.eia.gov/petroleum/supply/weekly/",
+        note: "用于原油库存、成品油与短周期兑现观察。"
+      },
+      eiaSteo: {
+        name: "EIA｜Short-Term Energy Outlook",
+        url: "https://www.eia.gov/outlooks/steo/",
+        note: "用于原油需求预期、供应展望与中短期节奏框架。"
+      },
+      opec: {
+        name: "OPEC｜Monthly Oil Market Report",
+        url: "https://publications.opec.org/monthly-oil-market-report/",
+        note: "用于原油课程中 OPEC+ 预期、供给假设与节奏切换。"
+      },
+      lmeStocks: {
+        name: "LME｜Warehouse Stock Data",
+        url: "https://www.lme.com/en/Trading/Reports/Warehouse-and-stocks-reports",
+        note: "用于铜库存、交仓结构与有色库存观察。"
+      },
+      cmeCurve: {
+        name: "CME Group｜Contango and Backwardation",
+        url: "https://www.cmegroup.com/education/courses/introduction-to-ferrous-metals/what-is-contango-and-backwardation.html",
+        note: "用于期限结构、库存紧张度与月差课程。"
+      },
+      cmeOi: {
+        name: "CME Group｜Volume and Open Interest",
+        url: "https://www.cmegroup.com/education/courses/introduction-to-futures/understanding-volume-and-open-interest.html",
+        note: "用于成交量、持仓变化与事件兑现型行情课程。"
+      },
+      worldsteel: {
+        name: "worldsteel｜Short Range Outlook",
+        url: "https://worldsteel.org/media-centre/press-releases/2025/short-range-outlook-october-2025/",
+        note: "用于黑色链课程中下游需求与行业景气框架。"
+      }
+    };
+
+    const reportWindows = [
+      {
+        date: "04/06",
+        title: "USDA Crop Progress",
+        copy: "农产品天气和生长进度进入交易前台，适合配合“预热阶段”课程理解预期如何累积。",
+        source: "USDA",
+        jumpTo: "22"
+      },
+      {
+        date: "04/07",
+        title: "EIA Short-Term Energy Outlook",
+        copy: "更适合观察需求和供应假设，而不是拿来直接解释每一次日内波动。",
+        source: "EIA",
+        jumpTo: "12"
+      },
+      {
+        date: "04/09",
+        title: "USDA WASDE",
+        copy: "豆系与谷物会围绕市场预期、报告结果和兑现节奏重新定价。",
+        source: "USDA",
+        jumpTo: "09"
+      },
+      {
+        date: "04/10",
+        title: "MPOB 月度数据",
+        copy: "棕榈油报告窗口往往同时牵动产量、出口和库存三条线的博弈。",
+        source: "MPOB",
+        jumpTo: "10"
+      }
+    ];
+
+    const categoryInfo = {
+      "盘面理解": "解释消息、库存、持仓与价格之间为什么经常不按字面关系运行，重点训练预期、兑现与验证的识别能力。",
+      "品种研究": "围绕黑色、油脂油料、有色和能化，把核心变量重新放回产业链和时间顺序里理解。",
+      "工具应用": "订单流、期限结构、量价分布与异动提示，都被放回它们真正适用的边界中使用。",
+      "复盘训练": "从案例和阶段拆解入手，把复盘从记录涨跌升级为记录驱动、结构、验证与失效。"
+    };
+
+    const courses = [
+      {
+        id: "01",
+        title: "利多落地为何不涨：读懂预期兑现型行情",
+        category: "盘面理解",
+        track: "方法",
+        duration: "8分钟",
+        status: "重点",
+        coreQuestion: "为什么消息偏多，价格反而下跌？",
+        audience: "有交易经验、常做事件行情的用户",
+        lead: "市场交易的不是新闻标题，而是事件发生前，盘面对这件事已经押注了多少。",
+        description: "把预期差、兑现交易、情绪切换和持仓调整放回同一张观察图里。",
+        keywords: ["预期差", "兑现交易", "情绪切换", "持仓调整"],
+        tools: ["价格走势", "成交量", "持仓变化", "事件时间线"],
+        sources: ["cmeOi"],
+        intro: [
+          "交易者最常见的困惑之一是：新闻出来偏多，价格却不继续涨，甚至当日转跌。问题往往不在新闻本身，而在市场是否早已提前完成了定价。",
+          "对成熟市场来说，真正重要的不是消息方向，而是现实与此前预期的差异。如果盘面在事件前已经连续上行、基差走强、情绪集中，那么利多落地更像一次兑现时点。"
+        ],
+        logic: [
+          "预期交易阶段，资金先围绕“可能发生什么”建仓；兑现阶段，资金会转向“已经发生了什么，以及是否还值得继续持有”。",
+          "若事件结果只是符合预期，新增买盘未必足以接住前期浮盈盘，多头平仓就可能让价格在消息落地后回落。",
+          "价格回落不一定代表利多被证伪，很多时候只是定价重心从“抢跑”切换到“验证”，市场开始要求更高等级的现货和数据确认。"
+        ],
+        mistakes: [
+          "把消息面直接等同于价格方向，忽略事件前一段时间里价格和持仓已经反映了多少。",
+          "只看当日涨跌，不看事件前后成交与持仓的结构变化，结果把止盈理解成逻辑反转。",
+          "看到回落就判定行情结束，没有区分是节奏性回吐，还是核心驱动被真正证伪。"
+        ],
+        framework: [
+          "先看事件前：价格是否已经提前走强，市场是否有明显抢跑痕迹。",
+          "再看事件当日：成交是放大配合持仓增加，还是放量但持仓回落，后者更像兑现。",
+          "再看现货和相关品种：若现货、基差、月差没有同步强化，说明盘面更多在交易预期本身。",
+          "最后看后续两到三个观察窗：若数据持续验证，回落可能只是洗筹；若验证跟不上，回落才更可能演化为趋势修正。"
+        ],
+        summary: [
+          "利多落地不涨，本质上是市场从预期交易切换到验证交易，而不是新闻突然失效。",
+          "真正有帮助的不是预测每一次落地后的方向，而是识别市场当下交易的是预期、兑现还是证伪。"
+        ]
+      },
+      {
+        id: "02",
+        title: "为什么库存下降，价格却未必上涨",
+        category: "盘面理解",
+        track: "方法",
+        duration: "8分钟",
+        status: "未学",
+        coreQuestion: "库存利多为什么可能不涨？",
+        audience: "经常看库存数据的交易者",
+        lead: "库存是结果变量，不是独立变量。库存下降必须放回供给、需求和预期里理解。",
+        description: "解释库存必须联看产量、需求、基差和期限结构，避免单点理解。",
+        keywords: ["库存", "需求预期", "基差", "供需错配"],
+        tools: ["库存图", "基差图", "期限结构", "现货价格"],
+        sources: ["cmeCurve", "eiaWpsr"],
+        intro: [
+          "很多交易者会把库存下降直接理解成利多，但盘面并不会机械响应。库存减少，可能来自需求改善，也可能来自供应延迟、发运节奏变化，甚至只是统计口径和时间错位。",
+          "当市场在库存公布前已经预期到去库，或者更担心未来需求回落时，库存下降本身就不足以推动价格继续走强。"
+        ],
+        logic: [
+          "库存要分清是绝对水平、边际变化还是相对季节性位置。绝对库存低，未必意味着边际更紧；边际去库，也未必意味着后续继续紧。",
+          "如果去库同时伴随基差走强、近月月差走扩、现货成交顺畅，说明库存变化与现实紧张度一致；否则更可能只是阶段性波动。",
+          "库存数据常常落后于市场预期。市场关心的不是“今天少了多少”，而是“未来几周会不会继续这样”。"
+        ],
+        mistakes: [
+          "只看库存绝对值，不看季节性位置和历史区间。",
+          "只看去库，不看上游产量、进口节奏或终端成交，导致把短期扰动当成长逻辑。",
+          "把库存利多理解成方向结论，而不是把它当作供需框架中的一个验证点。"
+        ],
+        framework: [
+          "先判断库存处在历史和季节性的什么位置，低库存和超预期去库不是一回事。",
+          "再看库存变化与现货、基差、月差是否共振，只有多维共振，库存信息才更有解释力。",
+          "再看市场此前预期：如果普遍预期去库，数据兑现后盘面未必继续涨。",
+          "最后看后续能否延续，库存变化只有被连续验证，才更可能演化为趋势驱动。"
+        ],
+        summary: [
+          "库存下降本身不能自动推出价格上涨，关键在于去库原因、市场预期和现货验证是否一致。",
+          "成熟的库存分析，应从单点观察升级为“库存 + 基差 + 结构 + 预期”的联读。"
+        ]
+      },
+      {
+        id: "03",
+        title: "盘面大涨时，先看什么才不容易追高",
+        category: "盘面理解",
+        track: "方法",
+        duration: "7分钟",
+        status: "未学",
+        coreQuestion: "强波动行情下，应该先确认什么？",
+        audience: "容易被盘中情绪带着走的短线与波段交易者",
+        lead: "先分清推动上涨的是现实驱动、预期抢跑，还是流动性与情绪本身。",
+        description: "建立大涨行情下的观察顺序，先判断驱动来源，再判断持续性。",
+        keywords: ["驱动来源", "成交放大", "持仓变化", "现货验证"],
+        tools: ["分时", "成交量", "持仓", "相关品种联动"],
+        sources: ["cmeOi"],
+        intro: [
+          "大涨最容易制造一种错觉：价格越强，逻辑似乎越确定。但价格强和逻辑强不是同一个概念，尤其在日内或短周期里更是如此。",
+          "真正减少追高冲动的办法，不是等情绪完全冷却，而是把观察顺序固定下来。"
+        ],
+        logic: [
+          "第一层要先看上涨由什么触发。是政策、报告、库存、现货还是单纯的短线资金扫盘？不同来源决定了持续性完全不同。",
+          "第二层看成交与持仓。放量上涨同时持仓增加，更像增量资金推动；放量上涨但持仓不增甚至下降，更像存量踩踏或空头回补。",
+          "第三层看现货与相关品种能否确认。如果盘面上冲而现货平静、相关链条不跟，行情更可能属于情绪先行。"
+        ],
+        mistakes: [
+          "把价格强等同于逻辑强，忽略上涨来源可能只是空头回补。",
+          "只看主力合约 K 线，不看相关品种和上下游是否同步。",
+          "情绪最热的时候才开始补驱动，结果把最拥挤的阶段当成最确定的阶段。"
+        ],
+        framework: [
+          "先看触发点：到底是事件、数据、现货还是盘中资金。",
+          "再看成交与持仓配合：增仓上行和减仓上行的含义完全不同。",
+          "再看链条确认：现货、基差、相关品种、替代品种是否同步支持。",
+          "最后看时点：上涨发生在预热、发酵还是兑现阶段，不同阶段对持续性的要求不同。"
+        ],
+        summary: [
+          "盘面大涨时，最怕的是用价格本身证明价格本身。",
+          "先看驱动来源、再看成交持仓、最后看现货验证，是降低追高概率的更优顺序。"
+        ]
+      },
+      {
+        id: "04",
+        title: "事件驱动行情怎么分辨“预期交易”还是“现实交易”",
+        category: "盘面理解",
+        track: "方法",
+        duration: "9分钟",
+        status: "继续",
+        coreQuestion: "市场到底在交易未来，还是现实？",
+        audience: "经常参与报告、政策和地缘事件行情的用户",
+        lead: "同一个事件，盘面在不同阶段交易的对象并不一样。先识别阶段，才谈节奏。",
+        description: "帮助用户区分事件行情的阶段属性，提升节奏判断能力。",
+        keywords: ["预期交易", "现实交易", "阶段识别", "验证"],
+        tools: ["事件日历", "价格对照图", "成交持仓图", "相关品种走势"],
+        sources: ["cmeOi", "usdaWasde", "eiaSteo"],
+        intro: [
+          "事件行情最容易把人带入一个简单叙事：消息来了，趋势就开始了。实际上，很多行情在消息出来之前就已经开始，消息落地后反而进入重估或回吐。",
+          "判断事件行情的关键，不是先问结果利多还是利空，而是先问市场目前交易的是预期、现实，还是预期落空。"
+        ],
+        logic: [
+          "预期交易阶段，盘面对未发生的变量先定价，表现往往是价格先走、数据未到、分歧较大。",
+          "现实交易阶段，市场更看重现货、库存、交割、利润等可验证变量，单靠叙事难以继续推动价格。",
+          "阶段切换的信号通常体现在成交与持仓结构、相关品种联动、以及现货验证是否开始接管叙事。"
+        ],
+        mistakes: [
+          "事件一出就默认进入趋势行情，没有意识到很多价格已经在事件前完成了预热。",
+          "只盯新闻文本，不跟踪链条变量，结果不知道市场究竟在验证什么。",
+          "把现实交易阶段中的回调看成逻辑消失，而不是资金从故事转向证据。"
+        ],
+        framework: [
+          "用时间轴先定位：事件前预热、事件落地、事件后验证，三段不要混着看。",
+          "用盘面看阶段：提前走强且持仓扩张，更像预期交易；现货和基差接力，更像现实交易。",
+          "用联动看可信度：若上下游、替代品和跨市场都开始共振，现实交易的权重更高。",
+          "用节奏看风险：预期阶段更容易高波动，现实阶段更看数据延续。"
+        ],
+        summary: [
+          "事件行情的第一步不是判断方向，而是判断市场在交易哪一层东西。",
+          "分清预期与现实，才能理解为什么同一条消息，在不同阶段会对应完全不同的盘面反应。"
+        ]
+      },
+      {
+        id: "05",
+        title: "为什么同样是利空，不同品种反应差这么大",
+        category: "盘面理解",
+        track: "方法",
+        duration: "8分钟",
+        status: "未学",
+        coreQuestion: "同一事件为何引发不同反应？",
+        audience: "经常做跨品种观察的交易者",
+        lead: "同样一句利空，在不同品种上面对的是不同库存位置、不同产业链和不同资金拥挤度。",
+        description: "从产业结构、库存位置、资金拥挤度与估值位置解释差异。",
+        keywords: ["产业属性", "拥挤度", "估值位置", "替代关系"],
+        tools: ["跨品种涨跌对比", "净持仓", "库存位置", "价差结构"],
+        sources: ["cmeOi", "worldsteel", "lmeStocks"],
+        intro: [
+          "交易者经常会碰到这种情况：同样是需求偏弱预期，黑色反应很大，有色反应一般，农产品甚至不怎么动。这并不是市场“选择性失明”，而是每个品种对同一变量的暴露方式不同。",
+          "市场从来不是用一套统一模板处理所有利空，真正有效的是先理解每个品种当下最敏感的矛盾在哪里。"
+        ],
+        logic: [
+          "品种差异首先来自产业链结构。需求端主导的品种，对宏观和终端景气更敏感；供给受扰动更大的品种，对同样的需求利空反应就可能更钝化。",
+          "其次来自库存和估值位置。低库存、高基差、近月偏紧的品种，往往更抗宏观扰动；高库存、贴水结构的品种，对同样利空更脆弱。",
+          "最后来自资金结构。拥挤交易中的品种，对利空更容易放大反应，因为盘面不只是交易事件，还在交易仓位本身。"
+        ],
+        mistakes: [
+          "用统一逻辑套所有品种，默认同一事件会引发同样的幅度和节奏。",
+          "只盯新闻，不看每个品种当时的库存、月差和资金拥挤度。",
+          "忽略替代关系和上下游分工，结果误判哪个环节更该先反应。"
+        ],
+        framework: [
+          "先比较每个品种当前最核心的矛盾，分清是供给端、需求端还是资金端主导。",
+          "再看库存、基差和月差所处位置，判断盘面缓冲垫有多厚。",
+          "再看估值与拥挤度，已经涨得多、仓位更集中的品种更怕同样的利空。",
+          "最后才比较事件本身，市场从来不是在真空中交易消息。"
+        ],
+        summary: [
+          "同样的利空，反应差异来自品种结构，而不是市场不理性。",
+          "跨品种比较最重要的不是谁跌得多，而是谁对当前变量暴露更高。"
+        ]
+      },
+      {
+        id: "06",
+        title: "盘面看起来很强，不一定逻辑很强",
+        category: "盘面理解",
+        track: "方法",
+        duration: "7分钟",
+        status: "未学",
+        coreQuestion: "价格强势和逻辑扎实有什么区别？",
+        audience: "短线与波段交易者",
+        lead: "价格强可以由情绪、流动性、止损盘和短期扰动推动，但逻辑强需要更多现实变量接力。",
+        description: "讲清价格强未必代表基本面强，帮助识别情绪推动行情。",
+        keywords: ["情绪推动", "逻辑驱动", "持续性", "现货验证"],
+        tools: ["价格图", "成交量", "持仓", "现货验证"],
+        sources: ["cmeOi", "cmeCurve"],
+        intro: [
+          "很多人把突破、长阳、放量理解成逻辑强化的证明，这在很多时候并不成立。盘面可以很强，但如果推动它的是短期情绪和仓位调整，持续性往往有限。",
+          "价格与逻辑的关系，更像是信号与原因的关系。前者能提示变化，后者才决定变化能否持续。"
+        ],
+        logic: [
+          "价格强的来源很多，可能是空头回补、事件刺激、流动性收缩，也可能是现实供需真的在收紧。",
+          "逻辑强通常有几个共性：现货跟得上、基差与月差同步强化、产业链变量出现连续验证，而不是只出现一天的情绪波动。",
+          "当价格与现实变量背离时，盘面仍可继续走一段，但这类行情更依赖情绪维持。"
+        ],
+        mistakes: [
+          "看到突破就默认趋势成立，忽略突破之后谁来接力。",
+          "只看价格不看现货和持仓，把最显眼的图形当成最可靠的证据。",
+          "把单日涨幅当成逻辑强弱的评分标准，忽略逻辑是否可延续。"
+        ],
+        framework: [
+          "先把价格强拆成原因，而不是直接把结果当原因。",
+          "再看现货、基差、月差与产业链是否开始跟随，若不跟，逻辑仍需谨慎。",
+          "再看成交和持仓是增量推动还是减仓推动，前者通常比后者更有持续性。",
+          "最后看时间维度，逻辑强弱不是一分钟决定的，而是几轮验证之后才更清楚。"
+        ],
+        summary: [
+          "价格强只说明市场在动，不说明逻辑已经扎实。",
+          "真正更有价值的，是建立区分“情绪强”和“逻辑强”的观察顺序。"
+        ]
+      },
+      {
+        id: "07",
+        title: "螺纹钢交易者必须盯的5个变量",
+        category: "品种研究",
+        track: "黑色",
+        duration: "10分钟",
+        status: "专题",
+        coreQuestion: "螺纹钢到底该盯哪些核心变量？",
+        audience: "黑色链交易者",
+        lead: "螺纹钢最怕只盯库存和价格，不看利润、铁水、需求和政策预期之间的顺序关系。",
+        description: "系统梳理钢厂利润、铁水、库存、终端需求与政策预期五个维度。",
+        keywords: ["钢厂利润", "铁水", "库存", "终端需求", "政策预期"],
+        tools: ["钢厂利润", "铁水日产", "社库厂库", "基差"],
+        sources: ["worldsteel", "cmeCurve"],
+        intro: [
+          "螺纹钢是一个极其讲究链条顺序的品种。盘面不只交易螺纹自身，还在交易铁矿、焦煤、焦炭、利润修复和终端需求的组合。",
+          "真正高频要盯的变量并不多，但必须知道先后顺序：先生产意愿，再原料消耗，再库存，再需求兑现。"
+        ],
+        logic: [
+          "钢厂利润决定生产意愿。利润改善，钢厂更愿意维持或提升开工，随后会传导到铁水和原料需求。",
+          "铁水是黑色链里极重要的中间变量。它既反映钢厂生产强度，也牵动铁矿、焦煤等原料端的定价。",
+          "库存和终端需求要一起看。单看去库意义不大，关键要判断是被动去库还是需求真的接住了供给。政策预期则常常决定估值上沿和市场愿不愿意提前交易。"
+        ],
+        mistakes: [
+          "只看价格和库存，不看利润与铁水，结果总在链条后半段追行情。",
+          "把政策消息直接等同于需求改善，没有区分预期拉动和现实落地。",
+          "只盯螺纹单一数据，不看黑色链上下游是否共振。"
+        ],
+        framework: [
+          "先看利润：钢厂有没有生产动力，这决定了后面变量是否会跟进。",
+          "再看铁水：生产强度有没有扩大，原料端是否会先反应。",
+          "再看库存与表需：需求是主动修复，还是只是阶段性错配。",
+          "最后看政策预期：政策更像估值因子，要和现实变量一起判断。"
+        ],
+        summary: [
+          "螺纹钢的核心不是记住五个变量，而是知道它们的传导顺序。",
+          "对黑色交易者来说，盯住利润、铁水、库存、需求和政策预期，才算真正进入产业链视角。"
+        ]
+      },
+      {
+        id: "08",
+        title: "铁矿石行情波动，到底在交易什么",
+        category: "品种研究",
+        track: "黑色",
+        duration: "9分钟",
+        status: "未学",
+        coreQuestion: "铁矿价格为何总是大起大落？",
+        audience: "黑色链用户",
+        lead: "铁矿石看似总在跟着情绪波动，实际上背后仍是发运、到港、港存、铁水和成材利润的组合。",
+        description: "解释铁矿背后的核心驱动，以及它为什么常常比成材更敏感。",
+        keywords: ["发运", "到港", "港存", "钢厂开工", "成材利润"],
+        tools: ["港口库存", "发运到港", "铁水", "价差"],
+        sources: ["worldsteel", "cmeCurve"],
+        intro: [
+          "铁矿石比很多品种都更容易出现快速上冲和急跌，因为它站在黑色链中游，既吃需求预期，也吃供应节奏，还高度敏感于钢厂生产意愿。",
+          "所以铁矿的“波动大”并不是随机，而是因为它同时承接了多个变量的变化。"
+        ],
+        logic: [
+          "供应端要看发运和到港，现实供给是否宽松往往先体现在港口库存和结构上。",
+          "需求端最核心的是铁水和钢厂利润。只要钢厂还有利润、铁水没有明显回落，铁矿的需求支撑就还在。",
+          "铁矿还常常承担黑色链中的预期放大器角色。政策改善预期、地产情绪修复、粗钢政策预期等，都可能让铁矿先于现实变量波动。"
+        ],
+        mistakes: [
+          "把铁矿波动简单理解成消息驱动，而不去拆到底是供应、需求还是估值变化。",
+          "只看港存，不看到港和铁水，结果对库存变化的含义理解过于静态。",
+          "忽略成材利润，忘了钢厂盈利能力才是铁矿需求能否持续的重要前提。"
+        ],
+        framework: [
+          "先看钢厂利润与铁水，这是需求端的总开关。",
+          "再看发运、到港和港口库存，判断供给宽松还是偏紧。",
+          "再看黑色链联动：成材是否跟、焦煤焦炭是否共振、月差是否强化。",
+          "最后看市场是否在抢跑政策与需求预期，预期交易阶段的铁矿波动通常更大。"
+        ],
+        summary: [
+          "铁矿石波动大，不代表它没有逻辑，恰恰说明它是多个逻辑的交汇点。",
+          "真正有帮助的不是猜它每天为什么涨跌，而是知道它当前在替哪条逻辑做放大。"
+        ]
+      },
+      {
+        id: "09",
+        title: "豆粕研究框架：从压榨到出口",
+        category: "品种研究",
+        track: "油脂油料",
+        duration: "11分钟",
+        status: "专题",
+        coreQuestion: "豆粕分析应该从哪几条线入手？",
+        audience: "油脂油料交易者",
+        lead: "豆粕不能只看美豆，也不能只看国内库存。真正有效的是把供应、压榨、需求、库存和出口放到同一张图里。",
+        description: "从供给、压榨、需求、库存和出口搭建豆粕研究框架。",
+        keywords: ["大豆供应", "压榨利润", "豆粕需求", "库存", "出口销售"],
+        tools: ["压榨利润", "豆粕库存", "基差", "出口销售"],
+        sources: ["usdaWasde", "usdaExport", "usdaOilseeds"],
+        intro: [
+          "豆粕最容易被简化成“盯美豆就够了”，但实际交易里，国内豆粕的节奏往往由进口到港、压榨节奏、饲料需求和库存共同决定。",
+          "对有经验的交易者来说，关键不是把数据记全，而是知道每条线索影响的是哪个环节。"
+        ],
+        logic: [
+          "第一条线是全球大豆供应，尤其是美豆和南美产区。它决定原料成本和远端供给预期。",
+          "第二条线是压榨。压榨利润、开机率和油粕比会影响豆粕阶段性供给释放速度。",
+          "第三条线是需求和库存。下游饲料需求、现货成交和库存变化一起决定豆粕盘面能否从成本逻辑切换到现实供需逻辑。出口销售则帮助理解美豆定价节奏，进而反映到国内情绪。"
+        ],
+        mistakes: [
+          "只看美豆，不看国内压榨和现货，结果对内盘节奏理解总慢半拍。",
+          "只看库存变化，不看压榨节奏，误把未来供应释放当成当下紧张。",
+          "把报告日当成唯一变量，忽略报告前市场预期早已开始影响盘面。"
+        ],
+        framework: [
+          "先看全球供应与报告预期，确定成本和远端方向框架。",
+          "再看国内压榨利润、到港与开机，判断供应释放节奏。",
+          "再看需求、库存和基差，识别现实端是否开始接力。",
+          "最后用出口销售和报告窗口校正节奏，理解市场是在交易预期还是交易现实。"
+        ],
+        summary: [
+          "豆粕研究的难点不在数据多，而在变量分散在不同时间尺度。",
+          "真正可用的框架，是先分清全球供应、国内压榨与现实需求各自影响哪一段定价。"
+        ]
+      },
+      {
+        id: "10",
+        title: "棕榈油交易，为什么必须盯报告窗口",
+        category: "品种研究",
+        track: "油脂油料",
+        duration: "9分钟",
+        status: "继续",
+        coreQuestion: "棕榈油为何特别依赖数据窗口？",
+        audience: "油脂交易者",
+        lead: "棕榈油的核心变量集中在月度统计窗口里，报告前后的预期博弈往往比结果本身更重要。",
+        description: "围绕 MPOB、产量、出口、库存讲清报告前后市场如何博弈。",
+        keywords: ["MPOB", "产量", "出口", "库存", "季节性"],
+        tools: ["MPOB 月报", "出口数据", "库存图", "价差"],
+        sources: ["mpob", "cmeCurve"],
+        intro: [
+          "棕榈油是报告窗口感很强的品种。产量、出口和库存这些最关键的变量，往往在月度统计里集中更新，因此盘面很容易在报告前提前预热、报告后快速兑现。",
+          "如果只看报告结果，不看市场此前在押注什么，就很难理解为什么明明数据偏多，盘面却先冲高后回落。"
+        ],
+        logic: [
+          "报告前，市场主要交易预期差。预估产量、出口和库存的分歧，会通过月差、相关油脂联动和盘面波动提前反映。",
+          "报告落地后，市场会迅速比较结果与预期之间的差异，而不是只看绝对数值本身。",
+          "报告后的持续性，还要看出口高频、季节性产量变化和竞品油脂走势是否跟得上。"
+        ],
+        mistakes: [
+          "只盯库存，不看库存背后是产量变化还是出口变化推动。",
+          "把每次 MPOB 报告都当成趋势起点，忽略很多行情已经在报告前走完一段。",
+          "只看棕榈油本身，不看豆油、原油和生柴政策预期的联动。"
+        ],
+        framework: [
+          "报告前先做预期地图：市场目前最在意的是产量、出口还是库存。",
+          "报告时看差值：公布结果相对预估偏离多少，而不是只看同比或环比。",
+          "报告后看兑现：相关油脂、基差和月差有没有接力，出口高频有没有继续确认。",
+          "把季节性当背景，不要把季节性均值当成交易结论。"
+        ],
+        summary: [
+          "棕榈油特别依赖报告窗口，不是因为它只靠报告涨跌，而是因为最关键的变量在窗口中集中更新。",
+          "对交易者更重要的，是学会区分报告前的预热、报告时的重定价和报告后的现实验证。"
+        ]
+      },
+      {
+        id: "11",
+        title: "铜的行情到底更看宏观，还是更看基本面",
+        category: "品种研究",
+        track: "有色",
+        duration: "10分钟",
+        status: "未学",
+        coreQuestion: "铜价的主导因素到底是什么？",
+        audience: "有色交易者",
+        lead: "铜既有宏观属性，也有产业属性。真正难的不是二选一，而是判断哪个阶段哪条线权重更高。",
+        description: "讨论铜的宏观属性与产业属性如何共同作用，建立双线框架。",
+        keywords: ["美元", "利率", "经济预期", "矿端扰动", "库存"],
+        tools: ["LME/SHFE 库存", "价差", "美元指数", "加工费"],
+        sources: ["lmeStocks"],
+        intro: [
+          "铜常被说成“铜博士”，因为它既能反映工业景气，也经常受美元、利率和风险偏好影响。很多误判都来自把铜单纯归类成宏观品种或基本面品种。",
+          "更合理的做法，是同时保留两条线：一条看宏观定价，一条看产业验证。"
+        ],
+        logic: [
+          "宏观线主要看美元、利率、经济预期和风险偏好，这决定了资金是否愿意给铜更高或更低的估值。",
+          "产业线主要看矿端扰动、冶炼利润、库存和现货升贴水，这决定了现实紧张度能否支持盘面。",
+          "当宏观预期强、产业也偏紧时，铜价更容易走出顺畅行情；若两条线背离，则往往表现为波动加大和节奏反复。"
+        ],
+        mistakes: [
+          "把铜只当宏观品种，忽略库存和现货结构的现实约束。",
+          "把铜只当基本面品种，忽略美元和利率变化能快速改写估值。",
+          "看到库存下降就急于下方向结论，没有先判断库存变化是否已经被市场预期。"
+        ],
+        framework: [
+          "先看宏观环境：美元、利率和风险偏好是否在给铜估值加分或减分。",
+          "再看产业线：库存、现货升贴水和矿冶环节有没有现实紧张的证据。",
+          "再看价差和跨市结构，判断紧张度是在远月预期里，还是已经落到近端现实里。",
+          "如果两条线相反，优先把铜看作节奏品种，而不是简单趋势品种。"
+        ],
+        summary: [
+          "铜不是宏观和基本面的二选一，而是一个双引擎品种。",
+          "真正的交易优势，来自识别当前哪个引擎在主导，另一个引擎是确认还是掣肘。"
+        ]
+      },
+      {
+        id: "12",
+        title: "原油为何经常先交易预期，再交易兑现",
+        category: "品种研究",
+        track: "能化",
+        duration: "10分钟",
+        status: "专题",
+        coreQuestion: "原油节奏为何常常前后反复？",
+        audience: "原油和能化交易者",
+        lead: "原油的定价总是同时挂着 OPEC+、地缘、库存和需求预期，预期先行是常态，不是例外。",
+        description: "围绕 OPEC+、地缘、库存和需求预期讲清原油常见节奏。",
+        keywords: ["OPEC+", "地缘风险", "库存", "需求预期", "期限结构"],
+        tools: ["油价走势", "库存数据", "运费", "期限结构"],
+        sources: ["eiaSteo", "eiaWpsr", "opec", "cmeCurve"],
+        intro: [
+          "原油很少等现实数据完全证实之后才开始交易。OPEC+ 政策、地缘风险、需求预期变化，常常会在库存和消费数据真正体现之前就先推动盘面。",
+          "这也是为什么原油经常让人觉得“前后反复”。市场先交易预期，再拿现实去校正预期，节奏上天然容易出现反身性的来回。"
+        ],
+        logic: [
+          "预期阶段，盘面更看供给收缩预期、需求修复预期和风险溢价上升，期限结构和近月表现往往更敏感。",
+          "兑现阶段，市场会回到库存、炼厂开工、成品油裂解和需求数据，看这些变量是否真的开始配合。",
+          "若现实验证跟不上，盘面会从高估值回撤；若现实接力，预期才会进一步转化成趋势。"
+        ],
+        mistakes: [
+          "只在消息公布后才开始理解原油，忽略市场往往在消息前已经完成部分定价。",
+          "把库存周报当作唯一解释框架，没有把 OPEC+ 和需求预期放回更大的节奏里。",
+          "把预期落空理解成逻辑完全失效，忽略原油经常经历多轮修正。"
+        ],
+        framework: [
+          "先看当下主线：供应、地缘还是需求预期，原油一次通常只有一条主线最重要。",
+          "再看期限结构与近远月强弱，结构比绝对价格更能反映近端紧张度。",
+          "再看 EIA、OPEC 和现实库存是否开始验证，确认市场是否从预期走向兑现。",
+          "最后看能化链条内部是否跟随，如成品油、运费或裂解结构是否配合。"
+        ],
+        summary: [
+          "原油之所以经常先交易预期、再交易兑现，是因为它天然处在政策、地缘和现实数据的交叉口。",
+          "理解原油最重要的不是追新闻，而是分清当前主导它的是预期溢价，还是现实供需。"
+        ]
+      },
+      {
+        id: "13",
+        title: "订单流里最容易被误读的三个信号",
+        category: "工具应用",
+        track: "工具",
+        duration: "8分钟",
+        status: "未学",
+        coreQuestion: "订单流最常见的误读是什么？",
+        audience: "使用订单流工具的用户",
+        lead: "订单流的价值在于补充场景，不在于替代场景。把局部异常直接翻译成方向，通常是第一层误读。",
+        description: "解释订单流信号必须放回场景中理解，避免把局部异常当成方向信号。",
+        keywords: ["主动成交", "局部密集成交", "成交结构", "吸收"],
+        tools: ["订单流", "成交分布", "K线", "持仓"],
+        sources: ["cmeOi"],
+        intro: [
+          "订单流工具会让很多交易者第一次看到盘中的细节，但看得更细，并不等于看得更准。多数误判都来自把局部成交特征直接当作方向依据。",
+          "真正有用的订单流，不是告诉你立刻做什么，而是帮助你判断当前盘面行为更像接力、兑现还是博弈。"
+        ],
+        logic: [
+          "第一个常见误读是把主动买卖量放大，直接理解为多空方向。主动成交只说明谁更着急，不说明谁一定更强。",
+          "第二个误读是把局部密集成交看成确定支撑或阻力。密集成交区更像市场发生过充分交换的区域，是否有效还取决于后续接受度。",
+          "第三个误读是把吸收或失衡单独看成信号。它必须与价格位置、波动阶段和更大级别结构一起看。"
+        ],
+        mistakes: [
+          "把局部信号机械视为买卖依据，没有任何上层场景校验。",
+          "只看一两分钟的细节，不看更大级别波段所在位置。",
+          "把订单流当成预测工具，而不是观察盘面行为的放大镜。"
+        ],
+        framework: [
+          "先看大级别背景：行情在趋势启动、发酵还是兑现阶段。",
+          "再看订单流异常发生在什么价格位置，是关键区、突破口还是中性区间。",
+          "再看价格对异常的后续反应，市场接受比异常本身更重要。",
+          "最后用成交量、持仓和相关品种去交叉验证，不让局部细节独占解释权。"
+        ],
+        summary: [
+          "订单流最容易被误读的地方，在于它看起来非常具体，于是让人误以为它能替代判断。",
+          "把订单流放回价格结构和阶段判断中，它才真正有价值。"
+        ]
+      },
+      {
+        id: "14",
+        title: "资金异动出现后，第一步该联看什么",
+        category: "工具应用",
+        track: "工具",
+        duration: "7分钟",
+        status: "未学",
+        coreQuestion: "异动出现后，先看哪个维度？",
+        audience: "使用盘中异动工具的用户",
+        lead: "异动不是结论，它只是提示有事情正在发生。关键在于第一时间把它接到正确的验证链条上。",
+        description: "建立盘中异动后的快速联看顺序，提升信息处理效率。",
+        keywords: ["成交", "持仓", "现货验证", "联动品种"],
+        tools: ["资金异动", "成交量", "持仓", "相关品种走势"],
+        sources: ["cmeOi"],
+        intro: [
+          "盘中异动提示很容易让人产生紧迫感，但真正决定质量的，不是你看到了异动，而是你之后第一步看什么。",
+          "好的异动处理方式，不是立刻猜方向，而是先判断异动属于什么类型。"
+        ],
+        logic: [
+          "异动先分三类：新闻触发、仓位触发和结构触发。不同类型对应的验证路径不同。",
+          "最先联看的通常不是更多盘口细节，而是成交量与持仓变化，因为它们能帮助判断是增量推动还是存量对敲。",
+          "第二步要看相关品种和现货线索是否跟随，异动如果无法扩散成链条共振，通常持续性有限。"
+        ],
+        mistakes: [
+          "看到异动就直接下结论，没有先判断它属于哪一类。",
+          "只盯主力合约，不看相关品种和产业链反应。",
+          "把单笔异常成交当成趋势起点，忽略后续接力是否存在。"
+        ],
+        framework: [
+          "先看成交量和持仓，确认是不是增量资金在推动。",
+          "再看价格所处位置，异动发生在突破口、前高前低还是区间中段，含义完全不同。",
+          "再看相关品种与现货验证，有无横向扩散。",
+          "最后看是否有事件背景，异动若没有事件和结构支撑，更多只能当作提醒，而不是结论。"
+        ],
+        summary: [
+          "资金异动之后的第一步，不是抢着解释，而是先分类型、再联看验证。",
+          "联看顺序建立得越稳定，异动工具的噪音就越小。"
+        ]
+      },
+      {
+        id: "15",
+        title: "期限结构什么时候最有参考价值",
+        category: "工具应用",
+        track: "工具",
+        duration: "8分钟",
+        status: "收藏",
+        coreQuestion: "期限结构适合解释哪些问题？",
+        audience: "看月差、看结构的用户",
+        lead: "期限结构最擅长回答的是紧张度与节奏，不擅长单独给方向。",
+        description: "讲清期限结构适合观察供需紧张度和节奏变化，不适合直接给出方向结论。",
+        keywords: ["近远月价差", "库存", "交割预期", "现货紧张度"],
+        tools: ["期限结构", "月差", "基差", "仓单"],
+        sources: ["cmeCurve"],
+        intro: [
+          "很多人看到近月走强、正套扩大，就自然联想到价格要涨；看到远月贴水，就自然联想到行情结束。实际上，期限结构的核心意义不是替你判断方向，而是帮助你识别市场在交易近端还是远端。",
+          "如果把期限结构用对，它是理解供需紧张度和节奏切换的高价值工具。"
+        ],
+        logic: [
+          "结构反映的是不同时间点上市场愿意为商品支付怎样的溢价或折价，因此它更贴近紧张度，而不是绝对涨跌。",
+          "近月偏强往往说明市场更看重眼前的供需和交割资源，远月偏强则更多反映中期预期改善或近端压力缓和。",
+          "结构有效的前提，是现货、库存、仓单和交割预期与之匹配。单看曲线本身，容易把金融定价当成现实结论。"
+        ],
+        mistakes: [
+          "把结构变化直接等同于涨跌判断，忽略它本质上是在表达时间维度的价差。",
+          "只盯月差，不看库存、仓单和现货紧张度。",
+          "在事件性和流动性扰动很强的时候，仍然过度相信结构信号。"
+        ],
+        framework: [
+          "先问结构在表达什么：是近端偏紧、远端改善，还是近端承压、远端有故事。",
+          "再看库存、仓单、基差是否支持这种表达。",
+          "再看结构变化发生在什么阶段，预热阶段和兑现阶段的解释权重不同。",
+          "最后才把结构和绝对价格放在一起看，结构是辅助理解，不是独立结论。"
+        ],
+        summary: [
+          "期限结构最有参考价值的时候，是你想知道市场在交易哪个时间维度的矛盾。",
+          "它适合解释紧张度和节奏，不适合被机械地翻译成多空判断。"
+        ]
+      },
+      {
+        id: "16",
+        title: "量价分布能帮你看清什么，不能帮你看清什么",
+        category: "工具应用",
+        track: "工具",
+        duration: "7分钟",
+        status: "未学",
+        coreQuestion: "分布图到底有什么边界？",
+        audience: "使用量价分布工具的用户",
+        lead: "量价分布更擅长告诉你市场在哪些区域发生过充分交换，不擅长告诉你未来一定怎么走。",
+        description: "解释量价分布更适合识别成交密集区和博弈区，而非机械信号。",
+        keywords: ["成交密集区", "博弈区", "价格接受度", "分布迁移"],
+        tools: ["量价分布", "成交区间", "K线"],
+        sources: ["cmeOi"],
+        intro: [
+          "量价分布是一个非常容易“看起来有答案”的工具，因为它把过去成交最密集的区域标得非常直观。但直观不等于直接可交易。",
+          "分布图真正重要的，是帮助你看清市场过去在哪里接受价格、在哪里发生分歧。"
+        ],
+        logic: [
+          "高成交密集区代表市场在该区域完成了较多交换，通常说明这里曾经有较高的接受度。",
+          "低成交区和边缘区域更容易体现价格拒绝或快速通过，但这不等于它们天然就是阻力或支撑。",
+          "真正有意义的是分布如何迁移：成交中心在向上还是向下转移，说明市场接受的价格区间有没有在变。"
+        ],
+        mistakes: [
+          "把分布峰值直接理解为必然支撑或阻力，没有观察价格再次回到该区时的反应。",
+          "忽略分布形成的阶段背景，在趋势和震荡中用同一套解释。",
+          "只看分布，不看时间与事件，导致把历史交换区错当成未来结论。"
+        ],
+        framework: [
+          "先问当前市场是在趋势还是震荡，不同环境下分布的解释方式不同。",
+          "再看成交密集区的位置是否在迁移，迁移方向比单个峰值更重要。",
+          "再结合价格重返该区域时的反应，看接受还是拒绝。",
+          "最后用它辅助理解博弈区，而不是把它当成自动化信号。"
+        ],
+        summary: [
+          "量价分布能帮你看清过去哪里发生过充分交换，哪里是主要博弈区。",
+          "它不能替你回答未来一定涨跌，只能帮助你理解市场如何接受价格。"
+        ]
+      },
+      {
+        id: "17",
+        title: "强弱订单比该怎么看，才不会看成方向判断",
+        category: "工具应用",
+        track: "工具",
+        duration: "6分钟",
+        status: "未学",
+        coreQuestion: "强弱订单比如何正确理解？",
+        audience: "使用订单结构工具的用户",
+        lead: "强弱订单比更像成交主动性的温度计，而不是方向指北针。",
+        description: "将该工具放回成交结构观察框架中，强调其辅助属性。",
+        keywords: ["成交主动性", "成交结构", "辅助判断", "节奏"],
+        tools: ["强弱订单比", "成交量", "价格走势"],
+        sources: ["cmeOi"],
+        intro: [
+          "强弱订单比之所以常被误用，是因为它看起来像一个非常干净的数字，但数字越干净，越容易让人忽视它背后的场景限制。",
+          "如果把它当成方向判断工具，通常会在震荡、逼仓或事件时段被反复误导。"
+        ],
+        logic: [
+          "强弱订单比表达的是主动成交结构的偏向，核心是看谁更着急成交，而不是看谁最终会赢。",
+          "当这个指标与价格推进方向一致，而且发生在关键位置时，参考价值才会上升。",
+          "若指标偏强但价格推不动，往往说明市场正在消化主动买盘，反而不能简单理解成更强。"
+        ],
+        mistakes: [
+          "把强弱订单比单独当成方向信号，没有任何价格位置与阶段过滤。",
+          "只看数值高低，不看数值变化出现在哪个波动阶段。",
+          "忽略价格对主动成交的反应，导致只看输入，不看结果。"
+        ],
+        framework: [
+          "先看价格所在位置：关键区、突破区还是区间中段。",
+          "再看强弱订单比是否与价格推进一致，一致性比绝对数值更重要。",
+          "再看成交放大和持仓变化，确认是否有增量参与。",
+          "最后把它放回辅助层，作为补充，不作为主判断。"
+        ],
+        summary: [
+          "强弱订单比能帮助你理解主动成交结构，但不能替代方向判断。",
+          "看它的时候，最重要的是价格反应，而不是指标本身看起来多强。"
+        ]
+      },
+      {
+        id: "18",
+        title: "季节性分析，什么时候容易失效",
+        category: "工具应用",
+        track: "工具",
+        duration: "8分钟",
+        status: "未学",
+        coreQuestion: "历史规律为何有时不再适用？",
+        audience: "使用季节性图表的用户",
+        lead: "季节性是背景，不是剧本。它在供需结构稳定时更有用，在制度和变量突变时更容易失效。",
+        description: "分析季节性规律的有效边界，帮助用户避免经验主义误判。",
+        keywords: ["季节性", "异常年份", "政策冲击", "供需突变"],
+        tools: ["季节性曲线", "历史年份对比", "事件线"],
+        sources: ["usdaCrop", "mpob", "eiaSteo"],
+        intro: [
+          "季节性图表最大的价值，是告诉你市场常见的节奏背景；最大的风险，则是让人误以为历史均值就是当期路径。",
+          "越是依赖天气、政策、进出口和制度因素的品种，季节性越容易因为异常年份而失真。"
+        ],
+        logic: [
+          "季节性有效的前提，是驱动结构大体稳定。若年份之间的供需约束相似，季节规律通常更有解释力。",
+          "当政策冲击、地缘风险、天气异常或产业链结构变化显著时，历史均值就会被新的变量重写。",
+          "因此季节性更适合提供“应当先看什么”的提示，而不是直接给出路径判断。"
+        ],
+        mistakes: [
+          "把历史均值当作当期必然路径，没有识别当年是否处于异常年份。",
+          "只看均线，不看离散度和极端年份。",
+          "在事件和政策主导的窗口，仍然用季节性替代现实变量。"
+        ],
+        framework: [
+          "先问今年是不是结构上类似的年份，若不是，季节性权重要降下来。",
+          "再看极端年份和离散度，避免把平均值看成高确定性。",
+          "再把季节性与当年现实变量叠加，判断规律是在强化还是被打破。",
+          "最后把季节性当导航，而不是当剧本。"
+        ],
+        summary: [
+          "季节性分析最容易失效的时候，是现实世界发生了足以改写供需节奏的变化。",
+          "真正成熟的用法，是把季节性当背景，再用当年的现实数据去修正。"
+        ]
+      },
+      {
+        id: "19",
+        title: "一次典型的库存利多失效案例复盘",
+        category: "复盘训练",
+        track: "复盘",
+        duration: "9分钟",
+        status: "实验室",
+        coreQuestion: "为什么数据利多却没走出趋势？",
+        audience: "想提升复盘能力的用户",
+        lead: "复盘的重点不是记住那次库存少了多少，而是拆清市场为什么没有相信这组数据。",
+        description: "通过案例拆解市场为何没有按常规逻辑演绎，训练“数据—预期—验证”框架。",
+        keywords: ["预期", "验证", "失效机制", "时间线"],
+        tools: ["库存图", "价格图", "持仓", "时间线"],
+        sources: ["eiaWpsr", "cmeOi", "cmeCurve"],
+        intro: [
+          "库存利多失效，是最适合训练复盘能力的场景之一。因为这里最容易暴露一个问题：你到底是在复盘数据，还是在复盘市场对数据的定价方式。",
+          "很多失败交易并不是数据看错，而是没有意识到市场早已提前定价，或者根本不相信这组数据能持续。"
+        ],
+        logic: [
+          "库存利多失效通常有三类原因：预期已满、其他变量更强、现实验证不足。",
+          "如果事件前价格已经上行、持仓拥挤，库存利多出来后就可能只触发兑现，而不是继续推进。",
+          "若库存改善没有被现货、基差或后续连续数据验证，市场很快会把这类利多降级为阶段性噪音。"
+        ],
+        mistakes: [
+          "复盘只记数据，不分析市场为什么不信。",
+          "只看结果图形，不记录事件前的预热与市场共识。",
+          "把一次数据失效简单归因于“市场不讲理”。"
+        ],
+        framework: [
+          "按时间线复盘：数据前、数据时、数据后，分别记录盘面的主线是什么。",
+          "把库存放回预期和现实中：这组数据超预期了吗，还是只是符合市场预估。",
+          "联看持仓、现货、基差和相关品种，判断盘面为什么没有扩散。",
+          "最后写出失效原因，是预期过满、验证不足，还是矛盾已经切换。"
+        ],
+        summary: [
+          "库存利多失效的复盘价值，在于它逼着你看到“市场为什么不信”。",
+          "复盘真正要训练的，不是对数据的背诵，而是对定价过程的理解。"
+        ]
+      },
+      {
+        id: "20",
+        title: "为什么你总在情绪最强时加仓",
+        category: "复盘训练",
+        track: "复盘",
+        duration: "7分钟",
+        status: "未学",
+        coreQuestion: "为什么总在最激烈的时候做错决定？",
+        audience: "有加仓冲动的交易者",
+        lead: "情绪最强的时候，通常不是信息最确定的时候，而是分歧最剧烈、波动最会放大主观感受的时候。",
+        description: "从行为和盘面特征出发，解释情绪极端时常见误判。",
+        keywords: ["情绪极值", "波动放大", "从众心理", "加仓冲动"],
+        tools: ["分时图", "成交量", "持仓变化"],
+        sources: ["cmeOi"],
+        intro: [
+          "很多人加仓不是因为逻辑变得更清楚，而是因为盘面开始剧烈波动、周围意见快速趋同，情绪上出现了“错过会更难受”的压迫感。",
+          "这种加仓往往发生在信息最嘈杂的时候，而不是信息质量最高的时候。"
+        ],
+        logic: [
+          "情绪最强时，价格波动和成交放大容易制造“市场已经确认”的幻觉。",
+          "但从结构上看，这个阶段常常恰好是多空集中表达、仓位快速迁移、最容易出现冲高回落或急跌反抽的时段。",
+          "交易者在这一刻最容易把波动强度误判为确定性强度。"
+        ],
+        mistakes: [
+          "把波动最强当成确定性最高。",
+          "在没有重新检查驱动和验证的情况下，仅因价格速度加仓。",
+          "用情绪化的自我解释替代记录：觉得自己是“看懂了”，其实只是被市场节奏推着走。"
+        ],
+        framework: [
+          "加仓前先暂停，重看驱动有没有新增信息，而不是只有新增波动。",
+          "再看成交与持仓，是增量接力还是情绪宣泄。",
+          "再看现货和相关品种有没有同步确认，避免只被单一价格线带走。",
+          "最后在复盘里记录加仓时的心理触发点，而不是只记录结果。"
+        ],
+        summary: [
+          "你总在情绪最强时加仓，往往不是因为你更理性，而是因为你更难忍受错过。",
+          "解决这个问题的起点，是把“强波动”与“高确定性”分开。"
+        ]
+      },
+      {
+        id: "21",
+        title: "一轮大行情，通常会经历哪几个阶段",
+        category: "复盘训练",
+        track: "复盘",
+        duration: "9分钟",
+        status: "重点",
+        coreQuestion: "大行情是如何一步步形成的？",
+        audience: "想提升节奏感的交易者",
+        lead: "大行情不是一根线走完的，它通常经历启动、发酵、扩散、兑现和退潮几个阶段。",
+        description: "把行情拆为几个阶段，帮助用户理解阶段差异和变量权重变化。",
+        keywords: ["行情阶段", "节奏切换", "变量权重", "兑现"],
+        tools: ["行情时间线", "价格与持仓对照图"],
+        sources: ["cmeOi", "cmeCurve"],
+        intro: [
+          "很多交易者在大行情里做得辛苦，不是因为看不懂方向，而是因为始终用同一套标准看整个过程。结果往往是前段太谨慎，后段太激进。",
+          "把行情拆成阶段，是提升节奏感最有效的方法之一。"
+        ],
+        logic: [
+          "启动阶段，市场通常只掌握少量线索，盘面先由预期和试探性资金推动。",
+          "发酵和扩散阶段，更多变量开始共振，现货、基差、月差、相关品种逐步加入，趋势更容易被市场承认。",
+          "兑现和退潮阶段，逻辑未必立刻消失，但市场已经开始交易拥挤度、兑现压力和下一阶段的变化。"
+        ],
+        mistakes: [
+          "用同一套标准看行情全程，导致阶段识别错位。",
+          "在启动阶段要求过高的验证，在兑现阶段又过度相信旧逻辑。",
+          "只盯价格，不记录每一阶段真正起作用的变量。"
+        ],
+        framework: [
+          "先按时间线标记启动、发酵、扩散、兑现、退潮五个阶段。",
+          "每个阶段都写清楚最重要的变量是什么，而不是把所有变量一股脑堆上去。",
+          "比较不同阶段里价格、持仓、现货和月差的关系如何变化。",
+          "最后写出节奏切换点，训练自己识别行情从一个阶段进入下一个阶段的信号。"
+        ],
+        summary: [
+          "大行情最难的不是看方向，而是知道方向在不同阶段该怎么理解。",
+          "阶段感一旦建立，很多追高、抄顶和过度自信的问题会自然减少。"
+        ]
+      },
+      {
+        id: "22",
+        title: "一次报告行情是如何从预热走向兑现的",
+        category: "复盘训练",
+        track: "复盘",
+        duration: "8分钟",
+        status: "继续",
+        coreQuestion: "报告前后市场通常怎么走？",
+        audience: "做报告行情的用户",
+        lead: "报告行情真正值得复盘的，不只是结果，而是预热、公布和兑现三个阶段各在交易什么。",
+        description: "以 USDA、MPOB 等重要报告为例，讲清报告前、报告时、报告后的市场节奏。",
+        keywords: ["事件窗口", "预热", "兑现", "再定价"],
+        tools: ["报告时间线", "价格走势", "市场预期对照"],
+        sources: ["usdaWasde", "usdaCrop", "mpob"],
+        intro: [
+          "报告行情最大的误区，是把研究重心全压在结果本身。但市场真正的定价过程，往往从结果出来前一周甚至更早就已经开始。",
+          "如果不复盘预热阶段在交易什么，报告当天就很容易只看到表面波动。"
+        ],
+        logic: [
+          "预热阶段，市场先根据调查预估、历史规律和产业线索形成交易共识，价格开始提前走动。",
+          "报告公布时，真正重要的是结果相对预期的偏离，而不是绝对数值本身。",
+          "报告后阶段，市场会迅速把焦点转向兑现：现货是否跟、相关品种是否确认、后续高频数据是否支持。"
+        ],
+        mistakes: [
+          "只复盘报告结果，不复盘预期变化。",
+          "把报告时的瞬时波动当成全部，忽略预热阶段早已决定了仓位和情绪分布。",
+          "报告一结束就停止观察，没有继续跟踪兑现阶段。"
+        ],
+        framework: [
+          "先写预热：市场此前在押注什么，价格和持仓如何变化。",
+          "再写报告时：结果与市场预估差多少，哪个变量超预期。",
+          "再写报告后：盘面是否扩散成现货、基差、月差和相关品种的共振。",
+          "最后总结是预期兑现、现实强化，还是高开低走式的再定价。"
+        ],
+        summary: [
+          "一次完整的报告行情，至少要看预热、发布和兑现三段。",
+          "只有把预期变化也纳入复盘，报告行情才会真正变成可迁移的经验。"
+        ]
+      },
+      {
+        id: "23",
+        title: "伪突破为什么总容易让人上头",
+        category: "复盘训练",
+        track: "复盘",
+        duration: "7分钟",
+        status: "未学",
+        coreQuestion: "为什么很多突破后很快回落？",
+        audience: "做突破交易的用户",
+        lead: "伪突破最吸引人的地方，在于它同时满足了图形、速度和情绪，但恰恰因此容易缺乏验证。",
+        description: "分析伪突破常伴随的成交、持仓和情绪特征，提高分辨能力。",
+        keywords: ["突破", "跟风盘", "成交验证", "持仓确认"],
+        tools: ["K线", "成交量", "持仓", "盘口变化"],
+        sources: ["cmeOi"],
+        intro: [
+          "突破交易最大的难点，是看起来最像机会的那一下，往往也是最容易引来跟风盘和情绪集中释放的时点。",
+          "伪突破之所以让人上头，是因为它在主观感受上很像“市场终于确认了”，但客观上可能只是流动性推动。"
+        ],
+        logic: [
+          "伪突破常见的特征是价格先冲出关键区，但后续没有足够的成交结构和持仓接力。",
+          "有效突破往往不仅要看价格过线，还要看成交是否放大、持仓是否扩张、相关品种是否同步。",
+          "若突破之后市场无法在新价格区完成接受，回落通常很快发生。"
+        ],
+        mistakes: [
+          "只看突破形态，不看验证条件。",
+          "把瞬时速度当成有效性证明，忽略新价格区有没有被接受。",
+          "忽略突破发生时的阶段背景，兑现阶段的突破更容易失败。"
+        ],
+        framework: [
+          "先看突破前市场处于哪个阶段，是预热、扩散还是兑现。",
+          "再看突破时成交和持仓是否一起配合，而不是只有价格在动。",
+          "再看突破后市场能否在新价格区停留并获得相关品种确认。",
+          "最后把失败突破也纳入复盘，记录哪类背景下它最容易出现。"
+        ],
+        summary: [
+          "伪突破容易让人上头，是因为它把情绪和图形同时推到最强。",
+          "真正提升识别力的方法，是把突破从形态判断升级为结构验证。"
+        ]
+      },
+      {
+        id: "24",
+        title: "你的复盘为什么总是记流水账",
+        category: "复盘训练",
+        track: "复盘",
+        duration: "8分钟",
+        status: "未学",
+        coreQuestion: "为什么复盘很多却没提升？",
+        audience: "有复盘习惯但效果一般的用户",
+        lead: "如果复盘只记录涨跌和情绪，而没有记录驱动、验证和失效，它很难真正转化为下一次判断能力。",
+        description: "教用户把复盘从记涨跌，升级为记录驱动、结构、验证和失效原因。",
+        keywords: ["驱动", "结构", "验证", "失效", "归因"],
+        tools: ["复盘模板", "时间线", "关键数据表"],
+        sources: ["cmeOi", "cmeCurve"],
+        intro: [
+          "很多复盘之所以没有用，不是因为不认真，而是因为记录方式过于贴近新闻和结果，远离定价过程本身。",
+          "好的复盘应该让你下一次更快识别市场在交易什么，而不是只是回忆某天发生了什么。"
+        ],
+        logic: [
+          "真正有效的复盘至少要有四层：驱动是什么、市场如何表达、哪些变量验证、什么地方失效。",
+          "如果只记“今天涨了、因为某某消息”，你得到的只是叙事摘要，而不是交易框架。",
+          "复盘的核心是归因质量，而不是字数。"
+        ],
+        mistakes: [
+          "只记结果，不记过程和判断依据。",
+          "把新闻当作复盘主体，忽略盘面如何对新闻定价。",
+          "没有记录失效点，导致每次都重复同样的情绪性错误。"
+        ],
+        framework: [
+          "第一栏写主线驱动，第二栏写盘面结构，第三栏写验证变量，第四栏写失效原因。",
+          "按时间线记录，而不是按新闻流水堆叠。",
+          "区分自己当时知道什么、市场当时知道什么，避免事后全知视角。",
+          "每次复盘最后都写一句：如果重来一次，我会先看哪三个变量。"
+        ],
+        summary: [
+          "复盘从来不是记得越多越有效，而是归因越清楚越有效。",
+          "把复盘写成驱动、结构、验证和失效，你的进步会明显快于单纯记流水账。"
+        ]
+      }
+    ];
+
+    const featuredId = "04";
+    const categories = ["全部", "盘面理解", "品种研究", "工具应用", "复盘训练"];
+    const tracks = ["全部", "方法", "黑色", "油脂油料", "有色", "能化", "工具", "复盘"];
+    const panelHashMap = {
+      recommendPanel: "recommend",
+      reportPanel: "reports",
+      pathPanel: "paths",
+      catalogPanel: "catalog",
+      sourcesPanel: "sources"
+    };
+    const panelHashReverseMap = Object.fromEntries(Object.entries(panelHashMap).map(([key, value]) => [value, key]));
+    const state = {
+      category: "全部",
+      track: "全部",
+      activeId: featuredId,
+      favorites: new Set(JSON.parse(localStorage.getItem("academyFavorites") || "[]")),
+      lastRead: localStorage.getItem("academyLastRead") || featuredId
+    };
+
+    const reportStrip = document.getElementById("reportStrip");
+    const featuredCard = document.getElementById("featuredCard");
+    const categoryTabs = document.getElementById("categoryTabs");
+    const trackChips = document.getElementById("trackChips");
+    const courseCatalog = document.getElementById("courseCatalog");
+    const sourceLinks = document.getElementById("sourceLinks");
+    const resumeBtn = document.getElementById("resumeBtn");
+    const lastReadLabel = document.getElementById("lastReadLabel");
+    const goCatalogBtn = document.getElementById("goCatalogBtn");
+    const goFeaturedBtn = document.getElementById("goFeaturedBtn");
+    const pageNav = document.getElementById("pageNav");
+
+    const drawer = document.getElementById("courseDrawer");
+    const drawerBackdrop = document.getElementById("drawerBackdrop");
+    const drawerClose = document.getElementById("drawerClose");
+    const drawerLabel = document.getElementById("drawerLabel");
+    const drawerTitle = document.getElementById("drawerTitle");
+    const drawerMeta = document.getElementById("drawerMeta");
+    const drawerIntro = document.getElementById("drawerIntro");
+    const drawerQuestion = document.getElementById("drawerQuestion");
+    const drawerAudience = document.getElementById("drawerAudience");
+    const introList = document.getElementById("introList");
+    const logicList = document.getElementById("logicList");
+    const mistakeList = document.getElementById("mistakeList");
+    const frameworkList = document.getElementById("frameworkList");
+    const summaryList = document.getElementById("summaryList");
+    const keywordTags = document.getElementById("keywordTags");
+    const toolTags = document.getElementById("toolTags");
+    const drawerSources = document.getElementById("drawerSources");
+    const bookmarkBtn = document.getElementById("bookmarkBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function getCourseById(id) {
+      return courses.find(course => course.id === id);
+    }
+
+    function clearHash() {
+      if (location.hash && location.hash.startsWith("#course-")) {
+        history.replaceState(null, "", location.pathname + location.search);
+      }
+    }
+
+    function filteredCourses() {
+      return courses.filter(course => {
+        const categoryMatch = state.category === "全部" || course.category === state.category;
+        const trackMatch = state.track === "全部" || course.track === state.track;
+        return categoryMatch && trackMatch;
+      });
+    }
+
+    function renderReports() {
+      reportStrip.innerHTML = reportWindows.map(report => `
+        <button class="report-card" data-jump="${report.jumpTo}" aria-label="${report.title}">
+          <div class="report-date">${report.date}</div>
+          <div class="report-title">${report.title}</div>
+          <div class="report-copy">${report.copy}</div>
+          <div class="report-foot">
+            <span>${report.source}</span>
+            <span class="report-link">相关课程</span>
+          </div>
+        </button>
+      `).join("");
+
+      reportStrip.querySelectorAll(".report-card").forEach(card => {
+        card.addEventListener("click", () => openCourse(card.dataset.jump));
+      });
+    }
+
+    function setActivePanel(panelId, updateHash = true) {
+      document.querySelectorAll(".content-panel").forEach(panel => {
+        panel.classList.toggle("active", panel.id === panelId);
+      });
+
+      pageNav.querySelectorAll(".page-nav-link").forEach(link => {
+        link.classList.toggle("active", link.dataset.panel === panelId);
+      });
+
+      if (updateHash && panelHashMap[panelId]) {
+        history.replaceState(null, "", `#${panelHashMap[panelId]}`);
+      }
+
+      pageNav.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function bindFoldSections() {
+      document.querySelectorAll(".fold").forEach(fold => {
+        const toggle = fold.querySelector(".fold-toggle");
+        if (!toggle) return;
+        toggle.onclick = () => {
+          fold.classList.toggle("open");
+        };
+      });
+    }
+
+    function bindCatalogGroups() {
+      courseCatalog.querySelectorAll(".catalog-group-head").forEach(head => {
+        head.addEventListener("click", () => {
+          head.closest(".catalog-group").classList.toggle("open");
+        });
+      });
+    }
+
+    function renderFeatured() {
+      const course = getCourseById(featuredId);
+      featuredCard.innerHTML = `
+        <div class="featured-kicker">Featured Lesson</div>
+        <div class="featured-title">${course.title}</div>
+        <div class="featured-copy">${course.lead}</div>
+        <div class="featured-meta">
+          <span class="meta-pill">${course.category}</span>
+          <span class="meta-pill">${course.track}</span>
+          <span class="meta-pill">${course.duration}</span>
+          <span class="meta-pill">${course.coreQuestion}</span>
+        </div>
+        <div class="featured-actions">
+          <button class="primary-btn" id="featuredOpen">开始阅读</button>
+          <button class="ghost-btn" id="featuredBookmark">${state.favorites.has(course.id) ? "已在书架" : "加入书架"}</button>
+        </div>
+      `;
+
+      document.getElementById("featuredOpen").addEventListener("click", () => openCourse(course.id));
+      document.getElementById("featuredBookmark").addEventListener("click", () => toggleFavorite(course.id));
+    }
+
+    function renderCategories() {
+      categoryTabs.innerHTML = categories.map(category => `
+        <button class="tab ${state.category === category ? "active" : ""}" data-category="${category}">${category}</button>
+      `).join("");
+
+      categoryTabs.querySelectorAll(".tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          state.category = tab.dataset.category;
+          renderCategories();
+          renderCatalog();
+        });
+      });
+    }
+
+    function renderTracks() {
+      trackChips.innerHTML = tracks.map(track => `
+        <button class="chip ${state.track === track ? "active" : ""}" data-track="${track}">${track}</button>
+      `).join("");
+
+      trackChips.querySelectorAll(".chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          state.track = chip.dataset.track;
+          renderTracks();
+          renderCatalog();
+        });
+      });
+    }
+
+    function getStateText(course) {
+      if (state.lastRead === course.id) return "继续";
+      if (state.favorites.has(course.id)) return "书架";
+      return course.status;
+    }
+
+    function renderCatalog() {
+      const list = filteredCourses();
+
+      if (!list.length) {
+        courseCatalog.innerHTML = `<div class="empty">当前筛选下暂无课程。尝试切换分类或赛道。</div>`;
+        return;
+      }
+
+      const renderRows = items => items.map(course => `
+        <article class="catalog-row" data-id="${course.id}">
+          <div class="catalog-index">${course.id}</div>
+          <div class="catalog-main">
+            <div class="catalog-kickers">
+              <span class="tiny-tag brand">${course.category}</span>
+              <span class="tiny-tag blue">${course.track}</span>
+              <span class="tiny-tag green">${course.status}</span>
+            </div>
+            <div class="catalog-title">${course.title}</div>
+            <div class="catalog-desc">${course.description}</div>
+          </div>
+          <div class="catalog-right">
+            <div class="catalog-time">${course.duration}</div>
+            <div class="catalog-state ${getStateText(course) === course.status ? "dim" : ""}">${getStateText(course)}</div>
+          </div>
+        </article>
+      `).join("");
+
+      if (state.category === "全部" && state.track === "全部") {
+        const order = ["盘面理解", "品种研究", "工具应用", "复盘训练"];
+        courseCatalog.innerHTML = order.map((category, index) => {
+          const items = list.filter(course => course.category === category);
+          if (!items.length) return "";
+          const serial = String(index + 1).padStart(2, "0");
+          return `
+            <section class="catalog-group ${index === 0 ? "open" : ""}">
+              <button class="catalog-group-head" type="button">
+                <div class="catalog-group-kicker">Chapter ${serial}</div>
+                <div class="catalog-group-title">${category}</div>
+                <div class="catalog-group-copy">${categoryInfo[category]}</div>
+              </button>
+              <div class="catalog-group-body">
+                ${renderRows(items)}
+              </div>
+            </section>
+          `;
+        }).join("");
+      } else {
+        courseCatalog.innerHTML = renderRows(list);
+      }
+
+      bindCatalogGroups();
+      courseCatalog.querySelectorAll(".catalog-row").forEach(row => {
+        row.addEventListener("click", () => openCourse(row.dataset.id));
+      });
+    }
+
+    function renderSourceLinks() {
+      sourceLinks.innerHTML = Object.values(sourceMap).map(source => `
+        <a class="source-link" href="${source.url}" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="source-name">${source.name}</div>
+            <div class="source-note">${source.note}</div>
+          </div>
+          <div class="source-action">查看</div>
+        </a>
+      `).join("");
+    }
+
+    function fillList(el, items) {
+      el.innerHTML = items.map(item => `<li>${item}</li>`).join("");
+    }
+
+    function renderSourcePills(sourceIds) {
+      drawerSources.innerHTML = sourceIds.map(id => {
+        const source = sourceMap[id];
+        return `
+          <a class="source-pill" href="${source.url}" target="_blank" rel="noopener noreferrer">
+            <span>${source.name}</span>
+          </a>
+        `;
+      }).join("");
+    }
+
+    function openCourse(id) {
+      const course = getCourseById(id);
+      if (!course) return;
+
+      state.activeId = id;
+      state.lastRead = id;
+      localStorage.setItem("academyLastRead", id);
+      history.replaceState(null, "", `#course-${id}`);
+      drawer.setAttribute("aria-hidden", "false");
+      drawer.classList.add("show");
+      drawerBackdrop.classList.add("show");
+      document.body.style.overflow = "hidden";
+
+      drawerLabel.textContent = `第 ${course.id} 讲`;
+      drawerTitle.textContent = course.title;
+      drawerMeta.innerHTML = `
+        <span class="meta-pill">${course.category}</span>
+        <span class="meta-pill">${course.track}</span>
+        <span class="meta-pill">${course.duration}</span>
+      `;
+      drawerIntro.textContent = course.lead;
+      drawerQuestion.textContent = course.coreQuestion;
+      drawerAudience.textContent = course.audience;
+
+      fillList(introList, course.intro);
+      fillList(logicList, course.logic);
+      fillList(mistakeList, course.mistakes);
+      fillList(frameworkList, course.framework);
+      fillList(summaryList, course.summary);
+
+      keywordTags.innerHTML = course.keywords.map(keyword => `<span class="soft-tag">${keyword}</span>`).join("");
+      toolTags.innerHTML = course.tools.map(tool => `<span class="tool-pill">${tool}</span>`).join("");
+      renderSourcePills(course.sources);
+      bookmarkBtn.textContent = state.favorites.has(course.id) ? "已加入书架" : "加入书架";
+      bookmarkBtn.classList.toggle("active", state.favorites.has(course.id));
+
+      const currentIndex = courses.findIndex(item => item.id === id);
+      const nextCourse = courses[(currentIndex + 1) % courses.length];
+      nextBtn.textContent = `下一节 · ${nextCourse.id}`;
+      nextBtn.onclick = () => openCourse(nextCourse.id);
+
+      updateLastRead();
+      renderCatalog();
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove("show");
+      drawerBackdrop.classList.remove("show");
+      drawer.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      clearHash();
+    }
+
+    function toggleFavorite(id) {
+      if (state.favorites.has(id)) {
+        state.favorites.delete(id);
+      } else {
+        state.favorites.add(id);
+      }
+
+      localStorage.setItem("academyFavorites", JSON.stringify([...state.favorites]));
+      renderFeatured();
+      renderCatalog();
+
+      if (state.activeId === id) {
+        bookmarkBtn.textContent = state.favorites.has(id) ? "已加入书架" : "加入书架";
+        bookmarkBtn.classList.toggle("active", state.favorites.has(id));
+      }
+    }
+
+    function updateLastRead() {
+      const course = getCourseById(state.lastRead);
+      lastReadLabel.textContent = course ? course.title : "事件驱动行情怎么分辨“预期交易”还是“现实交易”";
+    }
+
+    resumeBtn.addEventListener("click", () => openCourse(state.lastRead));
+    goCatalogBtn.addEventListener("click", () => {
+      setActivePanel("catalogPanel");
+    });
+    goFeaturedBtn.addEventListener("click", () => openCourse(featuredId));
+    drawerClose.addEventListener("click", closeDrawer);
+    drawerBackdrop.addEventListener("click", closeDrawer);
+    bookmarkBtn.addEventListener("click", () => toggleFavorite(state.activeId));
+    pageNav.querySelectorAll(".page-nav-link").forEach(link => {
+      link.addEventListener("click", () => {
+        setActivePanel(link.dataset.panel);
+      });
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeDrawer();
+    });
+
+    renderReports();
+    renderFeatured();
+    renderCategories();
+    renderTracks();
+    renderCatalog();
+    renderSourceLinks();
+    updateLastRead();
+    bindFoldSections();
+
+    const courseHashMatch = location.hash.match(/course-(\d{2})/);
+    if (courseHashMatch && getCourseById(courseHashMatch[1])) {
+      openCourse(courseHashMatch[1]);
+    } else {
+      const panelKey = location.hash.replace("#", "");
+      if (panelHashReverseMap[panelKey]) {
+        setActivePanel(panelHashReverseMap[panelKey], false);
+      }
+    }
+  </script>
+</body>
+</html>
