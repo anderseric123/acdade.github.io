@@ -4353,7 +4353,7 @@
       const history = [...state.readHistory]
         .map(id => getCourseById(id))
         .filter(Boolean)
-        .sort((a, b) => getCourseIndex(b.id) - getCourseIndex(a.id))
+        .reverse()
         .slice(0, 6);
       const list = history.length ? history : [getCurrentCourse()];
 
@@ -4519,6 +4519,9 @@
       if (!course) return;
       state.activeId = id;
       state.lastRead = id;
+      if (state.readHistory.has(id)) {
+        state.readHistory.delete(id);
+      }
       state.readHistory.add(id);
       saveProgress();
       renderAll();
