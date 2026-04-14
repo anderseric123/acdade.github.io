@@ -57,6 +57,28 @@
       overflow: hidden;
     }
 
+    .page-watermark {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      width: min(86vw, 390px);
+      max-width: 390px;
+      transform: translate(-50%, -50%);
+      opacity: 0.14;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1;
+    }
+
+    .app-header,
+    .app-main,
+    .site-footer,
+    .continue-bar,
+    .lesson-bar {
+      position: relative;
+      z-index: 2;
+    }
+
     .safe-top {
       height: env(safe-area-inset-top);
     }
@@ -76,6 +98,10 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 12px;
+    }
+
+    .brand-row > div:first-child {
+      min-width: 0;
     }
 
     .brand {
@@ -99,6 +125,15 @@
       font-size: 11px;
       line-height: 1.45;
       text-align: right;
+    }
+
+    .header-logo {
+      flex: 0 0 auto;
+      width: 92px;
+      height: auto;
+      display: block;
+      margin-top: 1px;
+      margin-left: auto;
     }
 
     .screen-tabs {
@@ -762,21 +797,6 @@
       background: var(--brand);
     }
 
-    .source-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .source-chip {
-      padding: 8px 10px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: transparent;
-      font-size: 12px;
-      line-height: 1;
-    }
-
     .site-footer {
       margin-top: 26px;
       padding: 18px 0 calc(88px + env(safe-area-inset-bottom));
@@ -856,99 +876,6 @@
       line-height: 1.65;
     }
 
-    .sheet-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(18, 20, 24, 0.16);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 180ms ease;
-      z-index: 70;
-    }
-
-    .sheet-backdrop.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .filter-sheet {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%) translateY(102%);
-      bottom: 0;
-      width: 100%;
-      max-width: 460px;
-      background: var(--surface);
-      border-top-left-radius: 18px;
-      border-top-right-radius: 18px;
-      border-top: 1px solid var(--line);
-      padding: 10px 18px calc(16px + env(safe-area-inset-bottom));
-      transition: transform 220ms ease;
-      z-index: 80;
-    }
-
-    .filter-sheet.show {
-      transform: translateX(-50%) translateY(0);
-    }
-
-    .sheet-handle {
-      width: 34px;
-      height: 3px;
-      border-radius: 999px;
-      background: rgba(35, 38, 44, 0.14);
-      margin: 2px auto 12px;
-    }
-
-    .sheet-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .sheet-title {
-      font-size: 17px;
-      font-weight: 700;
-    }
-
-    .sheet-clear {
-      border: 0;
-      background: transparent;
-      padding: 0;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .sheet-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .sheet-chip {
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .sheet-chip.active {
-      color: var(--brand-strong);
-      background: var(--brand-soft);
-      border-color: rgba(164, 96, 41, 0.14);
-    }
-
-    .sheet-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 18px;
-    }
-
     .lesson-mode .app-header,
     .lesson-mode .continue-bar {
       display: none;
@@ -982,6 +909,7 @@
 </head>
 <body>
   <div class="app">
+    <img class="page-watermark" src="金十期货水印.png" alt="" aria-hidden="true" />
     <div class="safe-top"></div>
 
     <header class="app-header">
@@ -991,6 +919,7 @@
           <div class="brand-meta" id="headerProgressText"></div>
         </div>
         <div class="header-side" id="headerSideText"></div>
+        <img class="header-logo" src="jin10_futures_logo.svg" alt="金十期货" />
       </div>
       <div class="screen-tabs" id="screenTabs">
         <button class="screen-tab active" data-screen="continueScreen">最近学习</button>
@@ -1012,7 +941,6 @@
       <section class="screen" id="catalogScreen">
         <div class="toolbar">
           <div class="category-tabs" id="categoryTabs"></div>
-          <button class="filter-link" id="trackFilterBtn">筛选</button>
         </div>
 
         <section class="chapter-list" id="courseCatalog"></section>
@@ -1020,7 +948,7 @@
 
       <section class="screen lesson-screen" id="lessonScreen">
         <div class="lesson-header">
-          <button class="back-link" id="lessonBackBtn" type="button">返回目录</button>
+          <button class="back-link" id="lessonBackBtn">返回目录</button>
           <div class="lesson-progress" id="lessonProgressText">第 00 讲</div>
         </div>
 
@@ -1059,11 +987,6 @@
           <ul class="lesson-listing" id="frameworkList"></ul>
         </section>
 
-        <section class="lesson-block">
-          <div class="lesson-block-title">参考来源</div>
-          <div class="source-row" id="lessonSources"></div>
-        </section>
-
         <section class="lesson-block next-lesson">
           <button id="nextPreviewBtn" type="button">
             <div class="next-kicker">下一讲推荐</div>
@@ -1077,16 +1000,7 @@
     <footer class="site-footer">
       <section class="footer-section">
         <h2 class="footer-title">资料来源</h2>
-        <p class="footer-copy">课程内容综合整理自交易所、官方机构、行业协会及主流大宗商品研究资料，用于帮助用户建立研究框架与盘面理解顺序。</p>
-        <div class="footer-links">
-          <a class="footer-link" href="https://www.usda.gov/oce/commodity/wasde" target="_blank" rel="noopener noreferrer">USDA WASDE</a>
-          <a class="footer-link" href="https://www.fas.usda.gov/data/export-sales-reporting-program" target="_blank" rel="noopener noreferrer">USDA Export Sales</a>
-          <a class="footer-link" href="https://bepi.mpob.gov.my/" target="_blank" rel="noopener noreferrer">MPOB</a>
-          <a class="footer-link" href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA WPSR</a>
-          <a class="footer-link" href="https://publications.opec.org/monthly-oil-market-report/" target="_blank" rel="noopener noreferrer">OPEC MOMR</a>
-          <a class="footer-link" href="https://www.cmegroup.com/education/courses/introduction-to-futures/understanding-volume-and-open-interest.html" target="_blank" rel="noopener noreferrer">CME 教育资料</a>
-          <a class="footer-link" href="https://www.lme.com/en/Trading/Reports/Warehouse-and-stocks-reports" target="_blank" rel="noopener noreferrer">LME Stocks</a>
-        </div>
+        <p class="footer-copy">课程内容由人工智能技术综合整理自交易所、官方机构、行业协会及主流大宗商品研究资料，用于帮助用户建立研究框架与盘面理解顺序，仅供参考，不构成任何投资建议。</p>
       </section>
 
       <section class="footer-section">
@@ -1107,23 +1021,11 @@
 
     <div class="lesson-bar hidden" id="lessonBar">
       <div class="bar-row">
-        <button class="secondary-btn" id="lessonCatalogBtn" type="button">返回目录</button>
+        <button class="secondary-btn" id="lessonCatalogBtn">返回目录</button>
         <button class="primary-btn" id="nextBtn">下一讲</button>
       </div>
     </div>
 
-    <div class="sheet-backdrop" id="filterBackdrop"></div>
-    <aside class="filter-sheet" id="filterSheet" aria-hidden="true">
-      <div class="sheet-handle"></div>
-      <div class="sheet-head">
-        <div class="sheet-title">赛道筛选</div>
-        <button class="sheet-clear" id="clearTrackBtn">清除筛选</button>
-      </div>
-      <div class="sheet-options" id="trackOptions"></div>
-      <div class="sheet-actions">
-        <button class="primary-btn" id="closeTrackBtn">完成</button>
-      </div>
-    </aside>
   </div>
 
   <script>
@@ -4386,11 +4288,6 @@
       catalogScreen: "catalog"
     };
     const reverseScreenHashMap = Object.fromEntries(Object.entries(screenHashMap).map(([key, value]) => [value, key]));
-    const nonLessonScreens = new Set(["continueScreen", "catalogScreen"]);
-
-    function normalizeNonLessonScreen(screen) {
-      return nonLessonScreens.has(screen) ? screen : "catalogScreen";
-    }
 
     function buildInitialReadHistory(lastRead) {
       const idx = courses.findIndex(course => course.id === lastRead);
@@ -4401,11 +4298,9 @@
     const storedLastRead = localStorage.getItem("academyLastRead") || featuredId;
     const storedReadHistory = JSON.parse(localStorage.getItem("academyReadHistory") || "null");
 
-    const savedScreen = normalizeNonLessonScreen(localStorage.getItem("academyScreen") || "continueScreen");
-
     const state = {
-      screen: savedScreen,
-      lastNonLessonScreen: savedScreen,
+      screen: localStorage.getItem("academyScreen") || "continueScreen",
+      lastNonLessonScreen: localStorage.getItem("academyScreen") || "continueScreen",
       category: "全部",
       track: "全部",
       pendingTrack: "全部",
@@ -4422,7 +4317,6 @@
     const recommendedList = document.getElementById("recommendedList");
     const openCatalogLink = document.getElementById("openCatalogLink");
     const categoryTabs = document.getElementById("categoryTabs");
-    const trackFilterBtn = document.getElementById("trackFilterBtn");
     const courseCatalog = document.getElementById("courseCatalog");
     const continueBar = document.getElementById("continueBar");
     const continueBarTitle = document.getElementById("continueBarTitle");
@@ -4430,12 +4324,6 @@
     const lessonBar = document.getElementById("lessonBar");
     const lessonCatalogBtn = document.getElementById("lessonCatalogBtn");
     const nextBtn = document.getElementById("nextBtn");
-    const filterBackdrop = document.getElementById("filterBackdrop");
-    const filterSheet = document.getElementById("filterSheet");
-    const trackOptions = document.getElementById("trackOptions");
-    const clearTrackBtn = document.getElementById("clearTrackBtn");
-    const closeTrackBtn = document.getElementById("closeTrackBtn");
-
     const lessonBackBtn = document.getElementById("lessonBackBtn");
     const lessonProgressText = document.getElementById("lessonProgressText");
     const lessonLabel = document.getElementById("lessonLabel");
@@ -4446,7 +4334,6 @@
     const signalList = document.getElementById("signalList");
     const mistakeList = document.getElementById("mistakeList");
     const frameworkList = document.getElementById("frameworkList");
-    const lessonSources = document.getElementById("lessonSources");
     const nextPreviewBtn = document.getElementById("nextPreviewBtn");
     const nextLessonTitle = document.getElementById("nextLessonTitle");
     const nextLessonCopy = document.getElementById("nextLessonCopy");
@@ -4498,7 +4385,7 @@
       localStorage.setItem("academyLastRead", state.lastRead);
       localStorage.setItem("academyReadHistory", JSON.stringify([...state.readHistory]));
       localStorage.setItem("academyFavorites", JSON.stringify([...state.favorites]));
-      localStorage.setItem("academyScreen", normalizeNonLessonScreen(state.lastNonLessonScreen));
+      localStorage.setItem("academyScreen", state.lastNonLessonScreen);
     }
 
     function splitAsteriskContent(value) {
@@ -4568,7 +4455,7 @@
     function setScreen(screen, updateHash = true) {
       state.screen = screen;
       if (screen !== "lessonScreen") {
-        state.lastNonLessonScreen = normalizeNonLessonScreen(screen);
+        state.lastNonLessonScreen = screen;
       }
 
       document.querySelectorAll(".screen").forEach(node => {
@@ -4708,37 +4595,6 @@
       bindCourseRows();
     }
 
-    function renderTrackDrawer() {
-      trackOptions.innerHTML = tracks.map(track => `
-        <button class="sheet-chip ${state.pendingTrack === track ? "active" : ""}" data-track-option="${track}" type="button">${track}</button>
-      `).join("");
-
-      trackOptions.querySelectorAll("[data-track-option]").forEach(button => {
-        button.addEventListener("click", () => {
-          state.pendingTrack = button.dataset.trackOption;
-          renderTrackDrawer();
-        });
-      });
-    }
-
-    function openTrackDrawer() {
-      state.pendingTrack = state.track;
-      renderTrackDrawer();
-      filterBackdrop.classList.add("show");
-      filterSheet.classList.add("show");
-      filterSheet.setAttribute("aria-hidden", "false");
-    }
-
-    function closeTrackDrawer(applySelection = false) {
-      if (applySelection) {
-        state.track = state.pendingTrack;
-        renderCatalogScreen();
-      }
-      filterBackdrop.classList.remove("show");
-      filterSheet.classList.remove("show");
-      filterSheet.setAttribute("aria-hidden", "true");
-    }
-
     function renderLessonScreen() {
       const course = getCourseById(state.activeId) || getCurrentCourse();
       const currentIndex = getCourseIndex(course.id) + 1;
@@ -4756,11 +4612,6 @@
       fillList(signalList, article && article.signals && article.signals.length ? article.signals : course.signals);
       fillList(mistakeList, article && article.mistakes && article.mistakes.length ? article.mistakes : course.mistakes);
       fillList(frameworkList, article && article.framework && article.framework.length ? article.framework : course.framework);
-      lessonSources.innerHTML = course.sources.map(sourceId => {
-        const source = sourceMap[sourceId];
-        return `<a class="source-chip" href="${source.url}" target="_blank" rel="noopener noreferrer">${source.name}</a>`;
-      }).join("");
-
       nextLessonTitle.textContent = nextCourse.title;
       nextLessonCopy.textContent = nextCourse.coreQuestion;
       nextPreviewBtn.onclick = () => openCourse(nextCourse.id);
@@ -4782,15 +4633,9 @@
       setScreen("lessonScreen");
     }
 
-    function goToCatalog() {
-      state.category = "全部";
-      state.track = "全部";
-      renderAll();
-      setScreen("catalogScreen");
-    }
-
     function closeLesson() {
-      goToCatalog();
+      renderAll();
+      setScreen(state.lastNonLessonScreen || "catalogScreen");
     }
 
     function renderAll() {
@@ -4808,32 +4653,24 @@
       });
     });
 
-    openCatalogLink.addEventListener("click", goToCatalog);
+    openCatalogLink.addEventListener("click", () => {
+      renderAll();
+      setScreen("catalogScreen");
+    });
 
     resumeBtn.addEventListener("click", () => openCourse(state.lastRead));
-    lessonBackBtn.addEventListener("click", goToCatalog);
-    lessonCatalogBtn.addEventListener("click", goToCatalog);
-
-    trackFilterBtn.addEventListener("click", openTrackDrawer);
-    filterBackdrop.addEventListener("click", () => closeTrackDrawer(false));
-    clearTrackBtn.addEventListener("click", () => {
-      state.pendingTrack = "全部";
-      renderTrackDrawer();
-    });
-    closeTrackBtn.addEventListener("click", () => closeTrackDrawer(true));
+    lessonBackBtn.addEventListener("click", closeLesson);
+    lessonCatalogBtn.addEventListener("click", closeLesson);
 
     document.addEventListener("keydown", event => {
       if (event.key === "Escape") {
-        if (filterSheet.classList.contains("show")) {
-          closeTrackDrawer(false);
-        } else if (state.screen === "lessonScreen") {
+        if (state.screen === "lessonScreen") {
           closeLesson();
         }
       }
     });
 
     renderAll();
-    renderTrackDrawer();
 
     const courseHashMatch = location.hash.match(/course-(\d{2})/);
     if (courseHashMatch && getCourseById(courseHashMatch[1])) {
