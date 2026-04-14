@@ -923,13 +923,13 @@
         <img class="header-logo" src="jin10_futures_logo.svg" alt="金十期货" />
       </div>
       <div class="screen-tabs" id="screenTabs">
-        <button class="screen-tab active" data-screen="continueScreen">最近学习</button>
-        <button class="screen-tab" data-screen="catalogScreen">课程目录</button>
+        <button class="screen-tab" data-screen="continueScreen">最近学习</button>
+        <button class="screen-tab active" data-screen="catalogScreen">课程目录</button>
       </div>
     </header>
 
     <main class="app-main">
-      <section class="screen active" id="continueScreen">
+      <section class="screen" id="continueScreen">
         <section class="section-block">
           <div class="block-head">
             <div class="block-title">最近学习</div>
@@ -939,7 +939,7 @@
         </section>
       </section>
 
-      <section class="screen" id="catalogScreen">
+      <section class="screen active" id="catalogScreen">
         <div class="toolbar">
           <div class="category-tabs" id="categoryTabs"></div>
         </div>
@@ -1016,7 +1016,7 @@
           <div class="bar-kicker">最近学习</div>
           <div class="bar-title" id="continueBarTitle"></div>
         </div>
-        <button class="primary-btn" id="resumeBtn">打开课程</button>
+        <button class="primary-btn" id="resumeBtn">打开</button>
       </div>
     </div>
 
@@ -4300,8 +4300,8 @@
     const storedReadHistory = JSON.parse(localStorage.getItem("academyReadHistory") || "null");
 
     const state = {
-      screen: localStorage.getItem("academyScreen") || "continueScreen",
-      lastNonLessonScreen: localStorage.getItem("academyScreen") || "continueScreen",
+      screen: "catalogScreen",
+      lastNonLessonScreen: "catalogScreen",
       category: "全部",
       track: "全部",
       pendingTrack: "全部",
