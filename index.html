@@ -1,4690 +1,752 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>金十期货学堂</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f6f7" />
+  <title>盘中异动·1分钟看懂</title>
   <style>
     :root {
-      --bg: #f7f4ed;
-      --surface: #fbf8f2;
-      --surface-2: #f1ece3;
-      --ink: #23262c;
-      --muted: #707168;
-      --muted-2: #9c988d;
-      --line: rgba(35, 38, 44, 0.1);
-      --brand: #a46029;
-      --brand-soft: rgba(164, 96, 41, 0.08);
-      --brand-strong: #8a4f1f;
-      --blue: #566884;
-      --green: #5e7961;
-      --danger: #a14d41;
+      --bg: #f8f9fa;
+      --card: #ffffff;
+      --text-main: #18202c;
+      --text-muted: #5d6574;
+      --text-light: #8a93a1;
+      --accent: #ff2442;
+      --shadow-sm: 0 2px 8px rgba(20, 27, 38, 0.04);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
       min-height: 100%;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'Source Han Sans', 'Noto Sans CJK SC', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: "Source Han Sans", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
-    body {
-      display: flex;
-      justify-content: center;
+    .app {
+      width: min(100%, 480px);
+      margin: 0 auto;
+      padding-bottom: calc(120px + env(safe-area-inset-bottom));
     }
 
-    button {
-      font: inherit;
+    /* === 吸顶头部与日历 === */
+    .header-container {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(248, 249, 250, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: calc(12px + env(safe-area-inset-top)) 14px 12px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .header__title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      padding: 0 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .calendar {
+      border-radius: var(--radius-lg);
+      background: var(--card);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .calendar__toggle {
+      width: 100%;
+      appearance: none;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
       cursor: pointer;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 460px;
-      min-height: 100vh;
-      background: var(--bg);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .page-watermark {
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      width: min(86vw, 390px);
-      max-width: 390px;
-      transform: translate(-50%, -50%);
-      opacity: 0.14;
-      pointer-events: none;
-      user-select: none;
-      z-index: 1;
-    }
-
-    .app-header,
-    .app-main,
-    .site-footer,
-    .continue-bar,
-    .lesson-bar {
-      position: relative;
-      z-index: 2;
-    }
-
-    .safe-top {
-      height: env(safe-area-inset-top);
-    }
-
-    .app-header {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      padding: 12px 18px 10px;
-      background: rgba(247, 244, 237, 0.97);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .brand-row {
+    .calendar__toggle-left {
       display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .calendar__icon { font-size: 18px; }
+
+    .calendar__summary {
+      display: flex;
+      flex-direction: column;
       align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
+      gap: 2px;
     }
 
-    .brand-row > div:first-child {
-      min-width: 0;
-    }
-
-    .brand {
-      font-family: 'Source Han Sans', 'Noto Sans CJK SC', sans-serif;
-      font-size: 24px;
-      line-height: 1.1;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-    }
-
-    .brand-meta {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .header-side {
-      flex: 0 0 auto;
-      color: var(--muted-2);
+    .calendar__summary-title {
       font-size: 11px;
-      line-height: 1.45;
-      text-align: right;
+      font-weight: 600;
+      color: var(--text-light);
     }
 
-    .header-logo {
-      flex: 0 0 auto;
-      width: 92px;
-      height: auto;
-      display: block;
-      margin-top: 1px;
-      margin-left: auto;
+    .calendar__summary-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
     }
 
-    .screen-tabs {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-top: 12px;
-      scrollbar-width: none;
-    }
-
-    .screen-tabs::-webkit-scrollbar { display: none; }
-
-    .screen-tab {
-      border: 1px solid transparent;
-      border-radius: 999px;
-      background: transparent;
-      color: var(--muted);
-      padding: 7px 12px;
+    .calendar__toggle-arrow {
+      color: var(--text-light);
       font-size: 12px;
-      font-weight: 700;
-      white-space: nowrap;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .screen-tab.active {
-      color: var(--brand-strong);
-      background: var(--brand-soft);
-      border-color: rgba(164, 96, 41, 0.12);
-    }
+    .calendar.is-open .calendar__toggle-arrow { transform: rotate(180deg); }
 
-    .app-main {
-      padding: 0 18px calc(86px + env(safe-area-inset-bottom));
-    }
-
-    .screen {
+    .calendar__panel {
       display: none;
-      padding: 16px 0 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      padding: 16px;
     }
+    .calendar.is-open .calendar__panel { display: block; }
 
-    .screen.active {
-      display: block;
-    }
-
-    .section-block + .section-block {
-      margin-top: 26px;
-    }
-
-    .block-head {
+    .calendar__head {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
-    .block-title {
-      font-family: 'Source Han Sans', 'Noto Sans CJK SC', sans-serif;
-      font-size: 22px;
-      line-height: 1.3;
-      font-weight: 700;
+    .calendar__month-value { font-size: 16px; font-weight: 800; }
+
+    .calendar__nav-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: #f0f2f5;
+      color: var(--text-main);
+      font-size: 16px;
+      cursor: pointer;
     }
 
-    .block-sub {
-      color: var(--muted);
+    .calendar__weekdays, .calendar__grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+
+    .calendar__weekday {
       font-size: 12px;
-      line-height: 1.5;
-      text-align: right;
-    }
-
-    .study-overview {
-      padding-top: 2px;
-    }
-
-    .study-kicker {
-      color: var(--brand);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .study-title {
-      margin-top: 8px;
-      font-family: 'Source Han Sans', 'Noto Sans CJK SC', sans-serif;
-      font-size: 30px;
-      line-height: 1.22;
-      font-weight: 700;
-    }
-
-    .row-top {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
+      color: var(--text-light);
       margin-bottom: 8px;
     }
 
-    .row-kicker {
-      color: var(--brand);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .row-state {
-      color: var(--muted-2);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .inline-pill {
-      white-space: nowrap;
-    }
-
-    .inline-pill::after {
-      content: "·";
-      margin-left: 8px;
-      color: var(--muted-2);
-    }
-
-    .inline-pill:last-child::after {
-      display: none;
-    }
-
-    .lesson-list {
-      border-top: 1px solid var(--line);
-    }
-
-    .lesson-row {
-      width: 100%;
-      padding: 14px 0;
-      border: 0;
-      border-bottom: 1px solid var(--line);
+    .calendar__cell {
+      appearance: none;
+      border: none;
       background: transparent;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      text-align: left;
-    }
-
-    .lesson-row.current {
-      background: linear-gradient(90deg, rgba(164, 96, 41, 0.06), rgba(164, 96, 41, 0));
-    }
-
-    .lesson-no {
-      width: 30px;
-      color: var(--muted-2);
-      font-size: 11px;
-      font-weight: 700;
-      padding-top: 2px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .lesson-main {
-      min-width: 0;
-      flex: 1;
-    }
-
-    .lesson-meta-line {
-      color: var(--muted-2);
-      font-size: 11px;
-      line-height: 1.5;
-    }
-
-    .lesson-title-line {
-      margin-top: 4px;
-      font-size: 16px;
-      line-height: 1.55;
-      font-weight: 700;
-    }
-
-    .lesson-desc-line {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.65;
-    }
-
-    .lesson-side {
-      color: var(--brand);
-      font-size: 12px;
-      font-weight: 700;
-      white-space: nowrap;
-      padding-top: 2px;
-    }
-
-    .catalog-head {
-      padding-top: 2px;
-    }
-
-    .catalog-title {
-      font-family: 'Source Han Sans', 'Noto Sans CJK SC', sans-serif;
-      font-size: 28px;
-      line-height: 1.24;
-      font-weight: 700;
-    }
-
-    .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 14px;
-      padding-bottom: 8px;
-    }
-
-    .category-tabs {
-      display: flex;
-      gap: 14px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    .category-tabs::-webkit-scrollbar { display: none; }
-
-    .category-tab {
-      padding: 0 0 8px;
-      border: 0;
-      background: transparent;
-      color: var(--muted-2);
-      font-size: 13px;
-      font-weight: 700;
-      white-space: nowrap;
+      padding: 8px 0;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
       position: relative;
     }
 
-    .category-tab.active {
-      color: var(--ink);
-    }
-
-    .category-tab.active::after {
+    .calendar__cell.is-outside { color: #c4c9d1; }
+    .calendar__cell.is-active { background: var(--text-main); color: #fff; }
+    .calendar__cell.is-today::after {
       content: "";
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 1.5px;
-      background: var(--brand);
-    }
-
-    .filter-link,
-    .text-link {
-      border: 0;
-      background: transparent;
-      color: var(--brand);
-      padding: 0;
-      font-size: 12px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .chapter-list {
-      margin-top: 6px;
-      border-top: 1px solid var(--line);
-    }
-
-    .chapter-group {
-      border-bottom: 1px solid var(--line);
-    }
-
-    .chapter-head {
-      width: 100%;
-      padding: 18px 0;
-      border: 0;
-      background: transparent;
-      text-align: left;
-      color: inherit;
-      display: grid;
-      grid-template-columns: 112px 1fr;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .chapter-kicker {
-      color: var(--brand);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .chapter-thumb {
-      width: 112px;
-      height: 74px;
-      border-radius: 12px;
-      overflow: hidden;
-      background: var(--surface-2);
-      border: 1px solid rgba(35, 38, 44, 0.06);
-    }
-
-    .chapter-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .chapter-meta {
-      min-width: 0;
-      position: relative;
-      padding-right: 24px;
-    }
-
-    .chapter-meta::after {
-      content: "展开";
-      position: absolute;
-      right: 0;
-      top: 0;
-      color: var(--muted-2);
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .chapter-group.open .chapter-meta::after {
-      content: "收起";
-    }
-
-    .chapter-title {
-      margin-top: 6px;
-      font-family: 'Source Han Sans', 'Noto Sans CJK SC', sans-serif;
-      font-size: 20px;
-      line-height: 1.35;
-      font-weight: 700;
-    }
-
-    .chapter-copy {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .chapter-body {
-      display: none;
-    }
-
-    .chapter-group.open .chapter-body {
-      display: block;
-    }
-
-    .fold-group {
-      border-top: 1px solid var(--line);
-    }
-
-    .fold {
-      border-bottom: 1px solid var(--line);
-    }
-
-    .fold-toggle {
-      width: 100%;
-      padding: 16px 0;
-      border: 0;
-      background: transparent;
-      text-align: left;
-      color: inherit;
-      position: relative;
-    }
-
-    .fold-toggle::after {
-      content: "展开";
-      position: absolute;
-      right: 0;
-      top: 16px;
-      color: var(--muted-2);
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .fold.open .fold-toggle::after {
-      content: "收起";
-    }
-
-    .fold-body {
-      display: none;
-      padding-bottom: 14px;
-    }
-
-    .fold.open .fold-body {
-      display: block;
-    }
-
-    .research-title {
-      font-size: 15px;
-      line-height: 1.4;
-      font-weight: 700;
-    }
-
-    .research-copy,
-    .disclaimer {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.75;
-    }
-
-    .research-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .research-name {
-      font-size: 14px;
-      line-height: 1.45;
-      font-weight: 700;
-    }
-
-    .research-note {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .research-action {
-      flex: 0 0 auto;
-      color: var(--brand);
-      font-size: 12px;
-      font-weight: 700;
-      padding-top: 1px;
-    }
-
-    .continue-bar,
-    .lesson-bar {
-      position: fixed;
+      bottom: 2px;
       left: 50%;
       transform: translateX(-50%);
-      bottom: 0;
-      width: 100%;
-      max-width: 460px;
-      background: rgba(251, 248, 242, 0.98);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid var(--line);
-      padding: 10px 18px calc(10px + env(safe-area-inset-bottom));
-      z-index: 45;
-    }
-
-    .continue-bar.hidden,
-    .lesson-bar.hidden {
-      display: none;
-    }
-
-    .bar-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .bar-copy {
-      min-width: 0;
-    }
-
-    .bar-kicker {
-      color: var(--muted-2);
-      font-size: 11px;
-      line-height: 1.4;
-    }
-
-    .bar-title {
-      margin-top: 4px;
-      font-size: 14px;
-      line-height: 1.45;
-      font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .primary-btn,
-    .secondary-btn {
-      height: 42px;
-      border-radius: 999px;
-      padding: 0 18px;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .primary-btn {
-      border: 1px solid var(--brand);
-      background: var(--brand);
-      color: #fffaf4;
-    }
-
-    .secondary-btn {
-      border: 1px solid var(--line);
-      background: transparent;
-      color: var(--ink);
-    }
-
-    .lesson-bar .secondary-btn {
-      padding: 0 14px;
-    }
-
-    .lesson-screen {
-      padding-top: 8px;
-    }
-
-    .lesson-header {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 8px 0 12px;
-      background: rgba(247, 244, 237, 0.98);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .back-link {
-      border: 0;
-      background: transparent;
-      color: var(--ink);
-      padding: 0;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .lesson-progress {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-      text-align: right;
-    }
-
-    .lesson-hero {
-      padding: 18px 0 14px;
-    }
-
-    .lesson-label {
-      color: var(--brand);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .lesson-title {
-      margin: 8px 0 0;
-      font-family: 'Source Han Sans', 'Noto Sans CJK SC', sans-serif;
-      font-size: 30px;
-      line-height: 1.34;
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    .keyline-list {
-      margin-top: 16px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .keyline-item {
-      padding: 12px 0;
-    }
-
-    .keyline-item + .keyline-item {
-      border-top: 1px solid var(--line);
-    }
-
-    .keyline-k {
-      color: var(--muted-2);
-      font-size: 11px;
-      line-height: 1.4;
-    }
-
-    .keyline-v {
-      margin-top: 6px;
-      font-size: 15px;
-      line-height: 1.75;
-      font-weight: 700;
-    }
-
-    .lesson-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .lesson-block + .lesson-block {
-      margin-top: 22px;
-    }
-
-    .lesson-article {
-      margin-top: 4px;
-    }
-
-    .article-kicker {
-      color: var(--brand);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .article-intro {
-      margin-top: 8px;
-      font-size: 17px;
-      line-height: 1.9;
-      color: var(--ink);
-    }
-
-    .article-section + .article-section {
-      margin-top: 24px;
-    }
-
-    .article-subhead {
-      margin: 0 0 10px;
-      font-family: 'Source Han Sans', 'Noto Sans CJK SC', sans-serif;
-      font-size: 20px;
-      line-height: 1.4;
-      font-weight: 700;
-    }
-
-    .article-paragraph {
-      margin: 0;
-      font-size: 16px;
-      line-height: 1.95;
-      color: var(--ink);
-    }
-
-    .article-paragraph + .article-paragraph {
-      margin-top: 12px;
-    }
-
-    .lesson-block-title {
-      font-family: 'Source Han Sans', 'Noto Sans CJK SC', sans-serif;
-      font-size: 18px;
-      line-height: 1.35;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .lesson-listing {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      border-top: 1px solid var(--line);
-    }
-
-    .lesson-listing li {
-      padding: 12px 0 12px 14px;
-      border-bottom: 1px solid var(--line);
-      position: relative;
-      font-size: 15px;
-      line-height: 1.85;
-    }
-
-    .lesson-listing li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 22px;
-      width: 5px;
-      height: 5px;
+      width: 4px;
+      height: 4px;
       border-radius: 50%;
-      background: var(--brand);
+      background: var(--accent);
     }
 
-    .site-footer {
-      margin: 22px 8px 0;
-      padding: 14px 0 calc(72px + env(safe-area-inset-bottom));
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-    }
+    /* === 瀑布流内容区 === */
+    .feed-container { padding: 16px 14px; }
+    .date-section { margin-bottom: 32px; scroll-margin-top: 120px; }
 
-    .footer-section + .footer-section {
-      margin-top: 12px;
-    }
-
-    .footer-title {
-      margin: 0 0 5px;
-      font-family: 'Source Han Sans', 'Noto Sans CJK SC', sans-serif;
-      font-size: 13px;
-      line-height: 1.4;
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    .footer-copy {
-      margin: 0;
-      font-size: 11px;
-      line-height: 1.7;
-    }
-
-    .footer-links {
+    .date-header {
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
       gap: 8px;
-      margin-top: 10px;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      padding-left: 4px;
     }
 
-    .footer-link {
-      color: var(--muted);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(35, 38, 44, 0.18);
-      padding-bottom: 1px;
-      font-size: 12px;
-      line-height: 1.5;
+    .date-header::before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 14px;
+      background: var(--accent);
+      border-radius: 2px;
     }
 
-    .next-lesson {
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      padding: 14px 0;
+    .waterfall {
+      column-count: 2;
+      column-gap: 10px;
     }
 
-    .next-lesson button {
+    .xhs-card {
+      break-inside: avoid;
+      background: var(--card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,0.03);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .xhs-card:active { transform: scale(0.98); }
+
+    /* 优化：固定 1:1 比例，并让图片顶部对齐以裁剪底部二维码 */
+    .xhs-card__image {
       width: 100%;
-      border: 0;
-      background: transparent;
-      padding: 0;
-      text-align: left;
-      color: inherit;
+      aspect-ratio: 1 / 1;
+      display: block;
+      background: #f0f2f5;
+      object-fit: cover;
+      object-position: top; /* 关键修改：图片靠顶部对齐，超出部分从底部裁切 */
     }
 
-    .next-kicker {
-      color: var(--brand);
+    .xhs-card__body { padding: 10px 10px 14px; }
+
+    .xhs-card__title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.4;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .xhs-card__desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    /* === 大图查看器 (Modal) === */
+    .image-viewer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 14, 20, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .image-viewer.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .viewer-close {
+      position: absolute;
+      top: calc(16px + env(safe-area-inset-top));
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 300;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .image-viewer__img-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .image-viewer__img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      transform: scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .image-viewer.is-active .image-viewer__img {
+      transform: scale(1);
+    }
+
+    .disclaimer {
+      margin: 0 14px 6px;
+      padding: 0 4px 4px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      color: var(--text-light);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .disclaimer__title {
+      display: block;
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      color: var(--text-main);
+      margin-bottom: 2px;
     }
 
-    .next-title {
-      margin-top: 6px;
-      font-size: 18px;
-      line-height: 1.55;
+    .fixed-actions {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: 0 -5px 20px -5px rgba(0, 0, 0, 0.1);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .fixed-actions__inner {
+      width: min(100%, 480px);
+      margin: 0 auto;
+      padding: 12px 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .action-btn {
+      flex: 1;
+      min-height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      font-family: inherit;
+      font-size: 14px;
       font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
+      text-decoration: none;
+      line-height: 1;
+      user-select: none;
     }
 
-    .next-copy {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.65;
+    .action-btn:active {
+      transform: scale(0.97);
+      opacity: 0.92;
     }
 
-    .lesson-mode .app-header,
-    .lesson-mode .continue-bar {
+    .action-btn--share {
       display: none;
+      color: #f5d77a;
+      background: linear-gradient(135deg, #0f172a, #111827);
+      border: 1px solid rgba(245, 215, 122, 0.4);
     }
 
-    .lesson-mode .lesson-bar {
-      display: block;
+    .action-btn--share.is-app {
+      display: flex;
     }
 
-    .lesson-bar.hidden {
-      display: none;
+    .action-btn--download {
+      color: #19202b;
+      background: linear-gradient(90deg, #f8d46a 0%, #f2c94c 45%, #f8d46a 100%);
+      box-shadow: 0 8px 18px rgba(242, 201, 76, 0.22);
     }
 
-    @media (max-width: 380px) {
-      .study-title,
-      .lesson-title {
-        font-size: 26px;
-      }
+    .action-btn__text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
 
-      .lesson-row,
-      .chapter-head {
-        grid-template-columns: 1fr;
-      }
+    .action-btn__subtext {
+      font-size: 10px;
+      font-weight: 500;
+      opacity: 0.78;
+      transform: scale(0.92);
+    }
 
-      .chapter-thumb {
-        width: 100%;
-        height: 150px;
-      }
+    .action-btn__icon {
+      width: 16px;
+      height: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <img class="page-watermark" src="金十期货水印.png" alt="" aria-hidden="true" />
-    <div class="safe-top"></div>
+  <main class="app">
+    <header class="header-container">
+      <div class="header__title">盘中异动·1分钟看懂</div>
+      <div class="calendar" id="calendarRoot">
+        <button class="calendar__toggle" type="button" id="calendarToggle">
+          <div class="calendar__toggle-left">
+            <div class="calendar__icon">📅</div>
+            <div class="calendar__summary">
+              <div class="calendar__summary-title">定位到日期</div>
+              <div class="calendar__summary-value" id="calendarSummary">2026年04月15日</div>
+            </div>
+          </div>
+          <div class="calendar__toggle-arrow">▼</div>
+        </button>
 
-    <header class="app-header">
-      <div class="brand-row">
-        <div>
-          <div class="brand">金十期货学堂</div>
-          <div class="brand-meta" id="headerProgressText"></div>
+        <div class="calendar__panel" id="calendarPanel">
+          <div class="calendar__head">
+            <div class="calendar__month-value" id="calendarMonth">2026年4月</div>
+            <div class="calendar__nav">
+              <button class="calendar__nav-btn" type="button" id="prevMonth">‹</button>
+              <button class="calendar__nav-btn" type="button" id="nextMonth">›</button>
+            </div>
+          </div>
+          <div class="calendar__weekdays" id="calendarWeekdays"></div>
+          <div class="calendar__grid" id="calendarGrid"></div>
         </div>
-        <div class="header-side" id="headerSideText"></div>
-        <img class="header-logo" src="容器%20%281%29.svg" alt="金十期货" />
-      </div>
-      <div class="screen-tabs" id="screenTabs">
-        <button class="screen-tab" data-screen="continueScreen">最近学习</button>
-        <button class="screen-tab active" data-screen="catalogScreen">课程目录</button>
       </div>
     </header>
 
-    <main class="app-main">
-      <section class="screen" id="continueScreen">
-        <section class="section-block">
-          <div class="block-head">
-            <div class="block-title">最近学习</div>
-            <button class="text-link" id="openCatalogLink">查看目录</button>
-          </div>
-          <div class="lesson-list" id="recommendedList"></div>
-        </section>
-      </section>
+    <section class="feed-container" id="feedContainer"></section>
+    <section class="disclaimer" aria-label="免责声明">
+      <span class="disclaimer__title">免责声明</span>
+      本页面内容仅供参考，不构成投资建议或交易依据。部分内容由人工智能技术辅助生成，可能存在识别、理解或表达偏差，请结合原始信息与专业判断使用。
+    </section>
+  </main>
 
-      <section class="screen active" id="catalogScreen">
-        <div class="toolbar">
-          <div class="category-tabs" id="categoryTabs"></div>
-        </div>
-
-        <section class="chapter-list" id="courseCatalog"></section>
-      </section>
-
-      <section class="screen lesson-screen" id="lessonScreen">
-        <div class="lesson-header">
-          <button class="back-link" id="lessonBackBtn">返回目录</button>
-          <div class="lesson-progress" id="lessonProgressText">第 00 讲</div>
-        </div>
-
-        <section class="lesson-hero">
-          <div class="lesson-label" id="lessonLabel">第 01 讲 · 通用方法</div>
-          <h1 class="lesson-title" id="lessonTitle"></h1>
-          <div class="keyline-list">
-            <div class="keyline-item">
-              <div class="keyline-k">这节课解决什么问题</div>
-              <div class="keyline-v" id="lessonQuestion"></div>
-            </div>
-            <div class="keyline-item">
-              <div class="keyline-k">适合人群</div>
-              <div class="keyline-v" id="lessonAudience"></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="lesson-block">
-          <div class="article-kicker">课程正文</div>
-          <div class="lesson-article" id="lessonArticle"></div>
-        </section>
-
-        <section class="lesson-block">
-          <div class="lesson-block-title">盘面确认信号</div>
-          <ul class="lesson-listing" id="signalList"></ul>
-        </section>
-
-        <section class="lesson-block">
-          <div class="lesson-block-title">常见误读</div>
-          <ul class="lesson-listing" id="mistakeList"></ul>
-        </section>
-
-        <section class="lesson-block">
-          <div class="lesson-block-title">观察框架</div>
-          <ul class="lesson-listing" id="frameworkList"></ul>
-        </section>
-
-        <section class="lesson-block next-lesson">
-          <button id="nextPreviewBtn" type="button">
-            <div class="next-kicker">下一讲推荐</div>
-            <div class="next-title" id="nextLessonTitle"></div>
-            <div class="next-copy" id="nextLessonCopy"></div>
-          </button>
-        </section>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <section class="footer-section">
-        <h2 class="footer-title">资料来源</h2>
-        <p class="footer-copy">课程内容由人工智能技术综合整理自交易所、官方机构、行业协会及主流大宗商品研究资料，用于帮助用户建立研究框架与盘面理解顺序，仅供参考，不构成任何投资建议。</p>
-      </section>
-
-      <section class="footer-section">
-        <h2 class="footer-title">免责声明</h2>
-        <p class="footer-copy">金十期货学堂中的课程内容、案例拆解、图表与资料链接，仅用于研究学习与市场理解，不构成任何投资建议、交易建议或收益承诺。期货及衍生品交易存在较高风险，用户应结合自身经验、风险承受能力与合规要求，独立完成判断与决策。</p>
-      </section>
-    </footer>
-
-    <div class="continue-bar" id="continueBar">
-      <div class="bar-row">
-        <div class="bar-copy">
-          <div class="bar-kicker">最近学习</div>
-          <div class="bar-title" id="continueBarTitle"></div>
-        </div>
-        <button class="primary-btn" id="resumeBtn">打开</button>
-      </div>
+  <div class="fixed-actions">
+    <div class="fixed-actions__inner">
+      <button class="action-btn action-btn--share" id="sharePageBtn" type="button">
+        <span class="action-btn__icon" aria-hidden="true">↗</span>
+        <span>分享专题</span>
+      </button>
+      <a class="action-btn action-btn--download" id="download-btn" href="https://qihuo.jin10.com/app/index.html" target="_blank" rel="noreferrer">
+        <span class="action-btn__text">
+          <span>下载金十期货APP</span>
+          <span class="action-btn__subtext">全品种异动实时提醒</span>
+        </span>
+      </a>
     </div>
+  </div>
 
-    <div class="lesson-bar hidden" id="lessonBar">
-      <div class="bar-row">
-        <button class="secondary-btn" id="lessonCatalogBtn">返回目录</button>
-        <button class="primary-btn" id="nextBtn">下一讲</button>
-      </div>
+  <div class="image-viewer" id="imageViewer">
+    <div class="viewer-close" id="viewerClose">×</div>
+    <div class="image-viewer__img-container" id="viewerImgContainer">
+      <img class="image-viewer__img" id="viewerImg" src="" alt="大图预览">
     </div>
-
   </div>
 
   <script>
-    const sourceMap = {
-      usdaWasde: {
-        name: "USDA｜WASDE 历史与发布页面",
-        url: "https://www.usda.gov/oce/commodity/wasde",
-        note: "用于校准豆系、油脂油料与报告窗口课程中的月度供需估计框架。"
-      },
-      usdaCrop: {
-        name: "USDA｜Crop Progress",
-        url: "https://usda.library.cornell.edu/concern/publications/8336h188j",
-        note: "用于解释农产品阶段性预热、天气与生长进度如何进入预期交易。"
-      },
-      usdaExport: {
-        name: "USDA FAS｜Export Sales Reporting Program",
-        url: "https://www.fas.usda.gov/data/export-sales-reporting-program",
-        note: "用于豆粕、豆系外需与出口销售观察框架。"
-      },
-      usdaOilseeds: {
-        name: "USDA FAS｜Oilseeds: World Markets and Trade",
-        url: "https://www.fas.usda.gov/data/oilseeds-world-markets-and-trade",
-        note: "用于豆系全球供需、南美与美豆传导线索。"
-      },
-      mpob: {
-        name: "MPOB｜Monthly Palm Oil Statistics",
-        url: "https://bepi.mpob.gov.my/",
-        note: "用于棕榈油产量、出口、库存与月度报告窗口。"
-      },
-      eiaWpsr: {
-        name: "EIA｜Weekly Petroleum Status Report",
-        url: "https://www.eia.gov/petroleum/supply/weekly/",
-        note: "用于原油库存、成品油与短周期兑现观察。"
-      },
-      eiaSteo: {
-        name: "EIA｜Short-Term Energy Outlook",
-        url: "https://www.eia.gov/outlooks/steo/",
-        note: "用于原油需求预期、供应展望与中短期节奏框架。"
-      },
-      opec: {
-        name: "OPEC｜Monthly Oil Market Report",
-        url: "https://publications.opec.org/monthly-oil-market-report/",
-        note: "用于原油课程中 OPEC+ 预期、供给假设与节奏切换。"
-      },
-      lmeStocks: {
-        name: "LME｜Warehouse Stock Data",
-        url: "https://www.lme.com/en/Trading/Reports/Warehouse-and-stocks-reports",
-        note: "用于铜库存、交仓结构与有色库存观察。"
-      },
-      cmeCurve: {
-        name: "CME Group｜Contango and Backwardation",
-        url: "https://www.cmegroup.com/education/courses/introduction-to-ferrous-metals/what-is-contango-and-backwardation.html",
-        note: "用于期限结构、库存紧张度与月差课程。"
-      },
-      cmeOi: {
-        name: "CME Group｜Volume and Open Interest",
-        url: "https://www.cmegroup.com/education/courses/introduction-to-futures/understanding-volume-and-open-interest.html",
-        note: "用于成交量、持仓变化与事件兑现型行情课程。"
-      },
-      worldsteel: {
-        name: "worldsteel｜Short Range Outlook",
-        url: "https://worldsteel.org/media-centre/press-releases/2025/short-range-outlook-october-2025/",
-        note: "用于黑色链课程中下游需求与行业景气框架。"
-      }
+    const WEEKDAY_LABELS = ['日', '一', '二', '三', '四', '五', '六'];
+    const currentYear = 2026;
+    const currentMonthIndex = 3; 
+    const todayKey = '2026-04-15';
+
+    const cardStore = {
+      '2026-04-15': [
+        { title: '焦煤走强', desc: '日内单边上涨，收涨3.11%。触发：钢厂复产+铁水回升，原料补库需求增强；联动：焦煤上涨1.93%，黑色系共振偏强；基本面：焦煤库存周降33万吨，焦炭开启第二轮提涨，铁水产量回升；分歧：4蒙煤高供应+交割压力仍在，限制上方空间。', image: 'https://img.jin10.com/news/26/04/uvTabaEOkyzPecM-TdhOi.jpg' },
+        { title: '生猪反弹', desc: '上涨3.27%，07合约一度触及涨停。触发：养殖端惜售+出栏节奏放缓，供应阶段性收缩；供给：出栏量下降、二次育肥结束；需求：五一备货启动、低价刺激消费；分歧：4月供应压力仍大，上行空间有限，供给仍过剩，中长期偏弱格局未改。', image: 'https://img.jin10.com/news/26/04/0uOaBVck_wVy4A2iZ7Y_T.jpg' },
+        { title: 'PX走强', desc: '上涨3.99%，盘中一度更强。触发：多套PX装置检修+供应收缩，现货偏紧驱动上涨；联动：PTA上涨3.53%，聚酯链条整体走强；基本面：生意社数据显示PX现货上涨至1360-1370美元/吨，行业统计亚洲PX负荷较2月底下降10%-15%，PTA集中检修、库存去化；分歧：若美伊谈判顺利，油价回落或压制PX溢价。', image: 'https://img.jin10.com/news/26/04/uDyIUJoQZT1SNSsPbPdn-.jpg' },
+        { title: '黄金反弹', desc: '盘中一度涨超7%，收涨4.82%。触发：美伊释放重返谈判信号+美元持续回落，贵金属迎来反弹；联动：沪金同步上涨1.16%，贵金属板块整体走强；基本面：美伊或重启谈判，地缘风险边际缓和，美国3月PPI同比4%（低于预期4.6%），通胀压力与政策预期博弈；分歧：大有期货认为，避险+工业属性共振，白银弹性更强，但市场也担忧美联储降息可能推迟，对贵金属形成扰动。', image: 'https://img.jin10.com/news/26/04/LCzTIYeIBftGRRy93hLEK.jpg' },
+        { title: '集运欧线承压', desc: '下跌0.99%，盘中一度跌超3%。触发：即期运价持续下调，压制盘面情绪；运价：马士基/达飞/YML报价下调至约1800-2200美元/FEU；预期：wk18均价或降至2150美元附近；分歧：市场预期5月航司可能提价，对盘面形成托底。', image: 'https://img.jin10.com/news/26/04/TWE7EbkE3LgmVhtEeDdJM.jpg' },
+        { title: 'SC原油下挫', desc: '回吐风险溢价，收盘下跌3.35%。触发：美伊谈判预期升温，地缘溢价回落；联动：燃料油（高硫/低硫）同步下跌超2%；基本面：美伊或开启第二轮谈判，霍尔木兹海峡已有船只恢复通行，IEA称3月供应减少1010万桶/日，同时下调需求预期；分歧：油价高位仍具粘性，短期转弱震荡，等待谈判进一步指引。', image: 'https://img.jin10.com/news/26/04/QwkQCr9Co_7MstuV0WL_Z.jpg' }
+      ]
     };
-
-    const categoryInfo = {
-      "通用方法": "围绕预期、兑现、情绪、结构与盘面验证展开，解决交易者最常见的误读场景。",
-      "品种框架": "把黑色、油脂油料、有色和能化放回产业链里，强调变量传导顺序而不是单点结论。",
-      "工具理解": "订单流、结构、量价与季节性都放回真实场景中使用，强调工具边界而非机械信号。",
-      "复盘训练": "通过真实案例和阶段拆解，把复盘从记结果升级为记驱动、验证和失效。",
-      "宏观传导": "从利率、美元、通胀和政策预期出发，解释宏观冲击如何分层传导到商品盘面。",
-      "产业链联动": "聚焦上下游、替代品与利润分配，理解链条内部为何同向、背离或错位。",
-      "结构与交割": "围绕基差、仓单、月差和交割阶段，讲清结构定价到底在表达什么。",
-      "资金与持仓": "从增减仓、量价组合和拥挤交易入手，识别资金行为如何改变盘面节奏。"
-    };
-
-    const articleContent = {
-      "碳酸锂行情波动，到底在交易什么": {
-        "intro": "碳酸锂这个品种最容易给交易者制造一种错觉：价格天天大起大落，好像每天都在讲新故事，但真正拉动盘面的核心变量并不多。它的剧烈波动，本质上来自一个高度顺周期、又高度预期化的链条：上游资源释放速度、锂盐环节产量、下游电池和正极排产、现货库存消化节奏，以及这些现实变量在期货市场里被提前定价的方式。广州期货交易所已经上线碳酸锂期货，合约单位为 1 吨；CME 也有 Lithium Carbonate CIF CJK（Fastmarkets）现金结算合约，并且提供最长 24 个月的远期曲线，这本身就说明碳酸锂已经进入了一个可以被系统性交易“期限预期”的阶段。",
-        "body": [
-        "很多人第一次接触碳酸锂时，最容易把它理解成一个“新能源需求品种”——觉得只要电动车和储能景气，碳酸锂就应该强。这个理解只对了一半。碳酸锂当然受新能源需求影响，但在盘面上，它经常先交易的是供给弹性和库存路径，而不是终端销量本身。原因很简单：终端需求改善是相对平滑的，而锂盐供给释放、库存累积、现货价格下修，往往会在更短时间里集中体现，从而对价格形成更剧烈的再定价。",
-        "一个典型场景是这样的：市场开始听到“下游电池排产环比改善”“厂家补库意愿回升”，盘面先反弹，很多人便把这理解成行业景气重新启动。可随后如果锂盐厂开工仍高、库存消化速度又慢、现货报价跟不上，那这轮反弹就很容易从“需求修复逻辑”重新退回“高库存压制逻辑”。这类行情在碳酸锂上很常见，因为它不是一个只看终端需求的商品，而是一个对中游供给释放速度极其敏感的品种。",
-        "所以，碳酸锂最该拆开的，不是“多空”，而是三条线。第一条是资源与锂盐供给线，包括矿端、盐湖、锂盐加工和产出节奏。第二条是库存与现货线，也就是眼下市场到底有没有在现实成交里感受到宽松或收紧。第三条才是下游排产与补库线，即电池、正极、材料厂的开工与采购行为。盘面真正剧烈的时候，往往不是这三条线都在同向，而是其中某一条突然比另外两条先跑出来。",
-        "更具体地说，碳酸锂特别容易出现两种错位。第一种，是下游预期先修复，但现实供给还没收住。盘面会因为“后面可能好一点”先涨，但只要库存和现货端还没有形成持续验证，这种上涨就容易反复。第二种，是供给收缩信号先出来，但下游并没有马上接力。这样盘面也可能反弹，但更多是“供给改善了最差预期”，未必立刻等于需求和利润全面恢复。",
-        "这也是为什么研究碳酸锂，不能只盯一个新闻标题，也不能只看一个现货报价。更有效的观察顺序应该是：先看锂盐厂和资源端有没有明显变化，再看库存和现货成交有没有跟，最后才看下游排产是不是足以把这轮变化坐实。只有这三层连起来，碳酸锂的波动才不会显得像“每天换一个逻辑”。"
-],
-        "mistakes": [
-        "把碳酸锂简单理解成新能源需求品种",
-        "一看到反弹就等同于需求全面回暖",
-        "只看终端销量，不看中游供给释放",
-        "忽略库存消化与现货成交节奏"
-],
-        "signals": [
-        "锂盐厂开工与资源释放速度是否变化",
-        "库存与现货报价有没有同步松动或企稳",
-        "电池与正极排产改善能否持续",
-        "反弹时现货和期限结构是否跟随"
-],
-        "framework": [
-        "先看资源端与锂盐供给，再看库存和现货，最后才看排产与补库是否足以改写下一阶段价格路径"
-],
-        "summary": [
-        "常见误判是：一看到反弹，就说“新能源需求回来了”；一看到回落，就说“行业景气又不行了”。但碳酸锂真正的盘面语言，其实更接近一句话：市场每天都在问，供给收缩得够不够快，库存消化得够不够扎实，需求修复是不是已经足以改变下一阶段价格路径。"
-]
-      },
-      "碳酸锂研究框架：从锂盐供给到电池排产": {
-        "intro": "如果说上一节是在回答“碳酸锂到底在交易什么”，这一节更重要的问题是：研究碳酸锂，应该先看什么，后看什么。这个品种最大的难点不是变量太少，而是变量太多。资源端、锂盐端、材料端、电池端、整车端，任何一层都能讲故事；但真正对交易者有用的，不是把所有故事都收集起来，而是建立一个能不断筛掉噪音的研究顺序。广期所和 CME 都已经把碳酸锂放进标准化合约体系里，说明市场对它的理解，正在从“单纯看现货价格”转向“看一整条 forward curve 与期现联动”。",
-        "body": [
-        "我更建议把碳酸锂研究框架压缩成四层。",
-        "第一层是资源供给层。这层不是看“有矿没矿”这么简单，而是看资源能不能顺利转成锂盐产出。矿端和盐湖资源的释放速度，决定的是这个行业有没有新的供应压力。很多时候，市场不是因为需求差而跌，而是因为供给释放太快，快到足以压制所有需求改善的想象。",
-        "第二层是锂盐生产与库存层。这是最容易直接作用于盘面的层次。因为碳酸锂最终在现货世界里体现为锂盐成品，而盘面短期最敏感的也是锂盐库存、现货报价和成交节奏。研究做到这一步，交易者就已经可以避开很多表面叙事了。比如有人说“新能源很景气”，你真正要问的是：景气有没有转化成锂盐库存下降和现货价格企稳。",
-        "第三层是下游材料与电池排产层。这一层是需求端的现实抓手。市场经常喜欢提前交易“排产改善”，但你真正要看的不是一句“排产环比回升”，而是这种改善是否持续、是否足以消化库存、是否足以改变采购节奏。因为一次性的排产修复和趋势性的需求回暖，对价格的意义完全不同。",
-        "第四层才是终端新能源景气层。整车销量、储能装机、海外需求预期当然重要，但它们更适合做中长期背景，而不是直接拿来解释某一天、某一周的锂价波动。对盘面来说，中游供给和库存的节奏变化，往往比终端更早、更快、更敏感。",
-        "所以，研究碳酸锂最常见的错误，并不是“不懂行业”，而是顺序错了。很多人一上来就从“新能源前景”往下推，结果会发现现实价格经常不按这个逻辑走。原因并不复杂：期货盘面交易的是未来没错，但它更在意的是这个未来会不会先在中游供给和库存上体现出来。如果中游还在高库存、高产出、低现货弹性里，那么再好的远景，也很难立刻支撑价格。",
-        "把这个框架落到交易上，你会发现更有效的提问方式变成了：",
-        "资源端有没有开始收缩？",
-        "锂盐库存有没有真正松动？",
-        "现货成交是不是在改善？",
-        "电池和正极排产是不是持续恢复？"
-],
-        "mistakes": [
-        "从新能源远景直接推导短线价格",
-        "把排产环比回升当成趋势反转",
-        "忽略锂盐库存对盘面的直接约束",
-        "只看单一新闻，不建立研究顺序"
-],
-        "signals": [
-        "资源端释放是否加快或收缩",
-        "锂盐库存与现货价格是否真正改善",
-        "电池和正极排产恢复是否持续",
-        "终端景气有没有传导到采购和补库"
-],
-        "framework": [
-        "先资源供给，再锂盐库存与现货，再下游排产，最后才看终端景气是否足以坐实供需拐点"
-],
-        "summary": [
-        "只有这四个问题逐步串起来，你才能判断眼前的反弹是“最差阶段过去了”，还是“真正的供需拐点来了”。"
-]
-      },
-      "多晶硅价格到底在交易什么：产能、库存还是政策": {
-        "intro": "多晶硅最容易被误读成一个“光伏景气度代理品种”。只要听到光伏装机增长，很多人第一反应就是：那多晶硅应该偏强。但真实产业链远没这么线性。国际能源署在 Solar PV Global Supply Chains 报告里明确把光伏制造拆成五大环节：多晶硅、硅锭、硅片、电池片、组件；同时强调太阳能制造链的高度集中、产能扩张、成本与能源消耗的巨大差异。换句话说，多晶硅不是终端需求本身，它是光伏制造链中上游的一个高集中、高资本开支、高产能周期环节。",
-        "body": [
-        "这意味着，多晶硅价格交易的第一件事，并不一定是终端装机，而更常常是产能扩张和库存压力。IEA 还指出，光伏供应链在 2022 年之后出现了明显的产能扩张与价格竞争，2023 年全球组件现货价格在一年内下跌了约 50%，背后很大一部分原因就是供应链过剩和激烈竞争。这个背景对理解多晶硅非常重要：即便终端装机在增长，只要中上游扩产更快，价格依然可能持续承压。",
-        "所以，多晶硅价格更准确的主变量，通常是三条线。第一条是扩产和开工线。谁在投产、谁在放量、谁在维持高负荷，这些都会直接改变市场对未来供给的判断。第二条是下游价格传导线。硅片、电池片、组件有没有能力把上游价格接住，决定了多晶硅是不是有议价空间。第三条才是政策与终端装机线。政策会影响需求预期，也会影响贸易、补贴、出口与全球装机节奏，但它通常不是唯一驱动。",
-        "一个典型场景是：终端装机数据很好，市场一度觉得多晶硅会迎来修复；但与此同时，多晶硅和相关环节的产能释放速度更快，库存又没被有效消化，下游价格战还在持续。结果就是，表面上“需求很好”，但盘面真正交易的却是“供应更快”。这类行情很容易让人误以为市场在“忽略利多”，实际上是主导变量根本不在终端。",
-        "多晶硅和很多传统商品还有一个不同：它不是独立现货世界里的单点博弈，而是一个被整条制造链利润分配深刻影响的环节。下游硅片、电池片、组件一旦竞争加剧，上游多晶硅的利润空间就会被重新压缩。也就是说，多晶硅不是只在交易“我值多少钱”，而是在交易“整条链条最终愿意给我留多少利润”。"
-],
-        "mistakes": [
-        "把光伏装机增长直接翻译成多晶硅偏强",
-        "忽略中上游扩产快于需求吸收",
-        "只看行业景气，不看价格战和利润挤压",
-        "把政策预期当成唯一驱动"
-],
-        "signals": [
-        "扩产和开工节奏是否继续加快",
-        "库存与现货价格是否持续承压",
-        "硅片、电池片、组件利润能否向上游传导",
-        "政策变化是否改变终端与出口预期"
-],
-        "framework": [
-        "先看扩产与开工，再看库存与价格，再看下游利润传导，最后才看政策和终端装机"
-],
-        "summary": [
-        "因此，研究多晶硅真正有效的顺序应该是：先看产能和开工，再看库存与价格，再看下游利润传导，最后才看政策和终端装机。这个顺序听起来不如“行业景气”那么宏大，但它更接近盘面的现实语言。因为对价格来说，终端增长很重要，可供给增长更快时，价格一样可能下行。"
-]
-      },
-      "多晶硅研究框架：从光伏装机到产业链利润分配": {
-        "intro": "研究多晶硅，如果只从“光伏行业未来很好”出发，往往会在价格走势上不断碰壁。真正的问题不在于装机趋势错了，而在于多晶硅定价处在产业链的中上游，它不是直接卖给终端用户，而是先进入一整条制造、竞争和利润再分配体系。IEA 在光伏供应链报告里强调，这条链条不仅包括多晶硅本身，还包括硅锭、硅片、电池片和组件，而且各环节都存在产能、成本和集中度差异。",
-        "body": [
-        "所以，多晶硅研究最需要的，不是更多行业新闻，而是一套更稳的观察框架。我建议把它拆成四层。",
-        "第一层是终端装机与政策预期。这一层决定了市场愿不愿意给整个光伏链更高的估值。IEA 预计未来几年光伏仍将占全球新增可再生装机的大头，这当然给整个产业链提供了长期成长背景。",
-        "但这层只能告诉你行业有空间，不能直接告诉你多晶硅价格今天为什么涨跌。",
-        "第二层是制造链利润分配。终端景气并不自动利好多晶硅，除非链条中的价格和利润能向上游传导。如果硅片、电池片、组件竞争激烈，下游压价强，那么多晶硅即便处在上游，也未必能稳定获得高利润。这就是为什么同样是“行业好”，不同时间点多晶硅价格表现会差很多。",
-        "第三层是多晶硅自身供给与库存。这是真正短中期最关键的一层。扩产节奏、高耗能生产的成本边界、库存累积和去化、现货价格变化，这些比终端装机更直接决定多晶硅定价。一个行业可以景气，但如果供给扩张远快于需求吸收，价格依然会承压。",
-        "第四层是市场交易的阶段。有的时候，市场交易的是“长期光伏逻辑”；有的时候，交易的却是“短期库存压力”和“价格战”。如果不先判断当前处在哪个阶段，再完整的行业知识也很难直接映射成交易框架。",
-        "这也是为什么多晶硅最典型的误判，是把“终端好”直接翻译成“上游价格强”。更有效的做法应该是：",
-        "先问装机会不会改善行业整体预期；",
-        "再问利润会不会真的传到上游；",
-        "再问供给和库存会不会把这份利润吃掉；",
-        "最后才问这件事会不会在价格上体现为趋势。"
-],
-        "mistakes": [
-        "把终端装机当成多晶硅价格的直接答案",
-        "忽视利润分配和供给库存的约束",
-        "不区分长期成长与短期价格压力",
-        "只看需求故事，不看阶段主导变量"
-],
-        "signals": [
-        "装机和政策是否仅改善估值预期",
-        "链条利润有没有向多晶硅传导",
-        "扩产、库存和现货价格是否仍压制盘面",
-        "当前交易的是长期逻辑还是短期价格战"
-],
-        "framework": [
-        "先行业预期，再利润分配，再供给库存，最后判断当前到底在交易长期空间还是短期压力"
-],
-        "summary": [
-        "如果按这个顺序来研究，多晶硅就不再只是“光伏新闻的延伸阅读”，而会变成一个具有清晰主变量和阶段逻辑的研究对象。"
-]
-      },
-      "黄金的行情到底更看美元、利率，还是避险": {
-        "intro": "黄金之所以长期吸引人，不是因为它只有一个逻辑，而是因为它从来都不止一个逻辑。世界黄金协会在关于黄金战略资产属性的研究里反复强调，黄金的需求来源多元，兼具回报、流动性和分散化属性；在最新的 Gold Demand Trends 中，黄金需求又被拆分成 ETF 与类似产品、央行与官方部门、首饰、零售投资等多个部分。也就是说，黄金根本不是一个只看“避险”或者只看“美元和利率”的单一品种。",
-        "body": [
-        "那么，黄金到底更看什么？更准确的答案是：先看谁在当前阶段占主导。",
-        "在很多宏观窗口里，美元和实际利率的变化最先影响黄金。原因很直接：黄金不生息，因此当实际利率走高时，持有黄金的机会成本上升；美元走强时，黄金的全球计价逻辑又会受到压制。这个框架在多数宏观交易时段都成立，因此黄金常常是最先对美联储预期和美元变化作出反应的品种之一。",
-        "但如果只把黄金理解成“利率和美元的函数”，很快就会遇到解释不通的行情。因为黄金还有另一套非常强的驱动：避险和配置需求。世界黄金协会把黄金视作在不确定时期的重要分散化和避险资产，并指出其负相关特征往往会在风险资产大幅调整时增强。最新的黄金需求报告也显示，2025 年全球黄金总需求创下新高，推动力之一就是 ETF 流入和避险、分散化需求增强。",
-        "这就意味着，黄金在一些时刻会更像利率资产，在另一些时刻则更像危机资产。美元和利率走强，本来对黄金不友好；但如果同时出现地缘风险、金融系统压力或股债相关性异常抬升，黄金又可能因为避险配置而逆着传统宏观关系走。你看到的不是逻辑冲突，而是不同需求来源在不同阶段抢定价权。",
-        "一个很典型的盘面误读是：看到美元强、利率高，就机械认为黄金一定弱。可如果这时央行购金仍高、ETF 流入在恢复、市场对风险资产的信心在下降，那么黄金完全可能表现出韧性。世界黄金协会的数据里，中央银行与官方部门仍然是黄金需求的重要组成部分，2025 年官方部门净买入仍高达 863 吨。",
-        "也就是说，黄金不是只有“交易层需求”，它还有“储备层需求”。",
-        "所以，研究黄金时更实用的框架不是问“到底哪个最重要”，而是问：",
-        "现在是利率和美元在主导，还是避险和配置在主导？",
-        "如果利率和美元不支持，黄金还能不能站住？",
-        "如果能站住，背后是谁在买？ETF、央行，还是零售投资？"
-],
-        "mistakes": [
-        "把黄金只看成避险资产",
-        "把黄金只看成美元和利率的函数",
-        "美元强就机械认为黄金一定弱",
-        "忽略央行和配置需求的长期支撑"
-],
-        "signals": [
-        "美元和实际利率变化是否压制金价",
-        "ETF 流向和避险情绪是否增强",
-        "央行购金和官方需求是否仍具韧性",
-        "黄金是否表现出逆传统宏观关系的抗跌或上行"
-],
-        "framework": [
-        "先看美元与实际利率，再看 ETF 与投机资金，再看避险和央行配置需求，最后判断当前是谁在定价"
-],
-        "summary": [
-        "只有这样拆，黄金的盘面才不会变成一句空泛的“黄金就是避险”。"
-]
-      },
-      "黄金研究框架：从央行储备到 ETF 资金流": {
-        "intro": "研究黄金，最容易陷入两种极端。第一种是只盯美元和美债收益率，把黄金看成纯宏观品种；第二种是只讲避险，把黄金写成一种抽象情绪资产。真正好的黄金研究，不应该停在这两个标签上，而要把黄金的需求结构完整拆开。世界黄金协会的数据口径本身就提供了一个天然框架：黄金需求可以拆成官方部门购金、ETF 与类似产品、首饰需求、金条金币投资等。",
-        "body": [
-        "如果只从交易应用上说，我更建议把黄金研究框架分成四层。",
-        "第一层是宏观层：美元、实际利率、通胀预期、美联储路径。",
-        "这层决定黄金的估值框架。很多阶段里，黄金最直接的波动来源还是这里。尤其在没有重大风险事件时，黄金经常最先按这套逻辑定价。",
-        "第二层是资金层：ETF 流入流出、投机仓位、期货市场情绪。",
-        "黄金之所以有时会走得很快，是因为它既是配置资产，又是高流动性交易资产。ETF 流向和市场投机仓位变化，往往能解释为什么同样一套宏观逻辑，在某些阶段走得更猛。",
-        "第三层是配置层：央行储备需求与避险配置。",
-        "这一层特别重要，因为它决定了黄金的“底层韧性”。官方部门购金不是天天冲击市场，但它对长期需求结构的影响非常大。世界黄金协会 2025 年的 Gold Demand Trends 里，央行和官方部门仍然是高位净买入的重要来源。",
-        "所以，黄金不是只靠短线资金定价的。",
-        "第四层是实物层：首饰、零售金条金币、科技用途。",
-        "这层对短线影响没那么大，但它构成了黄金市场的底部需求生态，也影响不同地区对金价波动的吸收能力。",
-        "把这四层合起来，你会发现黄金真正难的地方，不是变量太多，而是变量会轮流主导。某一阶段宏观最重要；某一阶段风险偏好最重要；某一阶段 ETF 流量和央行购金会变成关键解释变量。研究黄金最怕的，不是不知道这些变量，而是习惯性只用其中一个解释所有行情。",
-        "更有效的做法，是每次先判断当前行情主要属于哪一层，然后再用其他几层做验证。比如黄金上涨时，如果美元和利率并不支持，那就去找避险和配置需求；如果避险情绪一般，却有明显 ETF 流入和央行购金背景，那说明市场在通过配置需求重新解释黄金。"
-],
-        "mistakes": [
-        "只盯美元和美债收益率",
-        "把避险写成抽象情绪而不看资金流",
-        "忽略央行购金的底层韧性",
-        "不区分短线驱动与长期配置逻辑"
-],
-        "signals": [
-        "美元、实际利率与通胀预期的变化",
-        "ETF 与期货仓位是否同步流入",
-        "央行储备需求是否维持高位",
-        "首饰与实物需求是否对高价形成吸收"
-],
-        "framework": [
-        "先宏观看估值，再资金看节奏，再配置看韧性，最后用实物需求补足底层支撑"
-],
-        "summary": [
-        "这样一来，黄金研究就不再是“看美元就好”这么简单，也不会落回“黄金是避险资产”这种空泛结论，而会更像一门真正能指导理解盘面的框架课。"
-]
-      },
-      "白银为什么比黄金更“躁动”": {
-        "intro": "白银经常被外行看成“便宜版黄金”，但真正研究过这个品种就会知道，它比黄金更难，因为它的驱动是混合的。白银协会披露，2024 年全球白银工业需求升至 6.805 亿盎司，创出连续第四年的纪录高位；驱动来自电网基础设施、汽车电动化、光伏和电子等结构性增长。与此同时，白银又仍然保留了投资、首饰和贵金属属性。也就是说，白银不是单纯的贵金属，而是一个同时连接投资需求和工业需求的“双重属性品种”。",
-        "body": [
-        "这就是为什么白银通常比黄金更“躁动”。",
-        "黄金更像单纯的宏观和避险资产，逻辑相对集中；白银则是一会儿被当成贵金属，一会儿又被当成工业品。宏观风险偏好改善时，白银可能因为“贵金属 beta + 工业品 beta”双重作用而跑得更快；宏观风险偏好恶化时，它又可能因为工业需求担忧而比黄金更脆弱。换句话说，黄金更多时候是在回答“配置要不要加”，而白银还要多回答一个问题：“现实工业需求会不会跟上”。",
-        "这类双重属性最容易在行情切换时制造误判。比如黄金开始走强，很多人会自然把白银也看成贵金属逻辑的延伸，于是更激进地追涨白银。但如果同一阶段工业品情绪偏弱、经济预期不强，那么白银未必能完整复制黄金路径。反过来，风险偏好改善、工业品和光伏相关需求预期抬升时，白银又往往会表现出明显高于黄金的弹性。",
-        "白银波动大，还有一个现实基础：它的市场更容易受到“宏观资金 + 工业预期”双重扰动。白银协会的 World Silver Survey 2025 不仅强调工业需求创纪录，还指出 2024 年全球白银市场继续处于结构性短缺状态。",
-        "这意味着，白银并不只是靠情绪波动，它还有现实供需的再定价基础。可这份现实供需，不像黄金那样主要靠储备和配置支撑，而是更容易受工业周期和政策驱动影响。"
-],
-        "mistakes": [
-        "把白银当成便宜版黄金",
-        "用黄金框架机械套白银",
-        "忽略工业需求与结构性短缺",
-        "只看贵金属情绪不看工业周期"
-],
-        "signals": [
-        "黄金走势与避险情绪是否同步支持白银",
-        "光伏、电子、电网等工业需求预期是否改善",
-        "ETF 与投机资金是否把白银当成高弹性替代品",
-        "供需缺口是否继续提供现实支撑"
-],
-        "framework": [
-        "先判断当前更像贵金属还是工业金属，再看资金有没有放大这种属性切换，最后用供需缺口做验证"
-],
-        "summary": [
-        "所以，理解白银为什么更躁动，最关键的一点，就是不要只拿黄金框架套它。白银有贵金属的上涨逻辑，也有工业品的波动放大器。很多时候，你看到的不是“白银比黄金更投机”，而是市场在更频繁地切换：现在到底在把它当成避险资产，还是当成高弹性工业金属。"
-]
-      },
-      "白银研究框架：金银比之外，还该看什么": {
-        "intro": "研究白银时，很多人天然会先看金银比。这当然有价值，因为它能帮助你判断白银相对黄金到底偏贵还是偏便宜，能不能获得补涨或补跌空间。可如果白银研究只停留在金银比，那其实只看到了它的一半。因为白银的工业需求已经大到不能再被当作“黄金影子”。白银协会的数据很清楚：2024 年工业需求创下 6.805 亿盎司的新高，全球总需求中工业端占比非常重要，而且增长背后和电网投资、电子、汽车电动化、光伏应用密切相关。",
-        "body": [
-        "因此，更完整的白银研究框架至少要分四层。",
-        "第一层是贵金属层：美元、实际利率、避险情绪、黄金走势、金银比。",
-        "这一层解释白银为什么会跟着贵金属整体走，为什么在宏观转宽松或避险升温时常常也能受益。",
-        "第二层是工业需求层：光伏、电子、电网、汽车等制造端需求。",
-        "这一层解释白银为什么有时会脱离黄金单独走强，或者为什么黄金很稳、白银却明显更有弹性。因为对工业品而言，需求预期和产能扩张的变化，会直接重塑价格弹性。",
-        "第三层是投资层：银条银币、ETF 与投机仓位。",
-        "白银价格经常比黄金更剧烈，一个原因就是它在资金层面更容易被当成高弹性替代品。宏观环境一旦有利于贵金属，部分资金会选择用白银放大波动收益。",
-        "第四层是供给与平衡层：矿端产量、回收、市场缺口。",
-        "白银协会的统计显示，白银市场已经连续多年出现结构性短缺。这个背景决定了，白银的很多上涨并不只是金融层面故事，它还有供需平衡上的现实支撑。",
-        "把这四层合起来，白银研究就会比“金银比高了还是低了”完整得多。你会开始问：",
-        "现在白银更像黄金，还是更像工业金属？",
-        "工业需求有没有在给金银比提供修正理由？",
-        "投资资金是不是在把白银当作黄金的高弹性替代？",
-        "如果这些问题都能同时解释盘面，白银的走势就会清楚得多。"
-],
-        "mistakes": [
-        "研究白银只看金银比",
-        "不区分贵金属层与工业需求层",
-        "忽略投资资金对白银波动的放大作用",
-        "把供需缺口从框架里拿掉"
-],
-        "signals": [
-        "金银比是否只是估值入口而非全部答案",
-        "工业需求线是否强化白银弹性",
-        "ETF、银条银币与投机仓位是否提供放大器",
-        "供给平衡与市场缺口是否仍支持中期韧性"
-],
-        "framework": [
-        "先贵金属层，再工业需求层，再投资资金层，最后回到供给平衡层判断白银处在哪种主导状态"
-],
-        "summary": [
-        "所以，金银比当然重要，但它最多只是入口。真正能把白银看懂的，不是会背一个比值的人，而是能分辨白银当前到底主要在交易贵金属属性，还是工业属性的人。"
-]
-      },
-      "利多落地为何不涨：读懂预期兑现型行情": {
-        "intro": "盘面最容易让人失去判断的时刻，不是利空砸盘，而是利多落地后价格不涨，甚至反手回落。对有经验的交易者来说，这种行情不是“市场失灵”，而是市场在回答另一个问题：这条利多，到底是不是新增信息。",
-        "body": [
-          "在很多人的直觉里，利多消息就该对应上涨，至少也该先冲一段。可真实市场里，大量“最像利多”的节点，恰恰最容易成为短线高点。原因不复杂：盘面交易的从来都不是消息标题，而是消息与预期之间的差值。",
-          "以农产品为例，USDA 的 WASDE 本身就是一个典型的“预期交易窗口”。它按月发布，对美国和全球谷物、油籽等供需进行更新，因此在豆类、玉米、小麦等市场中，经常成为阶段定价的核心节点之一。但真正影响盘面的，往往不是报告里的方向词，而是三层比较：",
-          "第一层，报告内容是否偏离市场预估。第二层，这种偏离幅度是否足以改写此前已经计入价格的交易逻辑。第三层，报告公布之后，现货、基差、月差、持仓有没有跟上验证。",
-          "很多交易者在事件行情里最容易掉进一个坑：把“偏多”直接等同于“还会继续涨”。这在报告交易里尤其危险。因为报告公布前，市场已经通过连续几天甚至几周的交易，把大部分“大家都知道的利多”提前价格化了。等到正式落地时，如果结果只是“符合预期”而不是“明显超预期”，资金最容易做的不是继续追，而是先了结。",
-          "这就是为什么报告窗口前，盘面经常出现一种很典型的节奏：前半段，围绕预期抢跑；节点日，围绕结果重估；节点后，围绕验证重新分层。",
-          "真正有经验的交易者，不会只盯报告本身，而会看报告前后的三个变化：",
-          "第一，看价格是在报告前涨的，还是报告后涨的。如果价格在报告前已经走出一轮顺畅上涨，那么报告落地当天就天然更容易变成兑现窗口。因为这时市场不是在回答“利多吗”，而是在回答“还有没有超出预期的新东西”。",
-          "第二，看持仓是否继续扩张。如果报告公布后价格冲高，但持仓没有继续配合，甚至开始回落，那往往意味着新增买盘不足，更多是存量资金在借事件完成换手。CFTC 的 COT 报告虽然不是盘中工具，但它的结构逻辑很有参考意义：它本质上是对每周二持仓结构的拆分，并在每周五发布，能帮助交易者识别阶段内不同类型参与者是否在继续把仓位往同一方向堆。",
-          "第三，看现货和结构有没有验证。真正能把“利多消息”推成“持续行情”的，从来不是消息本身，而是后续的资源和结构变化。比如报告偏多，如果只是盘面涨、现货不动、基差不强、近月不收紧，那更多是金融层面的短线反应；如果报告偏多之后，现货跟涨、基差抬升、近月相对更强，那才更接近现实供需开始跟上。",
-          "这里最值得强调的一点是：利多落地不涨，不等于利多无效；很多时候，它只是说明利多早就被市场提前交易了。",
-          "真实盘面里，这类错判非常常见。尤其是在 USDA 报告、出口销售周报、MPOB 月报、EIA 周报这些固定节奏的事件窗口里，市场参与者会提前建立一致预期。一旦结果不再提供新增惊喜，盘面就会从“预期交易”切到“兑现交易”。美国农业出口销售数据通常在每周四早上发布，本身就经常被市场拿来验证需求强弱；但同样一份出口数据，放在不同阶段，其意义完全不同：在预期脆弱时，它可能是增量证据；在预期已经很满时，它可能只是资金兑现的触发点。",
-          "所以，这节课真正要记住的，不是“利多落地会不会跌”，而是下面这个顺序：",
-          "先问：这条利多是不是新增信息？再问：价格此前是否已经提前反应？再问：落地后有没有结构验证？最后才问：这件事是不是足以推动新一轮定价。"
-        ],
-        "mistakes": [
-          "只看报告结论，不看市场预期差* 只看盘面瞬间反应，不看持仓和结构* 把“冲高”误当成“趋势延续”* 把“没涨”误读成“逻辑错误”"
-        ],
-        "signals": [
-          "报告前后价格位置是否已提前走强* 公布后持仓是否继续增加* 基差是否同步抬升* 近月是否强于远月* 现货是否出现跟涨或资源偏紧信号"
-        ],
-        "framework": [],
-        "summary": [
-          "利多落地为何不涨，本质不是消息失效，而是市场早已提前完成了大部分预期定价。真正重要的，不是报告标题，而是报告之后，市场是否愿意继续用资源、结构和仓位去给这条逻辑加价。",
-          "---"
-        ]
-      },
-      "棕榈油交易，为什么必须盯报告窗口": {
-        "intro": "棕榈油不是不能做趋势，但它往往先是“数据窗口交易品种”，然后才是“趋势展开品种”。不理解这一点，就很容易把报告日的波动，当成单纯情绪噪音。",
-        "body": [
-          "棕榈油是少数几个“月度官方数据发布本身就能重塑短期定价”的典型商品之一。原因不只是它有报告，而是它的交易结构天然依赖几个高频、可比、可预期的变量：产量、出口、库存。MPOB 的月度行业表现发布，通常集中在每月 10 日左右的中午 12:30，市场长期围绕这一节点形成预期与兑现的交易节奏。",
-          "对棕榈油交易者来说，报告窗口的重要性不只是“会波动”，而是它经常决定一件事：市场此刻究竟在交易供给收缩，还是在交易库存修复；是在交易出口强劲，还是在交易需求转弱。",
-          "很多初看棕榈油的人会觉得，库存变动似乎就是最直接的方向线索。可真正做久了会发现，库存只是结果项。真正推动盘面的，是产量和出口在报告前后的变化预期。如果市场此前普遍预期产量下降、出口增加、库存继续去化，那么价格很可能在报告前就已经走高；等到报告真的确认库存下降，盘面未必还会给出新的溢价。反过来，如果市场原本担心库存累积，但报告显示出口好于预期、库存增幅受限，价格就更容易在报告后快速修正。",
-          "这也是为什么棕榈油的月报交易，不能只盯一个数字。你至少要把它拆成三条线：",
-          "第一条线，供给线。产量变化决定的是“资源端有没有新增压力”。在季节性增产周期里，即便库存没有马上大幅累积，市场也会提前对供给修复定价。反过来，在减产阶段，哪怕库存仍高，只要供给端开始持续收缩，近月结构往往会先变紧。",
-          "第二条线，需求线。出口是最直接的高频需求验证。MPOB 的月度体系本身就把出口作为核心变量之一；市场之所以高度关注报告窗口，就是因为出口变化往往能直接修正对库存路径的判断。",
-          "第三条线，库存线。库存最适合做“结果确认”，不适合做单独推导。库存高，不一定立刻利空；库存低，也不一定立刻利多。关键看它是因为供给骤降导致，还是因为需求突然改善导致；看它是在增产周期里下降，还是在减产周期里下降。",
-          "真实盘面里，棕榈油最常见的误读，就是把报告中的单项变化，直接翻译为方向结论。比如“库存下降，所以一定强”；“产量恢复，所以一定弱”。但交易者更应该问的是：库存下降，是因为市场此前低估了出口，还是高估了产量？产量恢复，是短期修复，还是趋势性拐点？报告后，盘面是否用基差、月差、现货和相关油脂联动去确认这件事？",
-          "这里还有一个常被低估的点：棕榈油不是孤立交易。它和豆油、菜油之间存在非常强的比价与替代逻辑。也就是说，即便 MPOB 报告本身偏多，如果外部油脂链条没有形成配合，单边行情的持续性也会被削弱。相反，如果报告偏多，同时外盘油脂也在强化，那么报告日更可能成为结构再定价的起点，而不是短线冲高点。",
-          "所以，对棕榈油最有效的观察方式，不是“等报告看结论”，而是“在报告前建立预期差框架”。具体可以按这个顺序：",
-          "先看市场此前预期的主方向；再看报告里最容易偏离预期的变量；然后看报告公布后，盘面究竟强化的是哪条线——产量、出口还是库存；最后用月差、基差、相关油脂联动去确认。"
-        ],
-        "mistakes": [
-          "只盯库存，不拆产量和出口* 把报告结果当成静态结论* 忽略报告前市场已计价的预期* 只看棕榈油本身，不看油脂链联动"
-        ],
-        "signals": [
-          "报告后近远月强弱关系是否变化* 基差是否同步走强或走弱* 相关油脂是否形成共振* 现货报价是否跟随* 次日市场是否继续沿同一方向定价"
-        ],
-        "framework": [
-          "报告前连续上涨，报告落地库存继续下降，但价格冲高回落：多见于预期已满的兑现窗口。* 报告前盘面偏弱，报告显示出口好于预期、库存增幅低于担忧，价格快速修正：多见于悲观预期被纠正。* 报告中供给恢复，但近月月差仍强、现货依旧紧：说明现实资源并未明显宽松，报告利空被结构对冲。"
-        ],
-        "summary": [
-          "棕榈油交易为什么必须盯报告窗口？因为它的核心变量不是模糊的叙事，而是有固定频率、固定结构、固定预期博弈节奏的数据。真正能把棕榈油看懂的人，不是会背报告数字的人，而是会在报告前后读懂预期差和结构验证的人。",
-          "---"
-        ]
-      },
-      "期限结构什么时候最有参考价值": {
-        "intro": "不是所有月差都值得解释，也不是所有近强远弱都意味着资源紧张。期限结构真正有价值的时候，不是在你想从它身上找方向时，而是在你想判断“市场到底在给哪个时间段定价”时。",
-        "body": [
-          "CME 对 contango 和 backwardation 的定义很清楚：当远月价格高于现货或近端，市场处于 contango；当远月低于现货或近端，市场处于 backwardation。但交易者真正需要的，不是定义，而是：这种结构变化在什么情况下有解释力，什么情况下又容易误导。",
-          "期限结构之所以重要，是因为它把“方向问题”拆成了“时间问题”。现货紧不紧，不一定体现在绝对价格上，却常常会先体现在近月相对更强；反之，远端更弱，也未必是大势看空，有时只是市场在给未来供给修复、库存回升或事件消退定价。",
-          "这意味着，期限结构最有参考价值的第一种场景，是资源约束主要发生在时间维度上。比如，现实供给端没有全面断裂，但短期可交割资源偏紧、现货调运不顺、库存集中在错误的位置，那么近月往往会先体现出更高的稀缺溢价。这时候，如果只看主连价格，你可能只看到“涨得一般”；但看月差，你会更快发现市场真正紧的是“现在”，不是“全年”。",
-          "第二种高价值场景，是预期与现实出现错位时。很多时候，基本面上大家都承认中期会宽松，但短期却还没有真正松下来。此时远月可能先弱，近月却仍不肯跌。这样的结构不是矛盾，而恰恰说明市场在区分两个时间段：现在依然紧，未来可能松。如果把这种结构简单翻译成“整体偏多”或“整体偏空”，就会错过最有信息量的部分。",
-          "第三种场景，是交割逻辑开始主导价格时。越接近交割月，期限结构越不能只当成普通价差看。因为这时近月价格越来越多地反映交割资源、仓单、现货流通性和交割便利性，而远月还在交易更宽泛的预期。结构在这里不是附属信息，而是盘面最直接的“资源语言”。",
-          "但期限结构也很容易被误读。最常见的错法有两个：",
-          "第一，把结构强弱当成单独的方向信号。近月强，不代表全局一定强；远月弱，也不代表绝对价格一定要跌。结构表达的是时间分层，不是简单涨跌。",
-          "第二，脱离库存和现货去解释结构。CME 在介绍商品储存和供需关系时强调，库存和可储存性本身就会影响价格曲线的形态。换句话说，结构不是凭空出现的，它背后一定有资源配置、储存成本、供应预期或交割压力。所以，看结构一定要联看库存、基差、现货和仓单，否则很容易把“暂时挤压”看成“趋势级紧张”，也容易把“中期偏弱”误判成“短期马上转松”。",
-          "拿能源品种来说，EIA 的周度石油状态报告固定在周三发布，本身就是验证近端资源状态的重要窗口之一。炼厂开工、商业库存、成品油去化速度，这些变化并不总会立刻改变全曲线，但它们常常会先体现在近月和现货端的相对强弱上。所以，真正用期限结构的人，不会只盯“这个价差大了还是小了”，而会问：这个变化是在告诉我短期更紧了，还是未来更松了？是在告诉我交割资源更值钱了，还是市场对远端更悲观了？是在告诉我库存不够了，还是告诉我市场在提前修正预期？"
-        ],
-        "mistakes": [
-          "把 backwardation 直接理解成“必涨”* 把 contango 直接理解成“必跌”* 只看主力合约，不看月差变化* 把结构变化脱离库存和现货解释"
-        ],
-        "signals": [],
-        "framework": [
-          "先看结构变化发生在哪一段：近端、远端还是整条曲线2. 再看同期库存、基差、现货是否共振3. 再判断这是资源约束、交割压力还是未来预期变化4. 最后才把它翻译成对价格节奏的理解"
-        ],
-        "summary": [
-          "期限结构最有参考价值的时候，不是在你想从它身上找一个简单结论的时候，而是在市场的紧张、宽松、交割和预期正在沿着时间维度分层展开的时候。结构不是答案本身，但它常常比绝对价格更早告诉你：市场到底在担心现在，还是在担心以后。",
-          "---"
-        ]
-      },
-      "持仓增加但价格不涨，这种盘面该怎么理解": {
-        "intro": "价格不动、持仓却在增，这类盘面最容易被忽略。可很多真正的大波动，恰恰是在这种“表面没什么、内部很忙”的阶段酝酿出来的。",
-        "body": [
-          "持仓增加但价格不涨，第一层含义通常不是方向，而是分歧。越来越多的资金愿意把观点变成仓位，但市场还没有决定谁先占上风。换句话说，价格平静，并不代表市场平静。",
-          "这类盘面最常见于三种情形。第一，重要事件前，双方都在提前布局。第二，某个价格区间被视为关键分歧位，多空都愿意在这里做交易。第三，套保与投机同时增加，价格因此被暂时钉住。",
-          "对交易者来说，这种结构真正有价值的地方在于：后续一旦价格突破，更可能带着仓位基础，而不是纯情绪脉冲。也正因如此，持仓增加但价格不涨，不应被简单看成“没行情”，而更像“市场在积累能量”。",
-          "但它同样可能代表另一件事：如果持仓增加很久，价格始终走不出区间，且结构没有明显强化，那么很多新增仓位最终可能会演变成一次剧烈换手，而不是单边突破。也就是说，持仓增加本身不是答案，关键还是看后续有没有新变量把分歧打破。"
-        ],
-        "mistakes": [
-          "价格不动就觉得没意义。2. 把增仓滞涨直接理解成单边利空。3. 不区分事件前布局和长期僵持。4. 不联看月差、基差和现货。"
-        ],
-        "signals": [
-          "增仓是否持续- 区间边缘是否出现承接或压制- 月差和基差是否同步变化- 事件窗口后是否迅速突破- 增仓后谁被迫离场"
-        ],
-        "framework": [],
-        "summary": [
-          "持仓增加但价格不涨，很多时候表达的不是方向，而是分歧正在变成真仓位。真正该盯的，是后面什么变量会把这层分歧戳破。"
-        ]
-      },
-      "为什么同样是利空，不同品种反应差这么大": {
-        "intro": "同一条宏观利空，有的品种当天就大跌，有的只是短暂回落，有的甚至低开后反而走强。问题不在于市场矛盾，而在于“利空”从来不是一个统一作用在所有商品上的变量。市场真正交易的，是这条利空打到了哪个层次。",
-        "body": [
-          "做商品时间稍长一点，就会发现一个很典型的现象：同样是“美元走强”“利率预期上修”“宏观风险偏好回落”这样的宏观冲击，黄金、有色、原油、黑色、油脂油料的盘面反应经常完全不同。很多交易者会本能地寻找一个统一答案，想知道“这个利空到底偏空哪些品种”。但真实市场并不按这种简单映射运行。它更像一套分层系统：宏观、产业、库存、结构、资金，各自都在起作用，只是当时谁的权重更高。",
-          "先说最容易理解的一层：估值层。宏观利空往往最先打击的是估值和风险偏好，而不是现实资源。也就是说，当市场担心需求放缓、融资环境收紧、美元偏强时，最容易先被压的是那些金融属性更强、此前预期更满、资金更拥挤的品种。这种下跌常常来得快，表面上很有说服力，因为它和宏观叙事高度一致。",
-          "但第二层很快就会接上来：现实层。如果一个品种现实供给偏紧、库存偏低、现货坚挺，那么宏观利空往往只能先打掉估值的一部分，却未必能改变现实资源的定价。这个时候，盘面就会出现一种很典型的“利空不顺”的感觉：消息看着不友好，但价格就是不肯顺畅下去，甚至下去之后很快有承接。",
-          "这也是为什么同样是需求预期回落，有色内部都可能先分化。铜有时候对宏观最敏感，因为它兼具经济温度计和产业金属双重属性；铝则常常还要多一层成本、产能、供应约束考量；黑色又会多一层国内政策与地产、基建预期的影响。也就是说，宏观利空打进来以后，每个品种都要先经过自己的“翻译系统”，最后才形成价格反应。",
-          "案例上看，这种分化最典型的场景之一，出现在固定数据窗口前后。比如 USDA 的 WASDE 是月度供需更新，本身会持续影响谷物和油籽的供需预期；如果同一时间宏观层面偏空，但 WASDE 或出口销售方向仍在给农产品现实面支撑，那么农产品就未必会像工业品那样立刻同步走弱。WASDE 由 USDA 的 World Agricultural Outlook Board 按月发布，覆盖美国及全球主要农产品供需预测，因此它对农产品的“现实定价权”本来就比很多宏观叙事更直接。",
-          "再看能源。EIA 的周度石油状态报告固定在每周三 10:30 ET 发布，里面包括原油、汽油、馏分油库存以及炼厂开工等关键变量。宏观风险偏好回落时，油价当然会承压，但如果同一阶段美国商业库存下降、炼厂开工维持高位、成品油库存不宽松，那么市场对近端资源状态的理解就不会完全跟随宏观叙事走。EIA 本周报告页面显示，周度石油状态报告仍维持固定节奏更新，市场也长期围绕这一节点修正对近端供需的判断。",
-          "再进一步，第三层是结构层。很多时候，品种对同一利空的差异反应，不是因为逻辑不同，而是因为时间维度不同。一个品种也许短期资源偏紧，近月不愿大跌；但中期供给修复明确，远月已经先弱。另一个品种可能短期并不紧，但市场对未来政策或需求恢复仍有幻想，因此绝对价格抗跌，结构却悄悄转松。你如果只看主力合约，往往会觉得“为什么都不一样”；但如果把月差、基差、仓单、库存一起拉进来，差异就会变得非常清楚。",
-          "这也是为什么很多经验型交易者会说，真正的难点不是识别利空，而是识别利空打在哪一层。是打估值，还是打现实？是打短期，还是打中期？是打资金情绪，还是打现货资源？",
-          "如果是打估值，那么盘面往往先快跌，但随后要看有没有现实验证；如果是打现实，那么哪怕消息面不那么刺激，行情也可能走得更稳更长；如果是打时间结构，那么绝对价格的波动反而可能没那么大，真正的变化先发生在曲线上。",
-          "一个典型的误读场景是：交易者看到宏观数据不友好，立刻把所有工业品都归入同一个逻辑；结果发现，有的品种快速下挫，有的只是在高位震荡，有的甚至走出“利空不跌”。这时候最容易犯的错，就是把“不跌”理解成“逻辑错了”。其实更大的可能是，这个品种当下主导定价的，不是宏观层，而是现实层或结构层。",
-          "判断这一点，最有用的还是联看顺序：",
-          "先看这条利空影响的是需求预期、流动性还是风险偏好；再看目标品种当前处在库存高还是低、现货强还是弱、基差收还是扩的阶段；再看月差和近远月结构有没有把这种差异表达出来；最后再看资金是否在借宏观冲击做统一减仓，还是只是做局部再平衡。"
-        ],
-        "mistakes": [
-          "把同一条宏观利空机械套到所有品种* 只看绝对价格，不看结构和现货* 看到“利空不跌”就以为基本面更强* 忽略不同品种处在不同阶段"
-        ],
-        "signals": [
-          "基差是同步走弱，还是仍然坚挺* 近月与远月谁更先反应* 持仓是主动撤离，还是分歧加大* 现货报价、库存、仓单是否支持宏观叙事* 相关品种间是否同步，还是仅局部受影响"
-        ],
-        "framework": [],
-        "summary": [
-          "同样是利空，不同品种反应差这么大，不是因为市场不一致，而是因为市场在不同品种上回答的是不同问题。宏观冲击只是入口，真正决定盘面反应的，仍然是每个品种自己的库存位置、供需现实、时间结构和资金状态。",
-          "---"
-        ]
-      },
-      "盘面看起来很强，不一定逻辑很强": {
-        "intro": "很多行情最容易骗到人，不是在横盘时，而是在最强的时候。因为价格的强，和逻辑的强，从来不是一回事。",
-        "body": [
-          "商品市场里有一种很常见的错觉：盘面越强，逻辑越硬。这种错觉之所以危险，是因为它恰好符合人的直觉。价格涨得快，成交放大，群里都在讨论，资讯标题密集，情绪一热，大家就会很自然地把“强走势”理解成“强逻辑”。可真正看过足够多盘面的交易者会知道，很多最漂亮的拉升，恰恰是最脆弱的上涨。",
-          "要分清“盘面强”和“逻辑强”，先要把两者拆开。",
-          "盘面强，说的是价格表现。它可以来自事件刺激、情绪集中释放、短线资金追逐、空头回补，也可以来自真实供需改善。它是结果，是屏幕上最先能看到的东西。",
-          "逻辑强，说的是驱动质量。它意味着背后有更扎实的约束或变化在发生：供给端真的收缩了，需求端真的改善了，交割资源真的偏紧了，或者库存、基差、月差、现货之间真的开始出现持续验证。",
-          "问题就在这里：盘面可以很强，但驱动并不扎实。最典型的，就是事件窗口前后的抢跑行情。",
-          "以 USDA WASDE 这类固定报告窗口为例，由于报告按月发布，市场会提前围绕面积、单产、出口、库存等预期进行交易。很多时候，报告前几天价格已经拉起来了，盘面看上去非常强，资讯也会同步强化主题。但如果报告落地只是“符合预期”，并没有提供新的供需冲击，那么最强的那一段上涨，反而可能只是预期堆出来的。WASDE 的月度发布框架决定了，市场并不是等报告出来才开始定价，而是会在报告前持续预埋观点。",
-          "再看资金层。CFTC 的 COT 解释页面指出，报告本质上是对每周二未平仓合约结构的拆分，帮助市场看清不同类型大户的参与情况。虽然它不是盘中数据，但它提供了一个非常重要的理解框架：上涨可以来自新增多头，也可以来自空头回补。前者更接近逻辑推动，后者则往往更偏情绪修复。很多盘面上看起来“非常强”的拉升，持仓却并没有同步放大，甚至在上涨过程中开始回落。这说明推动价格的，不是新的分歧资金进场，而是原有空头被迫离场。这样的上涨当然也是真涨，但它的质量和持续性，和“增仓上行”的行情不是一个级别。",
-          "还有一种容易误判的强，是近端情绪强、现实验证弱。比如某个题材突然被放大，近月合约快速上冲，市场都在说“资源紧张”。可如果现货报价不跟，基差不强化，月差也没有进一步收紧，说明所谓的“紧”更多停留在交易情绪里，还没有真正反映为资源定价。这种盘面经常在当天或者次日看起来很漂亮，但后续却难以走出真正持续的趋势。",
-          "要判断一个行情到底是“盘面强”还是“逻辑强”，我更建议用下面这个顺序：",
-          "第一，看驱动是不是新增。是老题材被重复讲述，还是新变量真正进入了定价？如果只是旧逻辑在情绪上再加速，盘面可以很强，但质量未必高。",
-          "第二，看结构有没有跟。绝对价格上涨并不难，难的是基差、月差、近远月强弱关系和现货报价一起配合。只有结构跟上，逻辑才更有落地感。",
-          "第三，看资金是不是在加深分歧。如果上涨同时伴随未平仓合约增加，更说明市场在把观点转成仓位；如果只是缩量或减仓上涨，更多时候要警惕这只是空头回补或情绪脉冲。",
-          "第四，看上涨持续靠的是什么。靠标题、靠情绪、靠短线流动性，还是靠库存、供需、交割、现货？这个问题不解决，就很容易把盘面强，当成逻辑强。",
-          "现实里最典型的误读，就是“看到强就追，看到弱就怀疑逻辑”。但真正高质量的行情，很多时候未必最热闹；它往往是那种回调有承接、结构有验证、现货能跟上、时间一拉长反而越来越清楚的走势。",
-          "一个典型案例类型是：报告前价格连续上行，市场高度一致，消息一落地盘面冲一下后回落。看上去像是“利多失效”，其实只是盘面强、逻辑未进一步增强。真正的逻辑强，应该体现在报告后近端结构继续强化，现货和基差也接棒。"
-        ],
-        "mistakes": [
-          "把涨幅大等同于逻辑硬* 把所有拉升都理解成趋势启动* 忽略减仓上涨与增仓上涨的差异* 只看主连，不看基差和月差"
-        ],
-        "signals": [
-          "现货是否同步走强* 基差是否抬升* 月差是否进一步收紧* 持仓是增加还是下降* 相关品种是否形成联动验证"
-        ],
-        "framework": [],
-        "summary": [
-          "盘面看起来很强，不一定逻辑很强。真正有质量的行情，不只是价格冲出去，更是资源、结构和仓位愿意一起把这条逻辑坐实。",
-          "---"
-        ]
-      },
-      "螺纹钢交易者必须盯的5个变量": {
-        "intro": "黑色链最容易让人误判的地方，不是变量太少，而是变量太多。真正有效的方法，不是每个数据都看，而是抓住那几个真正决定阶段定价的核心变量。",
-        "body": [
-          "螺纹钢看起来是一个“需求品种”，但真正走盘时，它从来不是只看需求。对成熟一点的黑色交易者来说，螺纹的定价至少要放在五个变量里同时理解：钢厂利润、铁水产量、库存、现货需求、政策预期。这五个变量不是平行关系，而是一条会不断切换主导权的链条。",
-          "第一，钢厂利润。利润决定的是供给意愿。利润改善，意味着钢厂更有动力维持甚至抬升产量；利润被压缩，意味着供给侧更容易收缩。很多时候，螺纹并不是先被需求推动，而是先被利润和生产端的反应牵引。尤其在黑色链内部，成材和原料的相对强弱，往往先通过利润变化体现出来。",
-          "第二，铁水产量。铁水更像黑色链的心跳。它不仅影响铁矿、焦煤、焦炭，也决定螺纹供给基础。铁水持续高位，说明上游生产体系仍在高负荷运转，对成材供给形成支撑甚至压力；铁水回落，则说明生产节奏开始变化，黑色链的供需平衡点也会随之移动。螺纹交易者为什么一定要看铁水？因为很多表面上是“螺纹自己的行情”，实际上先动的是整条黑色链的生产节奏。",
-          "第三，库存。螺纹库存又不能只看总量，更要看“去化速度”和“位置感”。库存低不一定绝对利多，库存高也不一定立刻利空，关键在于：当前库存相对于需求季节、铁水水平和市场预期，处在什么位置。如果库存去化速度明显快于市场原先判断，螺纹盘面往往更容易走强；如果库存只是表面下降，但需求并没有明显改善，那么库存的支撑意义就会被削弱。",
-          "第四，现货需求。螺纹的现实需求，不是一个抽象概念，而是现货成交、终端拿货节奏、贸易商心态、工地复工进度这些微观行为的总和。盘面很多时候会提前反映需求预期，但能不能把预期坐实，最终还是要回到现货端看验证。这也是为什么螺纹强不强，单看期价不够，必须联看现货和基差。没有现货承接，螺纹很多上涨都只是预期推动；有现货配合，盘面才更容易走出持续性。",
-          "第五，政策预期。黑色链和其他商品最大的区别之一，就是政策预期在阶段性定价中经常占很大权重。地产、基建、限产、稳增长、环保、供给侧管理，这些都会改变市场对未来需求和供给的想象。政策预期强的时候，盘面可以提前走；政策现实不及预期的时候，盘面也会很快修正。所以螺纹交易者不能只盯现实数据，也不能只听政策故事，而要判断：当前盘面到底是“政策在主导”，还是“现实在接管”。",
-          "这五个变量真正难的地方，不在于认识它们，而在于判断当前谁是主变量。比如：",
-          "* 当钢厂利润和铁水都在高位，而需求一般时，螺纹更容易交易供给压力。* 当铁水见顶回落、库存下降、现货改善时，螺纹更容易交易供需修复。* 当政策预期突然抬升，但现货还没跟上时，螺纹更容易走“预期先行”的行情。* 当政策故事说得很多，但库存和需求都没有改善时，盘面就更容易冲高回落。",
-          "螺纹最怕的不是变量多，而是交易者拿一个变量去替代全部。比如只看库存，就容易忽略钢厂利润和铁水的高位供给；只看政策，就容易忽略现货承接不足；只看现货，又容易忽略远端预期正在变化。",
-          "典型案例类型是这样的：盘面因为政策预期走强，螺纹连续拉升，市场普遍把上涨理解成“需求会起来”。但随后现货成交并没有明显跟进，基差没有持续强化，铁水仍然处于高位，钢厂利润也没有显著恶化。这种情况下，盘面走强的基础就会比较脆弱，因为它主要靠的是预期，而不是现实链条同步改善。反过来，如果盘面不太热闹，但库存去化快、现货拿货好、铁水开始回落，基差也偏强，那么这种“安静的强”往往比高调上涨更值得重视。"
-        ],
-        "mistakes": [
-          "把库存单独当作方向判断* 只看政策故事，不看现货验证* 只看螺纹，不看整条黑色链生产节奏* 忽略利润和铁水对供给的约束"
-        ],
-        "signals": [
-          "螺纹现货成交是否改善* 基差是走强还是走弱* 铁水产量是否见顶或继续高位* 钢厂利润是否支持持续供给* 黑色链内部成材与原料是否共振"
-        ],
-        "framework": [
-          "先看当前是政策主导还是现实主导2. 再看钢厂利润与铁水，判断供给节奏3. 再看库存和现货，判断现实验证4. 最后看基差和盘面，判断市场是否提前或过度定价"
-        ],
-        "summary": [
-          "螺纹钢交易者必须盯的，不是某一个神奇指标，而是这五个变量的主次切换。谁在主导，决定你看到的是“预期行情”，还是“现实行情”。",
-          "---"
-        ]
-      },
-      "铁矿石行情波动，到底在交易什么": {
-        "intro": "铁矿石看起来像是“黑色链里最会讲故事的品种”，但它真正的价格波动，并不靠故事本身，而是靠钢厂生产、港口库存、发运到港和成材利润这些变量不断重排优先级。",
-        "body": [
-          "如果说螺纹钢更像需求预期和现货验证之间的拉扯，那么铁矿石更像是生产节奏与资源供给之间的博弈。很多时候，铁矿盘面的大波动，并不是因为逻辑特别复杂，而是因为市场经常会把不同时间段、不同层次的变量混在一起看。",
-          "理解铁矿，最关键的是先分清它到底在交易什么。通常有四条主线：",
-          "第一条，钢厂生产节奏。铁矿不是孤立商品，它最大的现实需求来自高炉生产。铁水维持高位时，铁矿的现实需求就有支撑；铁水一旦转弱，铁矿最先失去的往往不是故事，而是需求基础。所以，铁矿盘面很多时候并不是在交易“矿山消息”，而是在交易中国钢厂到底会不会继续保持高负荷生产。",
-          "第二条，港口库存与到港发运。港口库存是现阶段供给压力最直接的体现之一，但和库存一样，不能只看绝对值。更重要的是：库存是在累，还是在去；是因为到港增加在累，还是因为疏港不畅在累；是高品资源紧，还是总量看着不少。库存如果只是表面高，但结构性紧张仍在，盘面未必走弱；库存如果持续累积，同时钢厂利润走差、铁水回落，那盘面的压力就会明显放大。",
-          "第三条，成材利润。这是铁矿特别有意思的一点。很多人以为铁矿走势只由自己决定，但真实市场里，铁矿往往是黑色链利润再分配的结果。成材利润好的时候，钢厂更能承受矿价，也更愿意维持高开工；利润被压时，矿价就更容易成为压缩利润的对象。也就是说，铁矿很多波动，不是“矿自己强”，而是“下游还能不能接得住”。",
-          "第四条，政策与预期。铁矿石还有一个显著特征：它经常会成为市场表达黑色链预期的最前沿品种。因为它流动性好、关注度高、对铁水和需求预期的弹性大，所以当市场在交易地产、基建、稳增长或生产限制时，铁矿往往比螺纹更先有反应。但也正因为如此，铁矿更容易把“预期交易”做得很满。预期强时涨得快，现实不接时回得也快。",
-          "这也是铁矿最典型的盘面特征：它经常不是在交易单一变量，而是在交易变量切换。",
-          "举一个非常典型的场景：市场一开始因为政策预期改善，认为后续成材需求和钢厂生产会抬升，于是铁矿先涨；随后如果钢厂利润没有修复，成材现货承接也一般，那么市场就会开始怀疑高铁水是否可持续；这时即便政策故事还在，铁矿也可能先进入回落，因为它从“交易预期修复”切到了“交易利润约束”。",
-          "再换一个场景：表面上港口库存不低，看起来好像供给宽松；但如果高品资源偏紧、疏港强、钢厂补库积极，同时铁水高位，那么矿价依然能维持强势。这种情况下，绝对库存告诉你的只是“总量”，但盘面真正交易的是“可用资源结构”。",
-          "铁矿交易者最容易犯的错误，是把“利多矿价”和“利空矿价”讲得太线性。现实里更准确的问法应该是：",
-          "* 钢厂还愿不愿意继续生产？* 港口资源看起来多，但真正紧的是不是可交付的那部分？* 成材利润有没有给矿价留空间？* 当前盘面是在抢政策预期，还是在回到生产现实？",
-          "这个品种的高波动，本质来自于它对黑色链全局预期非常敏感，但又必须最终接受现实生产和利润的检验。也因此，铁矿特别容易出现一种典型行情：前期因为预期很强，价格走得很猛；后期因为现实验证不够，回落也很快。不是逻辑变了，而是主导变量变了。"
-        ],
-        "mistakes": [
-          "只看港口库存，不看资源结构* 把政策预期直接等同于铁矿持续上涨* 忽略成材利润对矿价的制约* 只把铁矿当原料，不把它当黑色预期风向标"
-        ],
-        "signals": [
-          "铁水是否继续高位* 成材利润是否修复* 港口库存是总量宽松还是结构偏紧* 疏港与补库节奏是否改善* 铁矿与螺纹、焦煤是否形成链条共振"
-        ],
-        "framework": [
-          "先看铁水和钢厂生产节奏2. 再看成材利润，判断矿价承受空间3. 再看港口库存、到港和资源结构4. 最后看政策预期和盘面是否已提前交易过度"
-        ],
-        "summary": [
-          "铁矿石行情波动，到底在交易什么？表面上看是矿山、港口、库存和消息，实质上交易的是钢厂生产意愿、利润空间、资源结构和政策预期的先后切换。真正看懂铁矿，不是背变量，而是知道当下谁在主导。"
-        ]
-      },
-      "豆粕研究框架：从压榨到出口": {
-        "intro": "豆粕看起来像个“跟着美豆走”的品种，但真正做久了会发现，单看外盘远远不够。豆粕的节奏，很多时候不是由某一个价格点决定，而是由“大豆进来以后，压榨能不能开、豆粕能不能卖、出口和内需能不能接”这整条链条共同决定。",
-        "body": [
-          "豆粕研究最容易犯的错，是把它看成单一需求品，或者单一成本品。前者会让人只盯饲料需求，后者会让人只盯美豆价格。更有效的办法，是把豆粕放回“大豆—压榨—豆粕/豆油双产出—内需/出口”这条完整链条里。因为压榨厂处理的不是“豆粕”本身，而是大豆；而压榨利润也不是只由豆粕决定，而是由豆粕和豆油共同决定。NOPA 的月度 Crush Report 之所以长期被市场视作关键指标，就是因为它覆盖了 20 家成员企业、代表美国 98% 以上的大豆压榨，可以直接帮助市场判断压榨节奏有没有变化。",
-          "要建立豆粕框架，第一步要抓住供给端并不等于“大豆有多少”。真正影响豆粕阶段供给的，是可到港大豆、压榨开机意愿、压榨利润和油厂节奏。市场很多时候会说“豆多了，所以粕就一定宽松”，但现实里并不总这么简单。因为只要压榨利润不支持、油厂检修增多、或者豆油端价格拖累联产品利润，豆粕供给并不会机械跟着大豆供应同步释放。也就是说，大豆是原料约束，压榨才是现实供给闸门。",
-          "第二步要把出口与内需同时放进来。USDA 的 Export Sales Reporting Program 规定了周度申报与披露体系，市场长期依靠这套制度跟踪大豆、豆粕、豆油等农产品的销售与发运变化。豆粕研究里一个常见盲区，是只看国内饲料需求，不看外部销售节奏；但现实中，无论是大豆还是豆类副产品，外需变化都可能通过压榨和库存路径间接影响豆粕定价。USDA 的周度出口销售报告本身，就是用来捕捉这种需求端变化的重要窗口。",
-          "第三步要明白，豆粕不是孤立产出，而是压榨联产品中的一半答案。这也是为什么豆粕行情经常会和豆油节奏发生分化。举个典型场景：如果油脂端因为政策、能源或生物燃料预期而更强，压榨利润可能被豆油托住，油厂开机意愿增强，豆粕供给随之提升；这时候，哪怕豆粕自身需求并不弱，盘面也不一定会同步走成单边强势。反过来，如果油端偏弱、粕端又没有明显需求塌陷，那么压榨利润受压，供给释放也会受限，豆粕反而可能更抗跌。换句话说，豆粕价格常常不是“自己一个人走出来的”，而是被压榨链条共同塑造的。",
-          "再往下，研究豆粕还必须理解库存只是结果，不是起点。库存高不一定立刻利空，库存低也不一定立刻利多。关键是库存变化来自哪里：来自压榨增加、需求转弱，还是来自运输、节奏、阶段错配。如果库存下降，但压榨仍高、出口一般、内需也只是季节性改善，这种去库未必意味着趋势性偏紧；反过来，如果库存尚未显著下降，但压榨利润受压、油厂开机受限、需求端又保持韧性，那么盘面往往会先给未来库存路径定价。市场真正交易的不是库存数字本身，而是库存背后的“下一步会不会继续这样走”。",
-          "豆粕最典型的误判，通常发生在固定数据窗口前后。比如 NOPA 月度压榨报告出来后，很多人会直接把“压榨高”翻译成“粕宽松”。但更有经验的交易者会多问几层：压榨高，是因为油端更强，还是因为粕端也强？压榨高之后，库存有没有明显累积？现货基差有没有马上转弱？如果这些验证没有同步跟上，那么高压榨更可能只是链条内利润驱动的生产行为，而不是豆粕本身进入过剩趋势。反过来，压榨不及预期时，也不能立刻把它理解成豆粕绝对利多，还要看大豆供应、出口、饲料需求和基差是否共振。",
-          "所以，豆粕真正有效的研究框架，可以压缩成五个问题：第一，大豆供给有没有变化，尤其是到港和压榨原料是否顺畅；第二，压榨利润能不能支持开机；第三，豆粕现货需求和出口有没有改善；第四，库存与基差是否验证这种变化；第五，豆油端是不是在改变整个压榨链条的行为。这五个问题串起来，豆粕就不再只是“跟涨跟跌的下游品种”，而是一个能被拆出供给、需求、利润和结构层次的完整研究对象。"
-        ],
-        "mistakes": [
-          "只看美豆，不看压榨利润和油厂开机* 把压榨高直接等同于豆粕必然宽松* 只看库存，不看库存变化背后的原因* 只看粕，不看油"
-        ],
-        "signals": [
-          "NOPA 压榨是否高于或低于预期* USDA 周度出口销售与发运节奏* 豆粕基差是否同步变化* 豆油与豆粕相对强弱是否改变压榨逻辑* 油厂开机、库存、现货报价是否共振"
-        ],
-        "framework": [],
-        "summary": [
-          "豆粕研究真正的核心，不是找一个“最准指标”，而是把它放回压榨链条里。只有同时看原料、压榨、联产品、需求和库存，豆粕的很多“看起来矛盾”的行情，才会变得顺理成章。",
-          "---"
-        ]
-      },
-      "铜的行情到底更看宏观，还是更看基本面": {
-        "intro": "“铜到底看宏观，还是看基本面”这个问题，本身就带着一点误导。因为铜从来不是二选一的品种。它最难也最有意思的地方，恰恰在于：它常常同时受宏观和现实供需驱动，只是阶段不同、权重不同。",
-        "body": [
-          "铜之所以常被叫作“Dr. Copper”，并不是因为它每次都能精准预测经济，而是因为它的需求面高度嵌入建筑、电气、电子、制造和电力系统之中。CME 的铜产品概览提到，建筑大约占到铜需求的近一半，电子与消费品又占据一大块；这意味着，铜天然会对经济预期、房地产和工业活动敏感。与此同时，ICSG 的 Copper Bulletin 和统计年鉴长期跟踪矿山、冶炼、精炼、消费、贸易和库存，这又让铜成为一个现实供需链条非常完整的商品。换句话说，铜既有宏观脸，也有产业脸。",
-          "如果一定要拆，铜的宏观驱动主要体现在三条线上：经济预期、美元/利率、风险偏好。经济预期改善时，市场会更愿意给铜未来需求增长定价；美元走强、利率抬升时，金融属性和定价货币效应又会对铜形成压制。一些 IMF 研究也讨论过铜价与全球增长、利率、美元等宏观因素之间的关系，这也是为什么铜经常在宏观交易窗口被拿出来当风向品种。也正因如此，宏观冲击来时，铜的反应往往比很多纯农产品更直接、更快。",
-          "但如果只把铜看成宏观品种，很快就会遇到解释不了的行情。因为铜还有非常强的基本面驱动。ICSG 的统计体系之所以被市场长期使用，就是因为铜的现实供需链条很长，从矿端、冶炼、精炼到终端使用，任何一段出问题，都可能改变价格。矿山扰动、冶炼加工费变化、废铜供应、交易所库存和区域现货紧张，这些都可能在短期内主导盘面。换句话说，铜不是只有“经济好不好”这一条线，现实资源够不够、交付顺不顺、库存在哪一环堆积，也同样重要。",
-          "更复杂的是，铜的宏观与基本面经常不是对立关系，而是先后接力。一个很典型的节奏是：先由宏观预期推动价格抬升，再由现实库存、现货升水、交易所仓单、加工费等变量决定这轮上涨能不能持续。LME 的仓单与库存报告体系，以及其关于仓储和实货交易的教育材料，本质上都在提醒一件事：金属价格并不只是一张图，它还对应着真实仓库、真实交付、真实流动性。所以，宏观把铜推上去之后，如果库存没有跟着下降、现货不强、仓单变化也不支持，那上涨就更像估值修复；如果库存下降、现货升水扩大、区域紧张加剧，那宏观预期就有了现实支撑。",
-          "铜还有一个很容易被忽略的点：它有全球价格，也有区域价格。LME 与 CME 铜合约都属于实物交割合约，但两者交割仓库网络和区域属性不同，LME 更全球化，CME 更偏美国区域，这也意味着铜价里不仅有全球宏观预期，还可能夹杂区域供需与基差差异。LME 的相关教育资料明确提到，LME 铜可在其全球核准仓库网络中交付，而 CME 铜则更具美国区域属性。这就是为什么有时候你会看到“宏观看起来一样，但不同交易所、不同区域的铜价格和现货状态并不完全同步”。",
-          "案例上看，铜最典型的两类误读是：",
-          "第一类，把宏观交易当成基本面行情。比如风险偏好明显修复，铜价快速走高，很多人会立刻说“供需大幅收紧”。但如果这时库存没有同步下降，现货升水也没有强化，甚至加工费和冶炼端还在释放偏宽松信号，那么更合理的解释是宏观预期先抬了估值，而不是现实铜资源已经明显紧张。",
-          "第二类，把基本面行情看成纯宏观波动。比如美元偏强、利率预期偏鹰，按理说铜该承压，但盘面却跌不下去，甚至近端偏强。此时往往要检查库存、仓单、现货和区域价差。有时候并不是宏观失效，而是现实资源偏紧在对冲宏观压力。",
-          "所以，判断铜到底更看宏观还是更看基本面，不该问“哪个更重要”，而该问“当前谁在主导，谁在验证”。宏观负责改变市场愿意给的估值区间；基本面负责决定这个区间能不能被现实坐实。"
-        ],
-        "mistakes": [
-          "把铜简单归类成“宏观品种”* 把所有上涨都理解成供需偏紧* 只看库存，不看库存发生在哪一环* 忽略区域现货和仓单差异"
-        ],
-        "signals": [
-          "ICSG 对全球供需和库存的跟踪变化* LME 库存和仓单变化* 现货升贴水与区域价差* 美元与利率预期变化* CME/LME 两地价格与交割属性差异"
-        ],
-        "framework": [
-          "先看宏观窗口：增长预期、美元、利率、风险偏好2. 再看现实变量：库存、仓单、现货升贴水、加工费3. 再看区域差异：LME 与 CME、不同地区现货状态4. 最后判断：当前是宏观主导，还是现实接管"
-        ],
-        "summary": [
-          "铜既看宏观，也看基本面。更准确地说，铜最常见的行情不是“二选一”，而是宏观先定情绪和估值，基本面再决定这轮行情能走多远、能不能坐实。",
-          "---"
-        ]
-      },
-      "原油为何经常先交易预期，再交易兑现": {
-        "intro": "原油的麻烦，从来不是消息太少，而是消息太多。OPEC+、地缘风险、EIA 周报、炼厂检修、航运扰动、季节性需求……任何一条线都能成为盘面波动的触发器。但真正决定行情节奏的，往往不是这些消息本身，而是市场先在交易预期，还是已经开始交易现实。",
-        "body": [
-          "原油是典型的“预期先跑”的市场。原因有三个。第一，它的信息密度极高，几乎每天都有新叙事；第二，它的金融化程度高，全球资金参与度强；第三，它同时连接实货、库存、炼厂、运输与宏观风险偏好，因此市场很容易在现实发生前就先给未来定价。OPEC 的月报长期会把供需展望、价格表现以及期货曲线结构一起讨论，甚至直接把 backwardation 视为实货市场偏支持的信号之一；EIA 则按固定节奏每周发布美国石油状态报告，帮助市场不断修正对现实供需的理解。",
-          "所谓“先交易预期”，最典型的表现，就是现实还没明显变化，价格已经先大幅波动。比如市场开始讨论 OPEC+ 是否延长减产、某个地缘冲突是否会影响航运或出口、旺季需求是否可能超预期、美国库存是否会继续去化。此时盘面先动的，不是因为油轮已经少了、库存已经立刻大降，而是因为市场在用期货价格提前押注“未来可能发生的变化”。原油的这类行情很容易走得快，因为它靠的是想象空间、仓位拥挤和一致预期。可也正因为如此，它在兑现环节也最容易出现反复。",
-          "“再交易兑现”的阶段，通常发生在两个时点。一个是事件正式落地，比如 OPEC+ 真的宣布了产量安排；一个是高频现实数据开始验证，比如 EIA 报告里的原油、汽油、馏分油库存和炼厂开工变化，开始告诉市场近端现实到底比想象中更紧，还是更松。EIA 的周报体系之所以被广泛使用，就是因为它让市场每周都能重新比对：此前讲的那些故事，到底有没有现实证据。",
-          "原油交易里最容易误判的，不是“方向”，而是“阶段”。很多人看到油价在消息面带动下上涨，就默认逻辑已经被证实。但真正的现实验证，往往体现在三个地方：",
-          "第一，期货曲线结构。OPEC 的月报多次把 major benchmarks 的 backwardation 与实货市场支持联系起来，这背后反映的是近端资源偏紧时，曲线前端更容易强于远端。也就是说，预期交易可以先把价格拉高，但如果近端结构没有进一步强化，很多上涨更像情绪而不是现实。",
-          "第二，库存与炼厂。如果市场一直在讲“供给要紧”，但 EIA 数据里商业库存并未继续去化，或者炼厂开工、成品油库存没有形成支持，那就要警惕预期跑得太快。反过来，如果库存连续下降、汽柴油去化配合、炼厂开工高位，说明现实正在跟上。",
-          "第三，地缘与实货之间的差。地缘事件最容易把油价推入“先交易预期”的模式。因为市场不需要等供应真的中断，就会先对“可能中断”加风险溢价。可兑现阶段会问得更细：出口真的减少了吗？航运真的堵了吗？保险、运费、装船和到港有没有系统性变化？如果没有，很多地缘溢价最终会在兑现阶段被收回。",
-          "一个典型案例类型是：市场在会议前普遍预期减产延长，油价连续上行；会议结果落地后，价格先冲后回，因为“该知道的早就知道了”；随后如果 EIA 周报继续显示库存去化、炼厂需求偏强、曲线前端更紧，油价又可能重新获得支撑。也就是说，预期决定第一段，兑现决定第二段，现实数据决定第三段。",
-          "所以，原油最有效的观察框架，不是盯着新闻标题追涨跌，而是先问：",
-          "这波上涨或下跌，是在交易未来，还是已经交易现实？如果是未来，那么现实要看什么来验证？如果现实没有跟上，这个预期还能撑多久？"
-        ],
-        "mistakes": [
-          "把每一次消息驱动都当成现实供需已经改变* 只看绝对价格，不看曲线前端强弱* 把库存单周变化机械化解读* 地缘风险一来就默认供应必然中断"
-        ],
-        "signals": [
-          "Brent/WTI/Oman 等曲线前端是否强化 backwardation* EIA 库存与炼厂开工是否验证预期* 成品油库存和需求是否同步* 航运、出口、装船是否出现现实扰动* 会议落地后价格和曲线是否还能继续强化"
-        ],
-        "framework": [],
-        "summary": [
-          "原油之所以经常先交易预期，再交易兑现，是因为它是一个高信息密度、高金融参与度、强实货约束并存的市场。真正能把原油看清的人，不是最先看到标题的人，而是最先看清“现在到底在交易哪一个阶段”的人。",
-          "---"
-        ]
-      },
-      "订单流里最容易被误读的三个信号": {
-        "intro": "订单流工具最大的价值，不在于“给方向”，而在于让你更快看到盘面里谁在主动、谁在承接、谁在撤退。可它最容易让人上瘾的地方，也恰恰在这里：看到局部细节后，交易者很容易把“局部信号”误当成“整体结论”。",
-        "body": [
-          "先把一个底层前提说清楚：订单流、成交明细、盘口深度这些工具，本质上都在帮助你观察交易过程，而不是替代你完成结论。CME 的教育材料把 market depth 描述为订单簿里不同价位上的买卖挂单信息；其 market data 页面也把 trades、top of book、market depth 和 market statistics 作为不同层次的数据视图。与此同时，CME 对 open interest 的定义是日终仍未平仓的合约总数，CFTC 的 COT 体系则进一步把 open interest 按参与者类型做拆分。把这些放在一起看，你会发现：盘面里有“瞬时过程数据”，也有“日终结构数据”，两者不是一个维度。",
-          "订单流最容易被误读的第一个信号，是大单主动成交。很多交易者看到某个价位连续出现主动买单，就立刻理解成“主力在强攻”；看到主动卖单密集打出，又立刻判断成“抛压很重”。但主动成交只能说明谁在此刻更着急成交，不能单独说明对手方是被动承接失败，还是正在从容吸收。一个很常见的场景是：主动买单很多，价格却推不动，这往往说明上方有稳定供应或套保卖盘在承接；反过来，主动卖单很多但价格跌不下去，也可能说明下方有资金在持续吸收。也就是说，主动成交是“意愿强弱”的线索，不是方向答案。",
-          "第二个最容易误读的，是盘口深度突然变薄或突然堆厚。CME 的材料中，market depth 被定义为订单簿中的挂单深度；但挂单并不是成交，它既可能是真实流动性，也可能会撤单、移动、重排。所以，看到某一侧挂单很多，不能直接理解成那里一定有牢固支撑或压力；看到某一瞬间深度突然变薄，也不能立即判断行情必然加速。因为订单簿是动态的，尤其是在事件窗口、波动加大或流动性突变的时候，挂单行为本身就会快速变化。真正需要看的，不是“有没有挂单”，而是挂单在价格靠近后是否持续存在、是否被成交吸收、是否在不同价位反复重建。",
-          "第三个最容易误判的，是局部成交密集区。很多人看到某个价格带反复放量，就会立刻把它定义成“关键支撑”或“关键阻力”。但量能密集只说明那里发生了大量换手，不自动说明后续一定起作用。它可能代表共识区、争夺区，也可能代表大资金换手后的中性区域。只有当这个价位带后续和持仓、结构、现货、月差等更高层次信号形成共振时，它才更有解释力。否则，局部密集成交很容易从“市场重点区域”被误读成“机械交易信号”。",
-          "这三个误读，本质上都来自同一个问题：把微观信号看得过大，把宏观结构看得过轻。",
-          "订单流工具的正确打开方式，不是让它告诉你该怎么想，而是让它帮你验证你已经在更高层框架里形成的判断。比如：",
-          "* 你先有一个事件窗口判断：今天是预期交易还是现实交易；* 再用订单流看盘中主动成交是在推进行情，还是在被动换手；* 再结合日终 open interest 变化，看这波动作到底有没有转化成新的仓位结构。",
-          "这就是为什么 open interest 和 market depth 一定要分开理解。Open interest 是日终仍未平仓的合约总数，更适合回答“有没有新增观点进入市场”；market depth 和逐笔成交更适合回答“盘中谁在主动，谁在承接”。如果把二者混为一谈，就很容易把盘中几分钟的激烈成交，误读成全天趋势已经被确认。",
-          "一个典型案例类型是：报告或数据公布后，某一侧主动单猛增，价格瞬间拉出；很多人会把这理解成趋势启动；但如果随后盘口上方持续有承接，价格无法脱离密集换手区，日终 open interest 也没有形成有效扩张，那更合理的解释往往只是“情绪瞬间释放 + 存量资金换手”，而不是新的趋势行情。",
-          "再换一个场景：盘中某价位下方挂单很厚，市场普遍把它当支撑；但数据或消息一来，挂单快速撤掉，价格直接穿透。这不是“支撑失效”，而是本来就不该把挂单厚度直接等同于真实支撑。真正值得信任的，不是挂单存在，而是挂单在成交压力到来之后，是否还愿意继续承接。",
-          "所以，订单流最有用的价值，反而是帮助你建立一种更克制的观察顺序：",
-          "先有方向框架，再看微观执行；先看结构判断，再看局部主动；先看事件背景，再看盘口行为；最后再用持仓和日终结构确认盘中动作有没有真正留下痕迹。"
-        ],
-        "mistakes": [
-          "把主动买卖盘直接等同于方向* 把盘口挂单厚度直接等同于支撑压力* 把局部放量区直接等同于必然转折位* 用盘中微观数据替代更高层次框架"
-        ],
-        "signals": [
-          "主动成交后价格能否持续脱离成交密集区* 盘口深度在价格靠近后是否持续存在* 日终 open interest 是否扩张* 事件背景下，盘中动作是否与现货、基差、月差共振* 次日是否继续沿同一方向定价"
-        ],
-        "framework": [],
-        "summary": [
-          "订单流里最容易被误读的，不是工具本身，而是交易者对工具的期待。它不是方向发生器，而是过程放大镜。放大镜能帮你看清细节，但前提是你先知道自己在看什么。",
-          "期货学院课程初稿（第13—48篇）版本：可直接投喂 Codex 的长文底稿定位：面向有一定交易经验的期货交易者写作口径：真实场景切入 + 案例类型 + 联看信号 + 合规表述说明：文中多次提到的 USDA、NOPA、CFTC、CME、EIA、OPEC、LME、ICSG 等，均可作为后续扩写时继续补充案例与数据的官方或行业资料锚点。"
-        ]
-      },
-      "资金异动出现后，第一步该联看什么": {
-        "intro": "盘中最容易让交易者失去节奏的，不是没有波动，而是突然出现大幅异动。价格一拉、一砸，很多人会本能地把这当成“方向已经明牌”。但真正有经验的处理方式，不是先判断多空，而是先判断这笔异动属于哪一类。",
-        "body": [
-          "资金异动出现后，第一步通常不是看技术形态，也不是立刻下结论，而是先看“异动有没有落到结构里”。盘中大单冲击、连续主动成交、盘口失衡，这些都只能说明此刻有人着急成交，不能单独说明一轮新趋势已经开始。真正要看的，是这笔异动之后，市场留下了什么痕迹。",
-          "一个常见场景是，数据发布或消息传出后，盘中瞬间出现大额主动买盘，价格快速拉升。此时如果只看分时，很容易理解成主线启动。但更好的做法，是立刻联看三个维度。第一，看成交放大以后，价格能否站稳新区域，还是只是冲一下就回落；第二，看盘口另一侧有没有持续承接或抛压；第三，看近月、远月、相关品种有没有同步变化。只有这三件事一起出现，异动才更像“市场在重估”，而不是“市场在躁动”。",
-          "资金异动最怕被误读成单点信号。比如某一时刻突然放量拉涨，很多人就会把它理解成“资金进来了”；可如果持仓没有继续增加，或者价格虽然冲起来、现货和基差却没有任何同步反应，那更可能只是短线资金利用消息窗口做的快速换手。相反，如果盘中异动之后，基差更强、月差更紧、持仓也逐步跟上，那么这笔异动的解释力就明显提高了。",
-          "对商品来说，资金异动最适合放回两类框架中看：一类是事件窗口，比如报告、政策、库存数据；一类是结构窗口，比如交割、基差、仓单、月差变化。前者决定“为什么现在动”，后者决定“这一下能不能留下来”。很多误判，就发生在交易者只看到了第一层刺激，却忽略了第二层承接。",
-          "真正高效的观察顺序是：先看异动发生时点，再看异动后价格留存，再看结构与现货有没有跟。把这三步做完，往往比立刻猜方向更有价值。因为异动不是答案，它只是市场突然把一个问题推到你面前：现在到底在交易什么。"
-        ],
-        "mistakes": [
-          "把任何异动都当成新趋势启动。2. 只看分时冲击，不看后续留存。3. 不联看月差、基差和相关品种。4. 把盘中情绪释放误读成现实重估。"
-        ],
-        "signals": [
-          "异动后价格能否站稳新区域- 持仓是否继续增加- 基差和月差是否同步强化- 相关品种是否共振- 现货端是否出现跟随"
-        ],
-        "framework": [],
-        "summary": [
-          "资金异动之后，第一步该联看的不是“别人怎么解释”，而是价格、结构和现货有没有把这笔异动接住。只有被接住的异动，才更可能演变成真正的行情。"
-        ]
-      },
-      "量价分布能帮你看清什么，不能帮你看清什么": {
-        "intro": "量价分布最吸引人的地方，是它能把一段时间里市场最密集的成交区域直接摊开给你看。但正因为它看起来很直观，交易者也最容易把它想得过于万能。",
-        "body": [
-          "量价分布最大的价值，不在于告诉你未来一定往哪走，而在于告诉你过去一段时间里，市场在什么价格区间最愿意成交、最愿意换手、最容易形成共识。也就是说，它更接近“接受度地图”，而不是“方向指令器”。",
-          "很多人第一次使用量价分布，都会把高成交密集区自动理解成支撑或阻力。这个理解不能说完全错，但非常不够。成交密集区只能说明这里曾经发生过大量换手，不能单独说明此后一定会起作用。因为这个区域既可能是多空达成暂时均衡的位置，也可能只是主力完成换手、随后离开的区域。它的意义，要结合后续价格回到该区域时的行为去重新判断。",
-          "举个常见场景：某个品种经历一段震荡，量价分布显示在中部价格带累积了大量成交。很多交易者会自然地把它理解为“核心支撑区”。但真正的考验在于，后来价格回落到这个区域时，是缩量企稳并迅速反弹，还是放量跌穿且没有明显承接。前者说明这个区域仍然有接受度，后者说明此前的大量成交只是历史事实，不是未来保护。",
-          "量价分布最有用的时候，是和阶段判断结合。比如在事件行情前后，如果价格快速脱离原有密集区并形成新的成交重心，这通常意味着市场愿意以新的价格区间重新平衡；相反，如果价格冲出去后很快又回到原有密集区，那么此前的突破更可能只是短暂情绪释放，而不是共识迁移。",
-          "它不能替你做的事情主要有三件。第一，不能单独判断趋势。分布图反映的是过去成交，不是未来路径。第二，不能单独判断驱动。一个价位为什么成为高换手区，可能来自政策、库存、交割、情绪，也可能只是时间拉长后的自然堆积。第三，不能脱离持仓和结构来理解。一个分布峰值，如果没有月差、基差、持仓的配合，很容易被过度解释。",
-          "更好的用法，是把量价分布当成“盘面上下文”。你先有一个更高层的判断，例如现在是在预期交易还是现实交易、是在资源偏紧还是预期修复；再用量价分布去看，这一轮波动是不是在把市场的接受区间往上或往下推。这样它就会从一个容易被神化的图形工具，变成一个真正有用的辅助判断工具。"
-        ],
-        "mistakes": [
-          "把成交密集区机械理解成支撑阻力。2. 把过去的换手结果当成未来的方向信号。3. 不结合时间段和阶段去解释分布。4. 忽略持仓、月差、基差的配合。"
-        ],
-        "signals": [
-          "价格回到分布密集区后的表现- 是否形成新的成交重心- 持仓是配合增加还是同步回落- 月差与基差是否在同方向变化- 事件后是否完成价格接受区间迁移"
-        ],
-        "framework": [],
-        "summary": [
-          "量价分布能帮你看清市场过去愿意在哪里成交，不能替你决定未来一定往哪走。真正有价值的，不是图上哪里最厚，而是市场下一次回到那里时，会怎么反应。"
-        ]
-      },
-      "强弱订单比该怎么看，才不会看成方向判断": {
-        "intro": "很多人看到强弱订单比，第一个反应就是把它翻译成“多空力量对比”。但如果把它直接当成方向工具，往往会在最应该谨慎的时候被它带偏。",
-        "body": [
-          "强弱订单比更接近一种成交主动性观察工具，而不是趋势判断工具。它揭示的，是某一时间段内，主动成交在买卖两侧的偏向程度。这里最关键的词有两个：主动性、时间段。也就是说，它反映的是“当下谁更着急”，并不自动代表“最终谁会赢”。",
-          "一个典型误读是：比值偏强，就理解成上涨概率大；比值偏弱，就理解成下跌概率大。可真实盘面里，经常会出现一种情况——主动买单很多，但价格推进并不顺畅；或者主动卖单很多，但价格跌不下去。这说明对手方吸收能力同样很强，所谓的强弱订单比，只是揭示了谁在主动出手，不代表对手方一定脆弱。",
-          "这种工具最适合放在两个场景里用。第一，是盘中判断行情性质。比如价格上涨时，如果强弱订单比持续偏强，说明上涨过程中主动买盘确实在推进；但如果价格上涨而比值并不突出，或者只在局部瞬间偏强，更多时候要警惕这只是存量盘面被动抬高。第二，是配合事件窗口做节奏判断。数据出来后，强弱订单比如果只在最初几分钟剧烈倾斜，随后迅速回归平衡，往往说明更多是情绪脉冲；如果倾斜能维持更久，并带动价格区域迁移，才更有结构意义。",
-          "强弱订单比最怕脱离价格位置和成交密度使用。同样一个数值，出现在区间中部、区间边缘、突破后、跌破后，含义都不一样。比如价格在高位、比值持续偏强，但涨幅不再扩大，反而可能意味着追价盘在高位被吸收；而价格在低位、比值偏弱却跌不动，则可能说明卖压已经释放得差不多，市场缺的是新的下行动力。",
-          "更有效的用法是，把强弱订单比看成“盘面情绪的体温计”。体温高，说明盘面激烈；但体温高不等于病因明确。真正的判断仍然要回到：价格有没有脱离原区间、持仓有没有跟、基差和月差有没有变化、相关品种有没有共振。只有这些更高层的信号也在同方向上配合，强弱订单比才更有解释力。"
-        ],
-        "mistakes": [
-          "把强弱订单比直接等同于多空方向。2. 只看数值，不看价格所处位置。3. 不区分短时脉冲和持续倾斜。4. 不联看持仓、结构和现货。"
-        ],
-        "signals": [
-          "价格能否脱离原有区间- 强弱倾斜是瞬时还是持续- 持仓是否同步扩张- 基差、月差是否共振- 异动后是否出现价格接受区间迁移"
-        ],
-        "framework": [],
-        "summary": [
-          "强弱订单比真正有用的地方，是帮助你观察盘中主动性的变化，而不是替你输出方向结论。它更像体温计，而不是诊断书。"
-        ]
-      },
-      "季节性分析，什么时候容易失效": {
-        "intro": "季节性图表最大的诱惑，是它看起来很有秩序：过去很多年都这样走，于是人很容易相信今年也会如此。但市场真正危险的时刻，往往恰恰是大家都相信历史会自动重演的时候。",
-        "body": [
-          "季节性分析之所以有价值，是因为商品市场天然和天气、种植、压榨、消费旺淡季、炼厂检修、运输节奏等周期因素深度绑定。也正因为如此，很多品种的季节性轮廓非常清楚，交易者完全不看季节性，反而会少掉一层重要背景。",
-          "但问题在于，季节性只能描述“历史上常发生什么”，不能自动回答“今年为什么还会发生”。一旦把这个顺序倒过来，季节性就很容易从工具变成陷阱。",
-          "最容易失效的第一种场景，是宏观冲击凌驾于产业节奏之上。比如历史上某段时间往往偏强，但当年却正好遇到利率预期剧烈调整、美元快速走强、系统性风险偏好回落，那么过去那条平滑的季节路径，往往会被宏观重新改写。不是季节性错了，而是当前真正主导市场的不是季节性变量。",
-          "第二种，是政策改变了原本的供需路径。这在黑色、能化和农产品里都不罕见。一个补贴政策、一个出口政策、一个减产安排、一个环保约束，都可能让原本稳定的季节节奏发生位移。市场最容易犯的错，就是拿平均年份去套异常年份。",
-          "第三种，是现实库存和结构已经偏离正常位置。同样是进入旺季，如果一个品种此前库存已经极低、基差很强，那么旺季的上行节奏可能会提前、也可能会被市场提前交易完；反过来，如果库存很高、远月偏弱，那么历史上应当偏强的时段，也可能只表现为“跌得慢一点”。也就是说，季节性真正有效的前提之一，是当前库存、结构和资源位置不要偏离得太远。",
-          "季节性还有一个常被低估的问题：它很容易让交易者产生“方向先验”。只要图看起来很一致，人就会本能地相信接下来应该往那个方向走。这种先验最大的问题，是它会弱化对现实变化的敏感度。你本来应该先问“今年和往年最大的不同是什么”，结果却直接进入“图上过去都这样”。",
-          "更好的用法，是把季节性放在最前面，但只作为“背景框架”，而不是“执行信号”。先用它告诉自己，这个品种在正常年份里通常怎么走；再去检查，今年的库存、基差、持仓、政策和宏观有没有把这条路径改掉。这样季节性才是地图，而不是命令。"
-        ],
-        "mistakes": [
-          "把历史均值路径直接理解成今年必然路径。2. 忽略政策、宏观和库存位置的变化。3. 用季节性替代现实验证。4. 只看均值，不看异常年份。"
-        ],
-        "signals": [
-          "当前库存与历史同期相比是否偏离- 基差与月差是否支持季节路径- 宏观环境是否明显不同于常年- 政策或供给安排是否改变历史节奏- 价格是否已提前反映旺淡季预期"
-        ],
-        "framework": [],
-        "summary": [
-          "季节性分析最容易失效的时候，不是图画得不够好，而是市场真正的主导变量已经换了。季节性是背景，不是判决书。"
-        ]
-      },
-      "一次典型的库存利多失效案例复盘": {
-        "intro": "库存下降，本该利多；价格没涨，甚至回落，于是很多人会说“市场不讲理”。但真正值得复盘的，从来不是市场为什么不听常识，而是这次库存利多，到底为什么没有形成新的定价。",
-        "body": [
-          "库存利多失效，是商品市场里最常见也最有教育意义的一类案例。因为它表面上是在告诉你“库存没用”，实际上是在提醒你：库存只是结果，不是驱动的全部。",
-          "典型场景通常是这样的：市场前期已经因为库存持续下降而走出一段上涨，媒体和交易圈都开始强调资源偏紧；随后新一轮库存数据继续下降，按理说应该强化利多，可盘面却只是冲一下，甚至很快回落。很多人这时会得出一个简单结论——库存数据失真，或者主力故意反着做。其实更大的可能是，市场早就在此前那一段上涨里把“库存下降”这件事交易过了。",
-          "更进一步看，这类案例往往还伴随两个问题。第一，库存下降虽然成立，但现货没有更强，说明资源偏紧没有继续加深；第二，库存下降的同时，供给预期在改善，或者远端宽松预期在升温，市场因此不愿意继续上修近端价格。",
-          "这类复盘最重要的，不是记住某次具体行情，而是记住复盘顺序。先问：库存下降，是新增信息，还是延续信息？再问：库存下降有没有被基差、现货、月差验证？再问：市场是不是已经开始交易供给修复或远端宽松？如果前两个问题的答案偏弱，第三个问题的答案偏强，那么库存利多失效就并不意外。",
-          "库存利多失效案例的真正价值，是逼着交易者从“单变量判断”升级到“路径判断”。不是问库存对不对，而是问库存接下来会不会继续这样走；不是问库存偏多吗，而是问市场现在到底在交易库存，还是在交易库存之后的那一段变化。"
-        ],
-        "mistakes": [
-          "只要库存下降就默认还能涨。2. 把库存看成独立变量，不看供给和结构。3. 只看数据，不看此前市场是否已定价。4. 盘面不涨就怪数据失效。"
-        ],
-        "signals": [
-          "库存下降后基差是否继续走强- 近月是否继续强于远月- 现货是否同步抬升- 持仓是否继续扩大- 供给修复或进口回升预期是否增强"
-        ],
-        "framework": [],
-        "summary": [
-          "一次典型的库存利多失效案例，真正教会交易者的不是“库存没用”，而是“库存只有在成为下一步路径的证据时，才最有力量”。"
-        ]
-      },
-      "为什么你总在情绪最强时加仓": {
-        "intro": "很多交易者不是不会分析，而是在最需要分析的时候，被情绪抢走了顺序。盘面越热、波动越大、讨论越多，越容易让人觉得“现在不做就错过了”。可真正高风险的，恰恰往往就是这种时刻。",
-        "body": [
-          "为什么总在情绪最强时加仓？因为情绪最强的时候，市场会同时制造三种错觉。第一，价格快速变化会被大脑自动理解成确定性上升；第二，周围人都在讨论，会放大从众心理；第三，已有盈利或错过焦虑，会让人更容易把“延续”当成“必然”。",
-          "商品市场里，这种场景尤其常见在事件窗口、突破行情和地缘题材里。价格快速拉升，分时很漂亮，群里都在说“逻辑坐实了”，很多人就会在最激烈的几根K线里继续加仓。但问题在于，情绪最强时，往往也是预期最满、短线最拥挤、盘面最脆弱的时候。",
-          "这并不意味着情绪强的时候一定错，而是说，情绪强不是加仓理由，它只是提醒你更应该回到框架。真正值得问的不是“涨得猛不猛”，而是“这一段涨，是谁在买、为什么买、买了以后有没有被结构接住”。",
-          "如果上涨伴随持仓继续增加、基差强化、月差更紧、相关品种共振，那说明情绪背后有更深的支撑；但如果只是短线放量、持仓没扩、现货没动、价格冲高回落，那么你感受到的“强”，更多只是市场在制造紧迫感。",
-          "一个非常典型的错误，是在短期盈利后顺着兴奋加码。因为当价格朝自己有利方向快速走时，交易者很容易把“我现在是对的”升级成“我会继续对”。而市场真正残酷的地方在于，最擅长让人失去节奏的，往往正是已经让你赚到钱的那一段。",
-          "更有效的处理方式，是给自己设一个固定动作：每次想在情绪最强时加仓，都先停一下，把盘面再拆成四件事——驱动是否新增，结构是否强化，持仓是否跟上，现货是否验证。只要这四件事有两件明显不成立，就说明眼前更可能是情绪高潮，而不是质量更高的新阶段。"
-        ],
-        "mistakes": [
-          "把波动最强理解成确定性最高。2. 把情绪热度误当成逻辑深度。3. 在已有盈利的兴奋里提高风险暴露。4. 因为怕错过而打乱原本节奏。"
-        ],
-        "signals": [
-          "持仓是否继续增加- 现货和基差是否跟上- 月差是否同步强化- 上涨后是否站稳新价格区间- 次日是否继续获得验证"
-        ],
-        "framework": [],
-        "summary": [
-          "总在情绪最强时加仓，本质上不是分析问题，而是顺序问题。先被盘面的热度带走，后被结构的冷静打回来，是很多交易者反复吃的亏。"
-        ]
-      },
-      "一轮大行情，通常会经历哪几个阶段": {
-        "intro": "很多人复盘大行情时，只记得起点和终点：哪里开始涨、哪里开始跌。可真正能帮助交易者提高节奏感的，不是记住结果，而是看清一轮行情通常是如何一步步演化出来的。",
-        "body": [
-          "大行情很少是一天长成的。它更常见的样子，是先有一个模糊的驱动，再有一个被市场反复强化的叙事，随后进入资金参与加深、结构验证、情绪扩散，最后再走向兑现和退潮。把一轮行情拆开来看，通常可以分成五个阶段。",
-          "第一个阶段是启动。这时驱动刚刚出现，市场还没有形成充分共识。价格未必涨得最多，但最有信息量，因为这个阶段往往能看到谁最先在提高仓位、哪个变量最早偏离常态。启动阶段的行情通常不热闹，却最能反映真正的新增信息。",
-          "第二个阶段是发酵。更多人开始接受这条逻辑，资讯密度提高，相关品种开始联动，价格波动变大。这个阶段的特点是：市场还在争论，但方向感已经比启动时清晰。很多好的趋势交易，往往不是做在启动当天，而是做在发酵初期，因为这时逻辑正在从少数人判断，变成更广泛的市场共识。",
-          "第三个阶段是扩散。这里通常是最热闹的一段。盘面加速，讨论密集，很多原本旁观的人开始加入，题材和逻辑被迅速传播到更多品种、更多时间框架里。扩散阶段不一定立刻见顶，但最容易积累拥挤和脆弱性，因为一致预期在这里最容易形成。",
-          "第四个阶段是兑现。市场开始问一个更尖锐的问题：现实到底跟上没有？此前讲的逻辑，是否已经在库存、基差、持仓、现货、月差里体现出来？兑现阶段常见的特征是，消息仍然不差，但价格不再轻松上涨；或者价格还能冲一下，但随后更容易出现高位反复。不是逻辑消失了，而是市场开始从“愿不愿意相信”，切到“够不够继续加价”。",
-          "第五个阶段是退潮。这里并不一定意味着趋势反转，有时只是节奏转慢、波动减弱、资金重新分层。真正的退潮，往往发生在现实没有进一步强化、结构也不再给出新证据时。市场开始从拥挤里撤出，价格可能回落，也可能只是进入更长时间的整理。",
-          "理解这五个阶段，最大的好处不是让你给行情贴标签，而是帮助你在盘中问对问题。启动期问：新增信息是什么？发酵期问：谁在扩仓、谁在跟？扩散期问：是不是已经太一致了？兑现期问：现实够不够接棒？退潮期问：这是节奏放慢，还是逻辑在衰减？",
-          "很多交易者的问题，不是看不懂行情，而是总拿“扩散期的情绪逻辑”去要求“兑现期的现实验证”，或者拿“启动期的谨慎”去对待“发酵期的趋势机会”。大行情的难点，从来不是有没有道理，而是谁在什么阶段占主导。"
-        ],
-        "mistakes": [
-          "把一轮行情看成单一阶段的线性上涨或下跌。2. 在启动期要求太多验证，在扩散期又忽略验证。3. 把兑现期的高位反复误读成逻辑失败。4. 不区分退潮和反转。"
-        ],
-        "signals": [
-          "持仓扩张节奏- 资讯与讨论密度变化- 相关品种联动是否扩大- 现货、基差、月差是否逐步验证- 高位是否开始出现拥挤与回吐"
-        ],
-        "framework": [],
-        "summary": [
-          "一轮大行情通常不是靠一个理由走到尾，而是靠一个理由在不同阶段里不断被市场重新解释。看清阶段，比执着方向更重要。"
-        ]
-      },
-      "一次报告行情是如何从预热走向兑现的": {
-        "intro": "报告行情最迷惑人的地方，是明明大家都知道那个时间点会来，可真正到了那一天，盘面还是会让大量交易者措手不及。原因就在于，市场不是从报告发布那一刻才开始交易。",
-        "body": [
-          "报告行情几乎总是分成三个阶段：预热、落地、兑现。",
-          "预热阶段，市场交易的是猜想。在报告正式发布前，交易者会围绕产量、库存、出口、需求、开工、库存路径等形成各种预估。这个阶段的盘面特点往往是：价格先动，观点逐步集中，资讯和讨论不断强化。此时真正重要的，不是报告会不会出，而是市场已经押了多少仓位在某个方向上。",
-          "落地阶段，市场交易的是偏离。报告出来后，不是“数据本身偏多偏空”最重要，而是它和市场原预期相比偏离了多少。一个略偏多但低于乐观预期的结果，可能比一个中性结果更容易引发回落；一个表面平平但远好于悲观预期的数据，反而可能触发修正性上涨。很多人误以为报告行情是在看绝对值，实际上更像在看“预期差”。",
-          "兑现阶段，市场交易的是验证。报告之后，盘面会很快提出新问题：这份数据是不是足以改变后续路径？如果答案是能，那么现货、基差、月差、持仓往往会进一步强化；如果答案是否，那么冲高或下探后就更容易回到原有节奏，甚至反向修正。",
-          "报告行情最容易误判的地方，在于把这三个阶段混为一谈。比如，预热阶段的上涨，其实已经把相当一部分利多交易完了；等报告出来后，如果没有新增惊喜，盘面就更容易进入兑现。很多人这时会说“利多落地为什么不涨”，其实那段上涨已经发生在落地之前。",
-          "一个典型案例类型是：报告前市场连续几天走高，大家普遍预期库存会更低；结果报告出来，库存确实下降，但幅度并未超出乐观预估；盘面先冲一下，随后因为新增买盘不足而回落。这种行情并不是逻辑被否定，而是预热阶段过满，兑现阶段缺少进一步抬价的理由。",
-          "更有效的应对方式，是在报告前就先写好三个问题：市场当前最拥挤的预期是什么？什么样的结果算明显超预期？什么信号可以说明报告后的走势是“兑现结束”，还是“新驱动开始”？"
-        ],
-        "mistakes": [
-          "只看报告结果，不看报告前已交易多少预期。2. 把报告公布瞬间的价格反应当成最终答案。3. 不跟踪报告后现货和结构验证。4. 把冲高回落简单理解为逻辑失败。"
-        ],
-        "signals": [
-          "报告前价格与持仓是否已提前走强- 报告后基差和月差是否强化- 现货与相关品种是否跟随- 次日是否继续沿同一方向定价- 市场是否出现新的共识变量"
-        ],
-        "framework": [],
-        "summary": [
-          "一场报告行情真正的节奏，不是“出数据—涨跌”，而是“预热—落地—兑现”。看懂了这三段，你就不再只是围着结果跑，而是在跟市场抢阶段。"
-        ]
-      },
-      "伪突破为什么总容易让人上头": {
-        "intro": "真正的突破，往往是在大家半信半疑时走出来；最容易让人追进去的，反而常常是那种看起来最坚决、最热闹、最像“这次不一样”的伪突破。",
-        "body": [
-          "伪突破之所以危险，不是因为它假，而是因为它在发生的当下太真了。价格穿过关键区间、成交突然放大、短线情绪迅速聚焦、图形看起来非常干净，这些都足以让人产生“确认感”。但盘面最会利用的，正是人对确认感的渴望。",
-          "伪突破通常有两个核心特征。第一，价格短时间内确实冲出了原有区间；第二，后续没有足够的结构和承接去把这个新区域坐实。也就是说，它并不是没有突破动作，而是没有完成“价格接受”。",
-          "从盘面行为看，伪突破最常见于三种场景。一是数据和消息刺激后，价格借窗口快速上冲，但随后无法继续脱离高位成交区。二是临近重要价格带时，主动买卖盘瞬间放大，把原本犹豫的交易者吸引进去。三是原本仓位已经较为拥挤，市场借某个看上去合理的理由把最后一段追价盘引出来。",
-          "很多人之所以容易在伪突破里上头，是因为他们盯着“突破动作”，却没有继续盯“突破后的留存”。真正有效的突破，不是冲过去，而是站住、扩散、再获得验证。价格冲破区间只是第一步；如果没有持仓扩张、没有新的成交重心、没有月差和基差配合，突破就很容易停留在图形层面。",
-          "还有一个容易被忽略的信号，是突破发生时的位置。如果盘面此前已经经历一段较长上涨，情绪和预期都不低，那么所谓突破更容易变成短线情绪的最后冲刺；相反，如果市场此前反复横盘、分歧积累充分，突破后又迅速获得结构验证，那么质量就高得多。",
-          "真正有用的判断方式，不是问“这里突破了吗”，而是问：市场有没有愿意用新的价格区间重新成交？有没有更多参与者在突破后继续把仓位堆上去？现货和相关品种有没有跟着确认？"
-        ],
-        "mistakes": [
-          "把突破动作本身当成突破成立。2. 只看价格，不看持仓和成交重心。3. 不区分高位伪突破和低位有效突破。4. 看到放量就自动提高确定性。"
-        ],
-        "signals": [
-          "突破后能否站稳新区域- 持仓是否持续增加- 是否形成新的量价重心- 基差和月差是否同步变化- 次日是否继续沿突破方向交易"
-        ],
-        "framework": [],
-        "summary": [
-          "伪突破之所以总容易让人上头，是因为它给了你最想要的那种“确定感”。但盘面真正要看的，从来不是冲过去那一下，而是冲过去之后，市场愿不愿意留下来。"
-        ]
-      },
-      "你的复盘为什么总是记流水账": {
-        "intro": "很多交易者每天也复盘，写了很多字，记了很多涨跌和新闻，可过一段时间再看，发现这些记录几乎没法真正帮助自己。问题通常不在勤奋，而在于复盘记录的是结果，不是判断过程。",
-        "body": [
-          "所谓“流水账式复盘”，最典型的特征就是：记了很多发生过的事，却没有说明这些事为什么重要，以及自己当时是怎么理解它们的。比如“今天某品种上涨2%，因为库存下降”；“某品种冲高回落，因为市场情绪转弱”。这些句子表面上没错，但几乎没有留下真正可复用的信息。",
-          "高质量复盘至少要回答四个问题。第一，今天市场到底在交易什么主变量？第二，盘面表面上表现出来的是什么，真实驱动又是什么？第三，当时有哪些信号验证了自己的判断，哪些没有？第四，如果重来一次，自己应该在哪一步更早看到风险或机会？",
-          "如果复盘里没有“判断过程”，那它就只是新闻整理；如果没有“验证信号”，那它就只是观点回忆；如果没有“哪里看错了”，那它就很难形成改进价值。",
-          "举个非常常见的例子。很多人复盘会写：“报告利多，盘面冲高回落。”但更好的复盘写法应该是：“报告前价格已连涨三天，市场预期库存大幅下降；报告结果虽然偏多，但低于最乐观估计；报告后持仓没有继续放大，基差也未显著强化，因此盘面回落更接近预期兑现，而不是逻辑失败。”两种写法最大的差别，不在字数，而在是否留下了“以后还能用”的判断框架。",
-          "真正有用的复盘，应该让你下次再遇到类似情形时，能更快识别：这又是一轮预期兑现；这又是一种库存利多失效；这又是一次伪突破；这又是一次情绪最强处的追价陷阱。如果复盘做不到这一点，它就只是把历史抄了一遍。",
-          "最有效的办法，是把复盘从“记发生了什么”改成“记自己当时怎么想、哪里对、哪里错、什么信号最关键”。复盘不是为了还原市场，而是为了还原自己的判断链条。"
-        ],
-        "mistakes": [
-          "把复盘当成新闻摘要。2. 只记结论，不记判断过程。3. 只记涨跌，不记验证信号。4. 不记录自己为什么会误判。"
-        ],
-        "signals": [],
-        "framework": [
-          "今日主变量- 市场表面现象- 真实驱动- 关键验证信号- 自己当时的判断- 判断正确/错误的原因- 下次可复用的经验"
-        ],
-        "summary": [
-          "复盘总像流水账，本质上是因为你记录的是“发生了什么”，而不是“自己是如何理解和处理这些变化的”。真正能让交易水平进步的，不是历史本身，而是你和历史打交道的方式。"
-        ]
-      },
-      "美联储预期变化，通常先影响哪些商品": {
-        "intro": "每次美联储预期变化，市场总会先问一句：商品会怎么走？但真实答案从来不是“商品一起动”，而是先看哪些品种对利率、美元和风险偏好最敏感，再看哪些品种拥有足以对冲宏观冲击的现实约束。",
-        "body": [
-          "美联储预期变化，最先影响的通常不是所有商品，而是那些金融属性更强、全球资金参与更深、估值更容易被利率重定价的品种。黄金往往排在最前面，因为它对实际利率和美元都高度敏感；铜也常常反应很快，因为它兼具宏观温度计和产业金属属性；原油会受到风险偏好和美元双重影响，但又会被现实库存、政策和地缘因素部分对冲。",
-          "也就是说，美联储预期变化真正先打到的，是资产定价层，而不是所有商品的现实供需层。如果市场突然把降息预期后移，最容易先被重估的是那些此前估值里已经包含较高流动性溢价的品种；如果市场转向更宽松预期，最容易先走强的也通常是金融属性更强、弹性更高的品种。",
-          "但商品之所以和股票、债券不同，就在于它们还有现实约束。比如某个阶段利率预期偏鹰，按理说工业品都该承压；可如果某个品种现实库存极低、现货坚挺、近月结构偏紧，那么宏观压力可能只能压制其估值空间，却不一定能立刻压穿现实支撑。也正因为如此，商品对美联储预期的反应，往往是“先一起动，再逐渐分化”。",
-          "对交易者来说，更实用的顺序不是问“美联储变了，商品涨跌如何”，而是先问：这次变化影响的是利率本身、美元，还是风险偏好？它更容易先冲击黄金、铜、原油，还是影响黑色和农产品的远端估值？哪些品种有现实基本面在对冲这一轮宏观变化？"
-        ],
-        "mistakes": [
-          "把美联储预期变化理解成所有商品统一方向。2. 只看宏观，不看现实供需对冲。3. 只看绝对价格，不看曲线和现货。4. 把短期估值波动当成长期逻辑切换。"
-        ],
-        "signals": [
-          "黄金、铜、原油谁先反应- 美元和实际利率变化- 商品近远月结构是否同步变化- 现货和基差是否跟随- 宏观冲击后谁最先企稳或继续走弱"
-        ],
-        "framework": [],
-        "summary": [
-          "美联储预期变化，通常先影响金融属性更强、全球资金参与更深的商品；但最终谁走得更远，仍然要看现实供需是否接手。"
-        ]
-      },
-      "美元走强时，商品为什么不一定全面承压": {
-        "intro": "“美元强，商品弱”是很多人最熟悉的一条宏观关系。但它之所以危险，也恰恰在于过于熟悉。真实市场里，美元走强确实常常会压制商品估值，但远不是每一次都会把所有商品一起打下去。",
-        "body": [
-          "美元走强之所以会压制商品，主要有两层逻辑。第一，大宗商品多以美元计价，美元升值会提高非美元买家的名义成本；第二，美元走强往往伴随流动性偏紧、风险偏好走弱，这会削弱对高弹性资产的估值支持。",
-          "但商品并不是一个纯金融篮子。很多商品的价格不只是“用美元标出来”，还要反映现实库存、现货紧张、交割资源和产业利润。所以，美元走强影响的是估值框架，不一定能立刻推翻现实供需。",
-          "最典型的情况，就是强现实品种在美元偏强环境下依然抗跌。库存极低、基差很强、近月偏紧的品种，市场会更在意现实资源的稀缺，而不是单纯按美元逻辑一刀切。于是你会看到，美元走强时，商品真正发生的往往不是“全面承压”，而是“先看谁更受金融层冲击，再看谁有现实层托底”。"
-        ],
-        "mistakes": [
-          "把美元与商品的负相关当成机械定律。2. 忽略现实库存和结构的约束。3. 不区分金融属性强和产业属性强的品种。4. 只看主力合约，不看曲线分层。"
-        ],
-        "signals": [
-          "美元走强时谁先跌、谁抗跌- 现货与基差是否仍强- 近远月结构是否仍偏紧- 持仓是主动撤离还是分歧加大- 是否出现品种间明显分化"
-        ],
-        "framework": [],
-        "summary": [
-          "美元走强时，商品不一定全面承压。宏观层会先压估值，但现实层会决定，哪些品种只是回吐，哪些品种会真正转弱。"
-        ]
-      },
-      "国内政策预期，如何影响黑色链和工业品": {
-        "intro": "黑色链和工业品对政策敏感，并不是因为政策能立刻改变所有现实，而是因为政策最容易先改变市场对未来需求、供给和利润分配的想象。",
-        "body": [
-          "在中国市场，黑色链和很多工业品都有一个显著特点：它们不仅交易现实数据，也交易政策语言。地产、基建、稳增长、供给侧管理、环保约束、限产安排，这些政策预期都可能在现实还没明显变化时，先推动盘面重估未来。",
-          "政策预期影响市场，通常分成三层。第一层是情绪层。政策表态一出来，市场会先判断“方向偏支持还是偏收紧”，这会很快体现在预期最敏感的品种上。第二层是估值层。如果市场相信政策会改善未来需求，黑色链、铜、铝等工业品往往先获得风险溢价修复。第三层才是现实层，也就是现货成交、库存去化、开工和利润能不能真正跟上。",
-          "这也是为什么政策预期行情里，螺纹、铁矿、焦煤焦炭的先后反应经常不同。成材往往先反映终端需求想象，铁矿更像黑色链预期风向标，双焦则夹在生产和利润之间。工业品也类似：铜对宏观温度敏感，铝还要看电力和成本约束，化工则常常先看上游成本和下游接货。",
-          "最容易误判的地方，是把政策预期直接当成现实兑现。市场确实会先交易政策，但如果后续现货、库存和利润没有跟上，预期行情就更容易冲高回落。很多所谓“政策不及预期”的行情，问题往往不在政策本身，而在市场此前已经把预期交易得太满。"
-        ],
-        "mistakes": [
-          "把政策表态直接等同于需求已经改善。2. 只看标题，不看传导路径。3. 忽略不同品种在链条中的位置差异。4. 不跟踪现货和利润是否接力。"
-        ],
-        "signals": [
-          "现货成交与出货是否改善- 库存去化是否加快- 钢厂利润和工业品利润结构是否修复- 近远月结构是否强化- 相关品种是否形成链条共振"
-        ],
-        "framework": [],
-        "summary": [
-          "国内政策预期最先影响的是想象空间，真正决定行情能走多远的，仍然是现实链条有没有跟上。"
-        ]
-      },
-      "通胀预期升温时，哪些商品更容易先动": {
-        "intro": "通胀预期升温，看似会利好“大宗商品”这个笼统概念，但市场从来不会这么粗放地交易。真正先动的，往往是那些既能承接资产配置逻辑，又能得到现实供需配合的品种。",
-        "body": [
-          "通胀预期升温时，最容易先动的通常有三类商品。第一类是贵金属，尤其是黄金。因为它对实际利率、货币预期和避险需求都敏感，是通胀预期与货币框架最直接的承接者。第二类是能源，尤其是原油，因为通胀叙事里经常包含供给约束、运输扰动和能源成本抬升。第三类是部分工业金属，尤其是铜，因为它既能承接经济修复想象，也能作为商品配置篮子中的高流动性代表。",
-          "但这并不意味着只要通胀预期一升温，所有商品都会一起走强。因为通胀预期也分成不同类型。若是需求拉动型通胀，工业金属和部分工业品更容易获得支持；若是供给扰动型通胀，原油和部分农产品更容易先受关注；若是货币框架变化驱动的通胀预期，则黄金往往反应更快。",
-          "真正重要的是分清：市场在交易“通胀本身”，还是在交易“通胀背后的原因”。如果市场认为通胀升温意味着需求更强，那么工业品的弹性会更大；如果市场认为通胀来自供给冲击，那么能源和部分农产品会更敏感；如果市场把它理解成货币贬值和实际利率下行，那贵金属通常最先受益。"
-        ],
-        "mistakes": [
-          "把通胀预期简单理解成全商品普涨。2. 不区分需求型和供给型通胀。3. 忽略实际利率和美元的配合作用。4. 把短期题材波动误当长期通胀逻辑。"
-        ],
-        "signals": [
-          "黄金对实际利率和美元的反应- 原油曲线和库存状态- 铜等工业金属是否与宏观预期共振- 农产品是否受天气和供给扰动强化- 资金是否在商品篮子中集中配置"
-        ],
-        "framework": [],
-        "summary": [
-          "通胀预期升温时，更容易先动的不是“所有商品”，而是那些最能承接当前通胀叙事核心的品种。"
-        ]
-      },
-      "地缘冲突来了，为什么油涨了，有些化工品却不一定跟": {
-        "intro": "地缘冲突一来，最容易让人形成的线性思维就是：油涨，化工肯定跟涨。可现实市场里，这条传导链常常会在中途断掉，因为成本推动和下游承接从来不是同一回事。",
-        "body": [
-          "原油是能化链条的上游定价核心，地缘冲突提升供应中断或运输扰动预期时，油价通常最先获得风险溢价。这一段上涨，往往交易的是未来可能的供应风险，而不是立刻已经减少的实货供给。",
-          "问题在于，下游化工品并不只看成本。它们还要看下游需求能不能承接、库存处在什么位置、利润是否已经被压缩、装置是否高负荷运转。于是就会出现一种常见现象：油价先涨了，但部分化工品只是短暂跟一下，随后走势明显弱于原油。",
-          "原因通常有三类。第一，下游需求不足，成本上涨无法顺畅传导。第二，化工环节本身库存较高，市场先消化库存，而不是立刻重估紧张。第三，利润链条再分配，上游更强，下游更弱，导致价格表现分化。",
-          "这也是为什么有些化工品在地缘冲突窗口里看起来“反应迟钝”。并不是逻辑失效，而是市场更快地意识到：油价涨的是风险溢价，下游能不能把这个溢价转化为现实价格，还要看各自产业链的位置。"
-        ],
-        "mistakes": [
-          "把原油涨价直接映射到全部下游化工。2. 忽略库存和下游接货能力。3. 不区分风险溢价与现实短缺。4. 只看成本端，不看利润链条。"
-        ],
-        "signals": [
-          "原油曲线是否持续强化- 下游现货是否跟涨- 化工品基差和库存是否改善- 利润链条是否向上游集中- 需求端是否出现明显承接"
-        ],
-        "framework": [],
-        "summary": [
-          "地缘冲突来了，油涨只是第一步；有些化工品不一定跟，是因为成本传导和现实承接之间，本来就隔着库存、利润和需求这三道门。"
-        ]
-      },
-      "宏观利空下，为什么某些强现实品种反而更抗跌": {
-        "intro": "宏观利空来了，很多品种一起下，但总会有少数品种跌不深，甚至很快企稳。不是它们和宏观无关，而是现实供需在替它们挡掉一部分冲击。",
-        "body": [
-          "宏观利空最先打的是估值和风险偏好，但商品价格除了估值，还有现实资源属性。某些品种之所以在宏观压力下更抗跌，通常具备几个共同特征：库存偏低、基差偏强、现货坚挺、近月结构偏紧，或者交割资源有限。也就是说，它们虽然会受到情绪层冲击，但现实层很快会站出来提供支撑。",
-          "这种抗跌并不意味着它们一定强，只是说明市场对这些品种的再定价更谨慎。因为跌下去以后，买方更容易在现实资源层面看到价值，而不是把它们完全当成金融资产处理。",
-          "常见于能源、部分有色、阶段性紧平衡农产品和交割结构偏紧的品种。宏观利空来时，它们可能也先下，但随后基差不走弱、月差不走松、现货也不跟跌，那么盘面就容易出现“跌不动”的特征。",
-          "交易者最容易犯的错，是把“抗跌”简单理解成“更强”。更准确的理解是：现实供需在对冲宏观压力。接下来能不能转强，还要看现实是否继续收紧，而不是仅凭一轮宏观扰动后的相对强弱。"
-        ],
-        "mistakes": [
-          "把抗跌直接理解成趋势更强。2. 不看现实约束，只看绝对价格。3. 忽略抗跌背后可能只是近端紧张。4. 把短期抗跌等同于中期看多。"
-        ],
-        "signals": [
-          "基差和月差是否仍强- 现货报价是否坚挺- 库存是否继续去化- 相关品种是否同步分化- 宏观情绪修复后谁弹性更强"
-        ],
-        "framework": [],
-        "summary": [
-          "宏观利空下的抗跌，很多时候不是故事，而是现实资源在定价。先看现实约束，再谈相对强弱，逻辑才更顺。"
-        ]
-      },
-      "黑色链里，成材和原料为什么经常不同步": {
-        "intro": "黑色链最让人头疼的一件事，就是明明逻辑都在讲“需求改善”或“供给收缩”，可盘面上成材和原料却常常不同步。其实这恰好说明，市场在分开给产业链不同环节定价。",
-        "body": [
-          "成材和原料不同步，最常见的原因是利润分配在变化。成材代表终端需求和现货成交，原料代表钢厂生产和补库意愿。需求预期改善时，成材通常先反应，因为市场会先给未来需求抬价；而一旦钢厂利润开始修复，铁矿和双焦又会因为生产预期提升而跟上。于是链条里经常会先成材、后原料，也可能先原料、后成材。",
-          "另一种不同步，则来自现实约束不同。比如成材现货成交一般、库存不够好，但铁水高位、钢厂补库积极，这时原料可能因为现实消耗而更强；反过来，如果政策预期改善把成材拉起来，但利润并没有真正修复，原料反而可能跟不上，因为钢厂并不愿意按盘面想象去提高原料定价。",
-          "所以，黑色链真正要看的，不是“大家一起涨没涨”，而是利润在向哪一环转移。利润往成材端走，说明需求和价格预期更强；利润往原料端走，说明生产与资源更紧；利润整体被压，说明链条并没有形成顺畅传导。"
-        ],
-        "mistakes": [
-          "把链条看成必然同涨同跌。2. 不跟踪利润在各环节的分配。3. 只看一个品种，不看整链。4. 把预期行情误读成现实联动。"
-        ],
-        "signals": [
-          "螺纹、热卷与铁矿、双焦相对强弱- 钢厂利润是否修复- 铁水和补库节奏是否变化- 现货成交和库存是否支持成材- 原料现货与港口资源状态"
-        ],
-        "framework": [],
-        "summary": [
-          "黑色链里成材和原料不同步，不是逻辑混乱，而是利润和现实约束正在不同环节之间重新分配。"
-        ]
-      },
-      "豆系为什么经常出现油强粕弱，或粕强油弱": {
-        "intro": "豆系最容易让人误解的地方，是把它们看成一条线上的同方向品种。可现实里，豆油和豆粕常常不是一起走，而是在压榨链里争夺利润主导权。",
-        "body": [
-          "豆油和豆粕都来自大豆压榨，但它们面向的是完全不同的需求体系。豆油更多连接食用油、生物燃料和油脂替代逻辑；豆粕更多连接饲料、养殖和蛋白需求。于是，同样一轮大豆供应变化，在两端释放出来的价格表现经常不同。",
-          "“油强粕弱”的常见场景，是油脂端获得更强的外部支持。比如生物燃料政策、原油走强、棕榈油出口偏好等，都可能先把油脂端利润抬起来。压榨利润变好后，油厂更愿意开机，豆粕供给随之释放，于是就会出现油端更强、粕端反而承压的局面。",
-          "“粕强油弱”则常见于饲料需求较好、养殖利润改善、油脂端缺乏驱动甚至偏弱的时候。此时压榨未必大幅提升，粕端反而因为现实需求更有支撑，表现出更强的韧性。",
-          "真正理解豆系分化的关键，是不要把它们当成两个独立品种，而要看成压榨利润在两端重新分配的结果。谁更强，决定了压榨行为；压榨行为变化，又会反过来改变另一端的供给压力。"
-        ],
-        "mistakes": [
-          "以为豆油和豆粕一定同步。2. 忽略压榨利润对开机的影响。3. 只看一端，不看联产品关系。4. 不把外部油脂链条纳入分析。"
-        ],
-        "signals": [
-          "豆油与豆粕相对价格变化- 压榨利润与油厂开机节奏- 豆粕现货与库存变化- 豆油现货和油脂链联动- 压榨和出口销售节奏"
-        ],
-        "framework": [],
-        "summary": [
-          "豆系之所以经常油强粕弱、粕强油弱，是因为压榨链从来不是一条单边逻辑，而是两端需求和利润共同塑造的结果。"
-        ]
-      },
-      "原油涨了，化工品为何有时跟不上": {
-        "intro": "原油被视为能化链条的上游锚，但真正到了盘面上，“油涨化工不涨”并不罕见。因为化工品的定价从来不是只看成本，还要看利润能否传导、库存是否偏高、下游有没有接货能力。",
-        "body": [
-          "当原油上涨时，市场确实会先给下游化工品一个成本抬升的逻辑框架。但这个逻辑能不能走成价格表现，要看三道传导门是否都打开：成本端是否持续、库存端是否宽松、需求端是否愿意接受更高价格。",
-          "如果原油涨的是风险溢价，尤其来自地缘扰动、运输预期或会议前猜想，那么化工品跟涨的持续性往往不强。因为下游会先怀疑：这个成本到底是短期情绪，还是未来几周几个月都要面对的现实。只要市场认为原油的上涨更多是“先交易预期”，化工链的中下游就更容易表现出犹豫。",
-          "另一个常见原因是库存。很多化工品即使原油涨了，只要自身库存偏高、装置负荷高、下游接货弱，市场也会选择先消化存货，而不是立即抬价。于是盘面上看起来就是：上游更强、下游更弱，利润被压缩，传导被截断。",
-          "所以，看“原油涨、化工为何跟不上”，核心不是问成本有没有抬，而是问成本抬起来以后，谁来接。只要需求没有及时接棒，或者库存还在压着，化工品就更容易在原油上涨时出现滞后、跟涨不足甚至冲高回落。"
-        ],
-        "mistakes": [
-          "把原油上涨直接映射成下游必涨。2. 不看化工品自身库存和利润。3. 把上游情绪波动当成下游现实紧张。4. 忽略终端接货能力。"
-        ],
-        "signals": [
-          "化工品现货是否跟涨- 基差是否同步走强- 库存是否开始去化- 装置检修和负荷是否变化- 利润是否从下游向上游集中"
-        ],
-        "framework": [],
-        "summary": [
-          "原油涨了，化工品跟不上，很多时候不是逻辑断了，而是成本传导没有穿透库存和需求这两层现实。"
-        ]
-      },
-      "铜和铝为什么有时同向，有时背离": {
-        "intro": "铜和铝常被一起归在有色板块里，但真实市场里，它们有时同涨同跌，有时又明显分化。理解这一点，关键不在于找一个统一逻辑，而在于承认：它们的宏观属性相似，现实约束却并不一样。",
-        "body": [
-          "铜和铝同向的时候，通常是宏观层在主导。比如美元、利率、风险偏好、经济修复预期，这些因素会先从估值层影响整个有色板块。因为铜和铝都属于高流动性工业金属，资金在做有色配置时往往会一起处理，盘面因此容易先表现出联动。",
-          "但一旦交易进入现实层，背离就会迅速出现。铜更受矿端扰动、冶炼加工费、交易所库存和区域现货紧张影响；铝则更容易受到电力、成本、产能约束和库存位置影响。也就是说，铜的现实约束更偏上游资源和精炼体系，铝的现实约束更偏成本曲线和产能边界。",
-          "因此，当宏观因素弱化，谁的现实更紧、谁的现货更强、谁的库存更有压力，谁就更容易率先脱离板块联动。很多看似“铜铝背离”的盘面，实质上只是市场从“板块定价”切到了“单品种定价”。"
-        ],
-        "mistakes": [
-          "把铜和铝长期视作同一逻辑。2. 只看有色板块情绪，不看各自现实约束。3. 忽略库存、成本和供应差异。4. 把短期联动误读成中期同步。"
-        ],
-        "signals": [
-          "宏观冲击后谁先走强或走弱- 库存与仓单变化- 成本端和产能约束是否不同- 现货升贴水差异- 资金在板块配置后是否回到单品种选择"
-        ],
-        "framework": [],
-        "summary": [
-          "铜和铝同向，是因为宏观先把它们放进同一个篮子里；铜和铝背离，则说明市场开始回到各自的现实约束。"
-        ]
-      },
-      "生猪和豆粕，为什么常常不能简单同向理解": {
-        "intro": "很多人直觉上会把生猪和豆粕绑在一起：猪好，粕就好；猪差，粕就差。可真实链条里，两者确实有关联，却远不是简单的线性关系。",
-        "body": [
-          "生猪和豆粕的联系主要来自饲料需求。养殖端补栏、育肥、存栏变化，都会影响蛋白粕需求。但问题在于，生猪价格、养殖利润和豆粕需求之间，存在明显的时间差和阶段差。猪价上涨，并不等于当下豆粕立刻更强；猪价下跌，也不等于豆粕立刻走弱。",
-          "原因在于，养殖利润变化之后，补栏决策、育肥节奏和实际饲料消耗都需要时间传导。更何况，豆粕自身还有压榨、库存、进口大豆、油脂利润这些独立变量。所以，生猪和豆粕的关系更像“中期需求背景”，而不是“当日方向信号”。",
-          "一个常见场景是：猪价偏强，市场想当然地认为豆粕需求会改善，于是看多粕端；但如果此时大豆到港充足、压榨利润较好、油厂开机高，豆粕供给的释放速度完全可能盖过需求改善的节奏。反过来，猪价不理想时，如果压榨受限、库存偏低、现货偏强，豆粕也未必走弱。"
-        ],
-        "mistakes": [
-          "把猪价变化直接映射成豆粕方向。2. 忽略养殖利润到饲料需求的传导时滞。3. 不看豆粕供给端变化。4. 把中期关系当成短期交易信号。"
-        ],
-        "signals": [
-          "养殖利润和补栏节奏变化- 豆粕库存与压榨开机- 现货和基差是否走强- 大豆到港与油厂利润- 饲料需求改善是否具有持续性"
-        ],
-        "framework": [],
-        "summary": [
-          "生猪和豆粕不能简单同向理解，因为一个是养殖利润和周期变量，一个是压榨链产出品。两者有关，但中间隔着时间差和供给端的再平衡。"
-        ]
-      },
-      "焦煤与焦炭，为什么有时一起涨，有时只涨一个": {
-        "intro": "双焦常被视作黑色链里关系最紧的两个品种，但真正盘面里，焦煤和焦炭并不总是同步。它们有时一起涨，有时却一个更强、另一个跟不上，背后反映的其实是利润、库存和供给约束在链条里不同的位置。",
-        "body": [
-          "焦煤是焦炭的原料，焦炭又是高炉炼铁的重要投入，表面上看是标准的上下游关系。但在价格表现上，谁更强往往要看哪一环的现实约束更紧。焦煤更受资源供给、进口、矿山扰动和配煤结构影响；焦炭则更受焦企利润、钢厂开工、提降提涨和焦钢博弈影响。",
-          "双焦一起涨，通常出现在整条黑色链预期和现实都偏强的时候。铁水高、钢厂补库积极、利润修复、原料库存不宽松，这种环境下，焦煤和焦炭往往一起受益。",
-          "只涨焦煤、焦炭跟不上的场景，则常见于煤端供应扰动更突出，而焦炭还没有获得足够的向下游传导能力。比如焦煤端因资源偏紧、进口收缩、配煤困难而更强，但焦炭端受制于焦企利润和钢厂压价，价格弹性就可能被削弱。",
-          "反过来，只涨焦炭、焦煤不那么强，则更多发生在焦企利润修复、钢厂开工和补库改善，而煤端资源并未明显收紧的阶段。也就是说，双焦的分化本质上是在回答：当下更紧的是哪一环，利润更愿意往哪一环转移。"
-        ],
-        "mistakes": [
-          "把焦煤和焦炭看成永远同步。2. 不区分资源紧张与提涨传导。3. 忽略焦钢利润博弈。4. 只看单边价格，不看相对强弱。"
-        ],
-        "signals": [
-          "焦煤资源与进口端变化- 焦企利润与提涨节奏- 钢厂补库与铁水变化- 双焦库存位置- 黑色链整体利润分配"
-        ],
-        "framework": [],
-        "summary": [
-          "焦煤和焦炭有时一起涨，有时只涨一个，关键不在于上下游关系有没有断，而在于当下真正更紧、也更有议价权的是哪一环。"
-        ]
-      },
-      "基差走强，盘面为什么不一定立刻上涨": {
-        "intro": "基差走强，很多人会本能理解成现货更紧、盘面该跟涨。但真实市场里，基差强并不总能立即推动盘面，因为基差表达的是“现货相对更强”，而盘面交易的往往是更前面的预期。",
-        "body": [
-          "基差走强通常说明现货端更紧、现货报价更坚挺，或者期货价格阶段性偏低。但这件事要不要立刻转化成盘面上涨，要看市场当前更在意近端现实，还是更在意未来供给修复、需求变化和估值框架。",
-          "一个常见场景是，现货资源确实偏紧，基差持续扩大，但市场同时预期后续供给会恢复或库存会回升。此时，盘面就可能表现为：现货强、基差强，但远月不愿意跟，主力合约也只是被动修复，而不是展开大趋势。换句话说，基差告诉你“现在紧”，盘面却在问“这种紧能持续多久”。",
-          "还有一种情况，是盘面此前已经提前反映过这条逻辑。比如市场早就因为资源偏紧上涨了一段，随后基差进一步走强，但新增买盘不足，这时盘面就未必还会同步加速。",
-          "所以，看基差不能停在“强弱判断”，而要继续往下问：这是近端短期紧张，还是中期趋势强化？盘面是还没反映，还是已经反映过度？基差走强时，月差、仓单、持仓有没有同步支持？"
-        ],
-        "mistakes": [
-          "把基差走强直接等同于期货必涨。2. 不区分近端紧与远端预期。3. 忽略盘面可能已提前定价。4. 不联看月差、仓单和库存。"
-        ],
-        "signals": [
-          "近月与远月结构是否同步强化- 持仓是否跟随增加- 仓单和库存是否也在偏紧方向变化- 现货报价是否持续坚挺- 盘面上涨后能否站稳"
-        ],
-        "framework": [],
-        "summary": [
-          "基差走强，说明现货更强，不代表盘面一定立刻大涨。只有当市场愿意把“现在紧”进一步翻译成“未来也更紧”，基差才更容易推动盘面重估。"
-        ]
-      },
-      "仓单变化，到底意味着什么": {
-        "intro": "仓单一变，很多人第一反应就是给方向结论：仓单增了偏空，仓单减了偏多。可真实市场里，仓单变化真正表达的，不是一个静态方向，而是交割资源和现货流通性的阶段变化。",
-        "body": [
-          "仓单本质上是可交割资源的登记结果。它的增减，最先表达的是：资源有没有从现货世界进入交割体系，或者从交割体系回到现货世界。也就是说，仓单的意义，不在于数量本身，而在于它发生在什么阶段、对应什么资源属性。",
-          "仓单增加，有时确实会压制近端，因为市场会理解为可交割资源更充裕、交割压力更大；但也有很多时候，仓单增加只是前期资源偏紧缓和、流通恢复，而不是趋势逆转。反过来，仓单减少也不能机械看多，它可能是现实偏紧，也可能只是资源从交易所体系转移到了场外现货流通。",
-          "真正理解仓单，必须先放进交割阶段里看。临近交割月，仓单增加的定价意义通常更直接，因为近月最关心的是可交割资源够不够；但在远月交易期里，仓单变化更多是一种结构提示，而不是单独结论。",
-          "更有效的观察顺序是：先看阶段，再看资源属性，最后看市场此前在担心什么。如果市场此前一直担心交割资源不足，那么仓单增加的冲击会更大；如果市场此前已经预计到资源回流，那么新增仓单未必能再带来多少额外压力。"
-        ],
-        "mistakes": [
-          "把仓单增减机械翻译成多空。2. 不区分交割前后和远近月阶段。3. 忽略仓单背后的资源属性变化。4. 只看仓单，不看基差和月差。"
-        ],
-        "signals": [
-          "仓单变化发生在什么阶段- 近月结构是否同步变化- 基差是否相应走强或走弱- 现货流通性是否改善- 市场此前的预期是否已计入"
-        ],
-        "framework": [],
-        "summary": [
-          "仓单变化真正表达的是交割资源与现货流通性的变化，不是天然利多或利空。只有放进阶段和结构里，它才真正有意义。"
-        ]
-      },
-      "月差异常扩大时，市场通常在担心什么": {
-        "intro": "月差突然拉大，很多人第一反应是“波动变大了”。但月差比绝对价格更诚实，它往往直接告诉你：市场正在把担心放在哪个时间段。",
-        "body": [
-          "月差异常扩大，本质上是在表达时间层面的不平衡。近月相对更强，通常意味着市场在担心短期资源、交割、库存或现货紧张；远月相对更强，往往意味着市场在给未来更乐观的需求预期、政策预期或供给修复速度偏慢定价。",
-          "最常见的情况，是近月快速走强、月差扩大。这通常说明现实资源更受关注：库存偏低、现货更强、交割资源有限、仓单不够、补库节奏偏急。也就是说，市场不是简单看涨，而是在说“现在更值钱”。",
-          "另一种情况，是远月先强于近月。表面上看不如近月走强那样直观，但它经常意味着另一种担心：当前并不紧，可市场对未来需求改善、政策修复或供给偏紧有更高期待，于是远月先获得溢价。",
-          "所以，月差异常扩大时真正要问的不是“涨跌”，而是“紧张发生在哪一段时间”。只有这个问题回答清楚，月差才不会被误读成简单方向信号。"
-        ],
-        "mistakes": [
-          "把月差扩大直接等同于单边看涨或看跌。2. 不分近月强还是远月强。3. 不联看库存、仓单和现货。4. 把短期结构问题误读成长期趋势。"
-        ],
-        "signals": [
-          "近月与远月谁更先动- 基差是否同步走强- 仓单和库存是否支持近端紧张- 持仓是否向近月集中- 现货和补库节奏是否变化"
-        ],
-        "framework": [],
-        "summary": [
-          "月差异常扩大，市场通常不是在给整体方向下结论，而是在强调：某个时间段的问题，比另一个时间段更迫切。"
-        ]
-      },
-      "交割月临近，哪些信号更值得盯": {
-        "intro": "越接近交割月，很多原本次要的变量会突然变得重要。因为这时盘面不再只是抽象预期，而越来越多地开始反映“到底有没有足够资源可以交”。",
-        "body": [
-          "交割月临近时，最值得盯的信号通常有四类。第一类是仓单和可交割资源。因为近月合约最终要面对交割现实，仓单多少、资源位置、规格适配与否，都会直接影响近月结构。第二类是基差和现货。若现货紧、基差强，说明近端资源更值钱；若现货平稳、基差一般，则交割压力可能更容易释放。第三类是近月持仓。临近交割时，谁还在近月留仓，往往比远月更有信息量。第四类是月差。月差常常是交割阶段最敏感的结构表达。",
-          "很多交易者在交割月前还按普通趋势逻辑看盘，结果总觉得“近月走势很怪”。其实并不是近月怪，而是近月的定价规则已经变了。它不再主要交易宏观故事，而是更关注现实能否交割、资源够不够用、交割成本高不高。",
-          "所以，交割月前最有效的观察方式，是把问题收窄：资源端够不够？现货是不是更强？仓单是在增加还是减少？近月持仓有没有异常累积？只要这些问题开始主导，盘面的理解就不能停留在一般性的方向叙事。"
-        ],
-        "mistakes": [
-          "用远月逻辑套近月。2. 忽略仓单和可交割资源。3. 只盯价格，不看持仓。4. 把近月结构异常理解成纯情绪。"
-        ],
-        "signals": [
-          "仓单变化- 基差与现货强弱- 近月持仓是否集中- 月差是否异常拉大- 交割便利性与资源分布"
-        ],
-        "framework": [],
-        "summary": [
-          "交割月临近，最值得盯的不是故事，而是资源。谁能把资源看清，谁就更不容易被近月盘面“看起来很奇怪”的走势带偏。"
-        ]
-      },
-      "近月强、远月弱，这种结构说明了什么": {
-        "intro": "近月强、远月弱，看起来像一句很简单的盘面描述，但它其实包含了市场对时间维度的判断：现在值钱，未来未必那么值钱。",
-        "body": [
-          "这种结构最常见的含义，是近端资源偏紧，而市场又不愿意把这种紧张简单外推到更远时间。换句话说，现实紧张成立，但持续性存在争议。于是近月获得溢价，远月仍保持谨慎。",
-          "这类结构常见于库存低、现货强、仓单有限、补库急而未来供给又可能恢复的阶段。市场会先把短期紧张体现在近月，却不愿意同步大幅抬高远月，因为它担心后续供给修复、进口增加、开工回升或季节性变化会缓解问题。",
-          "近月强远月弱还有一个重要含义：市场在分层对待现实和预期。近月交易现实，远月交易预期。只要预期层面没有明显转强，远月就更容易滞后。也因此，这种结构不是简单的“全面偏多”，而是一种更精细的“短紧长松”表达。"
-        ],
-        "mistakes": [
-          "把近月强直接等同于整体大多头。2. 忽略远月弱中隐含的修复预期。3. 不看供给恢复和季节变化。4. 只看主力，不看曲线结构。"
-        ],
-        "signals": [
-          "现货与基差是否偏强- 远端供给预期是否改善- 月差是否持续扩大- 仓单和库存是否支持近端紧张- 近月持仓是否异常聚集"
-        ],
-        "framework": [],
-        "summary": [
-          "近月强、远月弱，通常说明市场正在说：现在紧，但我还不愿意押未来一直都紧。"
-        ]
-      },
-      "盘面和现货背离时，市场到底在抢跑什么": {
-        "intro": "盘面涨了，现货没动；或者现货偏强，盘面却并不买账。很多人看到这种背离会困惑，觉得两个市场里必有一个是错的。其实更常见的情况是：它们在交易不同时间段。",
-        "body": [
-          "盘面和现货背离，本质上是“未来”和“现在”在抢定价权。现货更接近现实资源状态，盘面更容易先交易预期变化。所以，当两者背离时，真正要问的是：盘面是不是在抢跑一个尚未被现货验证的未来变量，还是现货在提示一个盘面暂时忽略的现实约束。",
-          "比如盘面先涨、现货没动，常见于市场在提前交易政策、报告、供给扰动、需求修复或宏观预期变化。此时盘面是在说“后面可能更紧、可能更强”，但现货暂时还没有感受到。反过来，现货强、盘面不涨，则往往说明近端资源确实偏紧，但市场更担心这种紧张持续不下去，或者远端供给会改善。",
-          "所以，背离不代表哪边一定错，很多时候只是时间差。真正重要的是看这种背离随后如何收敛：是现货跟上盘面，说明盘面抢跑成功；还是盘面回到现货附近，说明抢跑失败；或者现货继续强、盘面终于被迫修正，说明现实最终接管。"
-        ],
-        "mistakes": [
-          "一看到背离就认定市场失真。2. 不区分盘面交易未来、现货交易现在。3. 把背离当成静态结论，不跟踪后续收敛方式。4. 忽略基差和月差在其中的提示作用。"
-        ],
-        "signals": [
-          "基差变化方向- 背离后谁先向谁靠拢- 月差是否同步强化或走弱- 现货成交和报价是否持续- 持仓是否支持盘面继续抢跑"
-        ],
-        "framework": [],
-        "summary": [
-          "盘面和现货背离时，市场通常不是在“出错”，而是在抢跑未来。关键不在背离本身，而在背离之后，哪一边最终赢得了定价权。"
-        ]
-      },
-      "缩量上涨和放量上涨，哪个更值得警惕": {
-        "intro": "上涨本身不难判断，难的是判断这段上涨的质量。很多人只看涨了多少，却忽略了“怎么涨上去”的细节。",
-        "body": [
-          "缩量上涨和放量上涨各有风险，但风险类型不同。放量上涨说明参与者多、情绪热、方向感强，看上去更健康，但如果放量主要集中在高位追价区，持仓却没有持续跟上，或者结构没有强化，那么它更像情绪集中释放，反而更要警惕。缩量上涨则常常意味着卖压不大、市场轻，价格被较少的交易推上去，质量未必差，但一旦遇到新的抛压，也可能缺乏足够承接。",
-          "放量上涨最需要问的是：量从哪来？如果来自新增多头和结构强化，那往往更有持续性；如果来自空头回补和消息刺激，那可能强得快、回得也快。",
-          "缩量上涨最需要问的是：为什么没人卖？是因为市场真的不愿意在这个位置卖，还是因为暂时处于观望、流动性不足？两者的含义差很多。",
-          "所以，并不存在“缩量一定比放量差”或“放量一定更健康”的固定答案。真正值得警惕的，是那种价格涨得很漂亮，但量和持仓、现货、基差没有形成一致解释的上涨。换句话说，不是看量多量少，而是看量在告诉你什么。"
-        ],
-        "mistakes": [
-          "把放量上涨自动理解成强趋势。2. 把缩量上涨自动理解成虚涨。3. 不区分新增仓位和空头回补。4. 不结合位置和结构看量。"
-        ],
-        "signals": [
-          "持仓是否同步增加- 现货和基差是否跟随- 上涨位置是否接近关键阻力区- 次日是否延续- 量能集中在哪一段价格区域"
-        ],
-        "framework": [],
-        "summary": [
-          "缩量上涨和放量上涨都可能有问题。真正更值得警惕的，是价格很强，但量和结构给不出一致解释的上涨。"
-        ]
-      },
-      "盘中快速拉升后回落，通常暴露了什么问题": {
-        "intro": "盘中快速拉升最容易让人兴奋，但很多真正的风险，不是在拉升开始时，而是在回落那一刻暴露出来。",
-        "body": [
-          "快速拉升后回落，通常说明市场在某一瞬间确实找到了向上的理由，但这个理由没有被足够多的承接和验证接住。问题不在于涨那一下，而在于涨出去以后，谁愿意继续用更高的价格成交。",
-          "这种走势常暴露三类问题。第一，追价盘多、承接盘少。也就是价格冲得快，但真正愿意在新区域持续接手的人不多。第二，消息刺激强、现实验证弱。盘面能被短线情绪推起来，但基差、现货、月差没动。第三，上方本来就有较强套保或获利盘，盘中拉升反而把这些卖盘引了出来。",
-          "快速拉升后回落最大的提示，不是“这波一定失败”，而是“当前价格对更高位置的接受度不足”。如果随后盘面能重新企稳、整理、再放量突破，说明那次回落只是第一次试探；如果此后持续回到原区间，则更像典型的情绪冲动失败。"
-        ],
-        "mistakes": [
-          "把冲高回落简单理解成看空。2. 只盯拉升，不盯回落后的接受度。3. 不区分消息刺激与结构强化。4. 忽略上方原有抛压。"
-        ],
-        "signals": [
-          "回落后能否在更高价格带企稳- 持仓是否保留- 现货与基差是否强化- 次日是否重回高位- 原有区间是否重新成为主成交区"
-        ],
-        "framework": [],
-        "summary": [
-          "盘中快速拉升后回落，通常暴露的不是“方向一定错”，而是市场对更高价格还没有形成真正接受。"
-        ]
-      },
-      "持仓大减后的上涨，是真强还是空头回补": {
-        "intro": "上涨之后看持仓，如果发现持仓大减，很多人会疑惑：这到底算不算强？答案通常不是一句话，而要看这段上涨究竟是谁推动的。",
-        "body": [
-          "持仓大减后的上涨，最常见的解释是空头回补。空头在价格快速不利时被迫平仓，会推高价格，但这类上涨的特点往往是快、急、弹性大，却不一定有新的分歧资金持续加入。",
-          "这并不意味着空头回补没有交易意义。相反，它经常是盘面重要的节奏段。但问题在于，空头回补和新增多头驱动的上涨，在后续持续性上差别很大。前者更像把旧的压力撤掉，后者才更像把新的支撑加进来。",
-          "所以，持仓大减后的上涨最应该问的是：减仓之后，价格还能不能继续站住？回补结束以后，有没有新增资金接手？现货、基差和结构有没有跟上？如果这些都偏弱，那么这段上涨更多只是“空头买回来”，不是“多头真看上去”。"
-        ],
-        "mistakes": [
-          "把所有上涨都理解成新多头进场。2. 忽略持仓大减意味着旧仓退出。3. 不区分回补性上涨和趋势性上涨。4. 只看当天，不看后续承接。"
-        ],
-        "signals": [
-          "上涨同时持仓是减还是增- 减仓后价格能否继续抬高- 现货与基差是否强化- 次日是否继续获承接- 相关品种是否同步支持"
-        ],
-        "framework": [],
-        "summary": [
-          "持仓大减后的上涨，不一定是假强，但第一层解释往往是空头回补。是否能从“挤出来的上涨”走成“坐实的上涨”，要看后续有没有新增承接。"
-        ]
-      },
-      "价格没怎么动，持仓却大幅变化，说明什么": {
-        "intro": "有一种盘面表面看起来最无聊：价格几乎不动。但如果持仓却在大幅变化，这种“静止的表面”往往正在包裹一场激烈的分歧重组。",
-        "body": [
-          "价格没怎么动、持仓却大幅变化，通常说明交易正在某个狭窄价格带里快速完成仓位交换。市场表面平静，内部却并不平静。这样的盘面，既可能是多空分歧积累，也可能是主力换月、套保调整或事件前集中布局。",
-          "最值得注意的，是这种变化发生在什么阶段。如果发生在重大数据、报告、会议前，往往意味着市场正在预埋仓位，价格暂时不动只是因为双方都还不愿主动打破平衡；如果发生在交割月前，则可能意味着近月仓位重组和结构再平衡；如果发生在长期横盘末端，则要警惕后续大幅波动的可能。",
-          "这里最大的误读，是觉得“价格没动，所以没意义”。实际上，仓位变化比价格变化更早告诉你，市场参与者已经不满足于观望，而是在积极调整自己对未来的押注。"
-        ],
-        "mistakes": [
-          "价格平稳就忽略盘面信息。2. 不分事件前、交割前还是换月时段。3. 把所有持仓变化都当成方向信号。4. 不跟踪后续突破方向。"
-        ],
-        "signals": [
-          "持仓变化持续多久- 所处时间段和事件窗口- 月差、基差是否同步变化- 价格是否在区间边缘反复试探- 后续突破后是否获得量能和结构支持"
-        ],
-        "framework": [],
-        "summary": [
-          "价格没怎么动，持仓却大幅变化，说明市场正在重组观点。方向还没说出口，但仓位已经开始投票。"
-        ]
-      },
-      "市场拥挤时，为什么越一致越危险": {
-        "intro": "最让人安心的时刻，往往也是最危险的时刻。因为当市场人人看懂、人人都在同一边时，风险并不在逻辑是否成立，而在一旦出现反身性回撤，谁来接住大家一起挤出去的仓位。",
-        "body": [
-          "市场拥挤并不意味着逻辑错了。很多拥挤交易，逻辑甚至非常正确。危险在于，当一个逻辑被越来越多资金接受以后，价格里已经提前装进了太多“大家都知道”的内容。后面哪怕只是验证略低于最乐观预期，或者只是没有新的增量信息，都可能触发剧烈的仓位回吐。",
-          "越一致越危险，首先因为边际买家越来越少。一个逻辑越被广泛接受，越说明愿意为它加价的人已经大部分上车，后面推动价格继续走远的成本会越来越高。其次，一致预期会放大脆弱性。大家都站在同一边时，任何小扰动都会因为止盈、风控和情绪传染，被迅速放大。",
-          "很多交易者在拥挤交易里栽跟头，不是因为逻辑看错，而是因为忽略了“逻辑正确”和“仓位过满”可以同时成立。市场拥挤最大的信号，不是媒体都在谈，而是盘面越来越依赖同一套解释，回调越来越不容易被新资金视作便宜。",
-          "所以，越一致越危险的真正含义，不是看到一致就要反着做，而是要知道：当大家都在等同一个利多兑现、等同一个数据超预期、等同一个事件继续发酵时，市场已经在悄悄把风险从“看错逻辑”转移到“大家同时离场”。"
-        ],
-        "mistakes": [
-          "只要逻辑正确，就忽视仓位拥挤。2. 把高一致性当成高确定性。3. 不区分趋势成熟与趋势衰竭。4. 看到回调就立刻理解为便宜。"
-        ],
-        "signals": [
-          "持仓是否过度集中- 价格是否越来越依赖单一叙事- 现货和结构是否还能持续强化- 回调时是否迅速引发连锁止盈- 一旦利多落地，是否新增买盘不足"
-        ],
-        "framework": [],
-        "summary": [
-          "市场拥挤时，越一致越危险，不是因为大家一定错，而是因为价格里已经装下太多共识，留给意外的缓冲越来越少。"
-        ]
-      }
-    };
-
-    const courses = [
-      {
-        id: "01",
-        title: "利多落地为何不涨：读懂预期兑现型行情",
-        category: "通用方法",
-        track: "方法",
-        duration: "8分钟",
-        status: "重点",
-        coreQuestion: "为什么消息偏多，价格反而不涨，甚至回落？",
-        audience: "有交易经验、常做事件行情的用户",
-        description: "讲清预期、兑现、情绪和持仓调整之间的关系，帮助用户理解市场为何不按新闻字面运行。",
-        takeaway: "利多不涨，很多时候不是逻辑错了，而是市场已经在消息落地前完成了大部分定价。",
-        keywords: ["预期差", "兑现交易", "情绪切换", "仓位调整"],
-        tools: ["价格走势", "成交量", "持仓变化", "事件时间线"],
-        sources: ["usdaWasde", "usdaExport", "cmeOi"],
-        scene: [
-          "夜盘消息偏多，主力合约跳空高开，开盘后第一波拉升很快被卖盘压回，午后甚至翻绿。很多交易者当时会觉得市场在“反着走”。"
-        ],
-        caseStudy: [
-          "这类案例常见于库存下降、政策表述偏暖或供应扰动正式落地的窗口。消息出来前盘面已经连续几天走强，落地后成交放大，但持仓开始回落。"
-        ],
-        surface: [
-          "表面现象是利多兑现后价格不涨，像是市场不认可这条消息，或者逻辑突然失效。"
-        ],
-        driver: [
-          "真实驱动通常是利多早已被提前交易。消息落地时新增买盘不够承接前期浮盈，多头平仓把行情从“抢跑”切换到“验证”。"
-        ],
-        signals: ["报告前后价格位置是否已提前走强", "公布后持仓是否继续增加", "基差是否同步抬升", "近月是否强于远月", "现货是否出现跟涨或资源偏紧信号"],
-        mistakes: ["只看报告结论，不看市场预期差", "只看盘面瞬间反应，不看持仓和结构", "把冲高误当成趋势延续", "把没涨误读成逻辑错误"],
-        framework: ["先问这条利多是不是新增信息，再问价格此前是否已经提前反应，再看落地后有没有结构验证，最后才判断它是否足以推动新一轮定价"],
-        conclusion: [
-          "这个案例本质上属于典型的预期兑现型行情，表面是利多不涨，实质是仓位和节奏在重新定价。"
-        ]
-      },
-      {
-        id: "02",
-        title: "为什么库存下降，价格却未必上涨",
-        category: "通用方法",
-        track: "方法",
-        duration: "8分钟",
-        status: "重点",
-        coreQuestion: "库存利多为什么可能不涨？",
-        audience: "经常看库存数据的用户",
-        description: "解释库存必须结合产量、需求、基差和预期一起看，避免单点理解。",
-        takeaway: "库存是结果变量，不是单独的方向答案，关键在于去库的原因和持续性。",
-        keywords: ["库存", "供需错配", "基差", "预期"],
-        tools: ["库存图", "基差图", "期限结构", "现货成交"],
-        sources: ["eiaWpsr", "cmeCurve", "cmeOi"],
-        scene: [
-          "周度库存公布后，数据明显去库，但盘面只是瞬间上冲，随后回到原位。很多人会下意识认为这组数据“没用”。"
-        ],
-        caseStudy: [
-          "在能化、油脂和黑色里都常见这种情形：库存数字比市场预估好看，但现货成交并没有同步加速，近月结构也没有继续走强。"
-        ],
-        surface: [
-          "表面现象是去库利多没有兑现成上涨，于是交易者容易把它理解成数据失真或市场忽视。"
-        ],
-        driver: [
-          "真实驱动往往在于市场更关心去库原因和持续性。若去库来自短期到货延后、阶段性发运扰动，或此前市场早已预期到去库，价格未必需要再给出更高反应。"
-        ],
-        signals: ["去库是来自供给收缩还是需求改善", "现货和基差有没有同步强化", "近远月结构是否继续收紧", "库存数据公布后次日是否还能获得溢价", "市场此前是否已经提前交易去库预期"],
-        mistakes: ["只看库存绝对值，不看市场预期", "把去库直接翻译成上涨", "忽略基差和现货验证", "不区分短期扰动去库和趋势性去库"],
-        framework: ["先看库存变化原因，再看去库是否被现货和结构验证，最后判断市场是在交易库存本身，还是在交易库存之后的路径"],
-        conclusion: [
-          "这类案例本质上属于“结果变量失去边际惊喜”的行情，盘面没有交易库存本身，而是在交易库存背后的持续性。"
-        ]
-      },
-      {
-        id: "03",
-        title: "盘面大涨时，先看什么才不容易追高",
-        category: "通用方法",
-        track: "方法",
-        duration: "7分钟",
-        status: "未学",
-        coreQuestion: "强波动行情下应该先确认什么？",
-        audience: "容易情绪化追单的用户",
-        description: "建立大涨行情下的观察顺序，帮助用户先判断驱动，再判断持续性。",
-        takeaway: "价格强不等于逻辑强，先看驱动来源、量仓结构和现货验证，才能减少情绪化追高。",
-        keywords: ["驱动来源", "增仓上行", "现货验证", "联动确认"],
-        tools: ["分时", "成交量", "持仓", "相关品种走势"],
-        sources: ["cmeOi"],
-        scene: [
-          "盘中出现快速长阳，盘口连续扫单，群里都在说“别错过”。这时最容易让人把上涨速度误读成逻辑强度。"
-        ],
-        caseStudy: [
-          "真实市场里，经常出现某个品种受突发消息刺激迅速拉升，但半小时后发现相关品种并未跟涨，持仓也没有同步扩张。"
-        ],
-        surface: [
-          "表面现象是价格很强，好像逻辑已经被市场确认。"
-        ],
-        driver: [
-          "真实驱动可能只是空头回补、短线情绪宣泄或流动性挤压。若没有现货、结构和链条联动跟进，这种强更多是盘面行为，不是逻辑强化。"
-        ],
-        signals: ["拉升时持仓是否同步增加", "相关品种有没有形成联动", "现货、基差和月差是否跟进", "上涨后能否站稳新价格区间", "次日是否继续获得验证"],
-        mistakes: ["把价格强直接等同于逻辑强", "所有拉升都理解成趋势启动", "忽略减仓上涨与增仓上涨的差异", "只看主连，不看结构和现货"],
-        framework: ["先看驱动是不是新增，再看量仓组合，再看结构与现货是否配合，最后判断这波上涨究竟是情绪脉冲还是逻辑强化"],
-        conclusion: [
-          "这类案例本质上是在区分“价格强”和“逻辑强”，属于上涨性质识别课，而不是方向课。"
-        ]
-      },
-      {
-        id: "04",
-        title: "事件驱动行情怎么分辨“预期交易”还是“现实交易”",
-        category: "通用方法",
-        track: "方法",
-        duration: "9分钟",
-        status: "学习中",
-        coreQuestion: "市场到底在交易未来，还是在交易现实？",
-        audience: "做报告、政策、地缘事件的用户",
-        description: "帮助用户区分事件行情的阶段属性，提升节奏判断能力。",
-        takeaway: "事件出来不等于趋势启动，先分清预期阶段还是现实阶段，才能读懂后续节奏。",
-        keywords: ["预期交易", "现实交易", "阶段识别", "验证"],
-        tools: ["事件日历", "价格对照图", "成交持仓图", "相关品种走势"],
-        sources: ["usdaWasde", "eiaWpsr", "opec"],
-        scene: [
-          "政策会议、月报发布或地缘新闻出来后，市场常常先冲一段，再转入震荡，很多人会困惑：这到底算开始，还是已经结束。"
-        ],
-        caseStudy: [
-          "报告前一周盘面已经连续预热，报告公布时价格只是瞬间放大波动，真正决定后续方向的是现货、结构和相关品种能否接力。"
-        ],
-        surface: [
-          "表面现象是“事件出来了，所以行情启动了”或“事件出来没涨，所以逻辑没了”。"
-        ],
-        driver: [
-          "真实驱动在于市场有时在交易未来预期，有时在交易现实验证。预期阶段可以只靠想象推动，现实阶段必须靠现货、库存、利润或交割变量接管。"
-        ],
-        signals: ["事件前是否已有明显预热", "落地后是增仓还是减仓", "现货、基差和月差有没有接力", "相关品种和上下游是否同步响应", "事件后一到两个交易日是否延续"],
-        mistakes: ["事件一出就默认进入趋势行情", "把消息落地和逻辑成立混为一谈", "只看新闻标题，不看阶段切换", "忽略现实验证缺位时的兑现压力"],
-        framework: ["先识别事件前是否已经交易预期，再看落地后市场是在重估现实还是结算预期，最后用现货和结构验证谁在接管定价权"],
-        conclusion: [
-          "这类案例本质上属于阶段识别课：先看市场在交易哪一层东西，再看行情有没有延续条件。"
-        ]
-      },
-      {
-        id: "05",
-        title: "为什么同样是利空，不同品种反应差这么大",
-        category: "通用方法",
-        track: "方法",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "同一事件为何引发不同品种不同反应？",
-        audience: "做跨品种观察的用户",
-        description: "从产业结构、库存位置、资金拥挤度和估值位置解释差异。",
-        takeaway: "同样一条利空打到不同品种，会先经过各自的库存、结构和资金翻译系统。",
-        keywords: ["产业属性", "库存位置", "拥挤度", "估值"],
-        tools: ["跨品种涨跌对比", "库存位置", "净持仓", "价差结构"],
-        sources: ["usdaWasde", "eiaWpsr"],
-        scene: [
-          "同一晚宏观数据偏弱，黑色跳水明显，有色回撤有限，农产品几乎不动。交易者最容易误以为市场在随机挑着跌。"
-        ],
-        caseStudy: [
-          "真实盘面里，需求预期走弱时，高库存、弱基差、拥挤度高的品种往往率先释放压力，而低库存、近端偏紧的品种反应会慢得多。"
-        ],
-        surface: [
-          "表面现象是同一利空导致不同品种涨跌幅完全不一致。"
-        ],
-        driver: [
-          "真实驱动来自产业结构差异、库存缓冲垫、估值所处位置和资金拥挤程度。消息只是触发器，不是决定幅度的唯一变量。"
-        ],
-        signals: ["基差是同步走弱还是仍然坚挺", "近月与远月谁更先反应", "持仓是主动撤离还是分歧加大", "现货、库存、仓单是否支持消息叙事", "相关品种是同步还是局部分化"],
-        mistakes: ["把同一条宏观利空机械套到所有品种", "只看绝对价格，不看结构和现货", "看到利空不跌就以为基本面一定更强", "忽略不同品种处在不同阶段"],
-        framework: ["先识别利空打的是估值层、现实层还是结构层，再看目标品种当前处在什么库存和结构位置，最后再比较谁更脆弱、谁更有缓冲"],
-        conclusion: [
-          "这类案例本质上属于跨品种吸收能力差异行情，表面是同一利空，实际交易的是各自的结构脆弱性。"
-        ]
-      },
-      {
-        id: "06",
-        title: "盘面看起来很强，不一定逻辑很强",
-        category: "通用方法",
-        track: "方法",
-        duration: "7分钟",
-        status: "未学",
-        coreQuestion: "价格强势和逻辑扎实有什么区别？",
-        audience: "短线与波段交易者",
-        description: "讲清价格强未必代表基本面强，帮助识别短期情绪推动行情。",
-        takeaway: "真正有质量的行情，不只是价格冲出去，更是现货、结构和仓位愿意一起把逻辑坐实。",
-        keywords: ["情绪推动", "逻辑驱动", "持续性", "验证"],
-        tools: ["价格图", "成交量", "持仓", "现货验证"],
-        sources: ["usdaWasde", "cftcCot", "cmeOi"],
-        scene: [
-          "有些行情看起来非常漂亮：突破、放量、加速一应俱全，但第二天一旦情绪降温，价格就回到原位。"
-        ],
-        caseStudy: [
-          "真实案例常见于短期政策刺激、盘中拉涨或阶段性逼仓。当天价格很强，但现货、基差和月差并没有同步抬升。"
-        ],
-        surface: [
-          "表面现象是价格强势，好像基本面也同步变强。"
-        ],
-        driver: [
-          "真实驱动可能只是短期情绪、流动性收缩或被动回补，并不等于供需格局已经改善。逻辑强需要现货和结构去接力。"
-        ],
-        signals: ["现货是否同步走强", "基差是否抬升", "月差是否进一步收紧", "持仓是增加还是下降", "相关品种是否形成联动验证"],
-        mistakes: ["把涨幅大等同于逻辑硬", "把所有拉升都理解成趋势启动", "忽略减仓上涨与增仓上涨的差异", "只看价格，不看结构和现货"],
-        framework: ["先看驱动是不是新增，再看结构有没有跟，再看资金是在加深分歧还是被动回补，最后再判断上涨靠的是情绪还是逻辑"],
-        conclusion: [
-          "这类案例本质上属于情绪强于逻辑的上涨，表面是突破，实质是验证不足。"
-        ]
-      },
-      {
-        id: "07",
-        title: "白银为什么比黄金更“躁动”",
-        category: "品种框架",
-        track: "有色",
-        duration: "10分钟",
-        status: "重点",
-        coreQuestion: "白银为什么常常比黄金波动更大，它到底是在交易贵金属属性还是工业属性？",
-        audience: "关注贵金属弹性和工业属性切换的交易者",
-        description: "从工业需求、投资属性和供需缺口理解白银为何比黄金更高弹性。",
-        takeaway: "白银的躁动来自贵金属属性和工业属性的频繁切换。",
-        keywords: ["钢厂利润", "铁水", "库存", "表需", "政策预期"],
-        tools: ["钢厂利润", "铁水日产", "社库厂库", "基差"],
-        sources: [],
-        scene: [
-          "很多人做螺纹时只盯价格和库存，结果总在行情走出一段后才反应过来，因为真正的领先变量其实在上游。"
-        ],
-        caseStudy: [
-          "真实盘面里，螺纹常常先受政策预期带动抬升，随后市场会盯钢厂利润和铁水是否跟上；若铁水不动、需求验证偏弱，行情就容易回吐。"
-        ],
-        surface: [
-          "表面现象是螺纹涨跌总和库存、政策新闻绑在一起。"
-        ],
-        driver: [
-          "真实驱动是利润决定生产意愿，铁水决定原料需求，库存和表需决定现实是否承接，政策则更多影响市场愿意给多高估值。"
-        ],
-        signals: ["黄金走势与避险情绪是否同步支持白银", "光伏、电子、电网等工业需求预期是否改善", "ETF 与投机资金是否把白银当成高弹性替代品", "供需缺口是否继续提供现实支撑"],
-        mistakes: ["把白银当成便宜版黄金", "用黄金框架机械套白银", "忽略工业需求与结构性短缺", "只看贵金属情绪不看工业周期"],
-        framework: ["先判断当前更像贵金属还是工业金属，再看资金有没有放大这种属性切换，最后用供需缺口做验证"],
-        conclusion: [
-          "这类案例本质上属于产业链顺序判断课，表面是螺纹波动，实质是链条变量在接力。"
-        ]
-      },
-      {
-        id: "08",
-        title: "白银研究框架：金银比之外，还该看什么",
-        category: "品种框架",
-        track: "有色",
-        duration: "9分钟",
-        status: "未学",
-        coreQuestion: "研究白银时，除了金银比，还应该把哪些层次一起纳入判断？",
-        audience: "想把白银从比值交易拓展到完整研究框架的交易者",
-        description: "把白银拆成贵金属、工业需求、投资资金和供给平衡四层框架。",
-        takeaway: "金银比只是入口，真正决定白银节奏的是贵金属属性和工业属性的主导切换。",
-        keywords: ["发运", "到港", "港口库存", "铁水", "成材利润"],
-        tools: ["港口库存", "发运到港", "铁水", "价差"],
-        sources: [],
-        scene: [
-          "同样是黑色链，铁矿石经常先大涨大跌，成材却跟得没那么快。很多人会误以为铁矿只是“消息品”。"
-        ],
-        caseStudy: [
-          "地产预期转暖或粗钢政策传闻升温时，铁矿往往先拉，等到钢厂利润和铁水没有明显改善，盘面又会快速回吐。"
-        ],
-        surface: [
-          "表面现象是铁矿石像在跟着情绪跑，波动常常比成材更大。"
-        ],
-        driver: [
-          "真实驱动在于铁矿同时承接了供给节奏、钢厂生产意愿和政策预期三条线。它位于链条中游，最容易成为预期变化的放大器。"
-        ],
-        signals: ["金银比是否只是估值入口而非全部答案", "工业需求线是否强化白银弹性", "ETF、银条银币与投机仓位是否提供放大器", "供给平衡与市场缺口是否仍支持中期韧性"],
-        mistakes: ["研究白银只看金银比", "不区分贵金属层与工业需求层", "忽略投资资金对白银波动的放大作用", "把供需缺口从框架里拿掉"],
-        framework: ["先贵金属层，再工业需求层，再投资资金层，最后回到供给平衡层判断白银处在哪种主导状态"],
-        conclusion: [
-          "这类案例本质上属于预期放大器行情，表面是矿价剧烈波动，实际是在替黑色链预期做提前定价。"
-        ]
-      },
-      {
-        id: "09",
-        title: "豆粕研究框架：从压榨到出口",
-        category: "品种框架",
-        track: "油脂油料",
-        duration: "11分钟",
-        status: "专题",
-        coreQuestion: "豆粕到底该从哪几条线搭框架？",
-        audience: "油脂油料和农产品交易者",
-        description: "用进口、压榨、需求、库存和出口五条线重建豆粕的研究顺序。",
-        takeaway: "豆粕不是只看美豆，国内压榨和现货节奏同样决定盘面强弱。",
-        keywords: ["进口大豆", "压榨利润", "豆粕需求", "库存", "出口销售"],
-        tools: ["压榨利润", "豆粕库存", "基差", "出口销售"],
-        sources: ["usdaWasde", "usdaExport", "usdaOilseeds"],
-        scene: [
-          "很多人看到美豆大涨就直接去追豆粕，但现实里内盘豆粕常常并不完全同步，因为压榨和现货这条线会改变节奏。"
-        ],
-        caseStudy: [
-          "真实市场里，进口到港集中、油厂开机提升时，哪怕外盘偏强，豆粕盘面也可能表现克制；反过来，下游拿货改善、现货偏紧时，内盘会先走自己的节奏。"
-        ],
-        surface: [
-          "表面现象是豆粕盘面常和美豆同向但不同步。"
-        ],
-        driver: [
-          "真实驱动是全球供应决定成本，国内压榨决定供给释放，饲料需求和库存决定现实端是否接力。出口销售更多影响外盘预期，而不是直接替代内盘现实。"
-        ],
-        signals: [
-          "看压榨利润、开机率、到港节奏和库存变化。",
-          "看现货基差和下游成交是否开始强化。"
-        ],
-        mistakes: [
-          "把豆粕只当外盘映射品。",
-          "只看库存不看压榨节奏。"
-        ],
-        framework: [
-          "成本线、供给线、需求线分开看，再在盘面上找哪条线当前权重最高。",
-          "外盘给方向，内盘往往决定节奏。"
-        ],
-        conclusion: [
-          "这类案例本质上属于内外盘双线定价行情，表面看美豆，实际要回到压榨与现货。"
-        ]
-      },
-      {
-        id: "10",
-        title: "棕榈油交易，为什么必须盯报告窗口",
-        category: "品种框架",
-        track: "油脂油料",
-        duration: "9分钟",
-        status: "重点",
-        coreQuestion: "棕榈油为什么总在报告窗口前后剧烈波动？",
-        audience: "油脂油料交易者",
-        description: "围绕 MPOB 和出口高频，解释棕榈油为什么特别依赖数据窗口。",
-        takeaway: "棕榈油最关键的不是报告结果本身，而是报告前后的预期差和兑现节奏。",
-        keywords: ["MPOB", "产量", "出口", "库存", "季节性"],
-        tools: ["MPOB 月报", "出口数据", "库存图", "价差"],
-        sources: ["mpob", "cmeCurve"],
-        scene: [
-          "棕榈油常在报告前几天提前异动，报告出来后反而高开低走或低开反弹，很多人只盯结果会完全跟不上节奏。"
-        ],
-        caseStudy: [
-          "典型窗口是市场先押注产量下降或出口改善，盘面预热后，报告若只符合预期，价格就容易转成兑现式波动。"
-        ],
-        surface: [
-          "表面现象是报告日决定了涨跌。"
-        ],
-        driver: [
-          "真实驱动是报告前预估差异、报告时实际偏离和报告后高频出口验证三层力量依次接管市场。"
-        ],
-        signals: [
-          "先看报告前月差、相关油脂和市场一致预估如何变化。",
-          "报告后再看出口高频、现货和价差是否继续确认。"
-        ],
-        mistakes: [
-          "只看库存，不看库存背后的产量和出口。",
-          "把报告当天波动当作全部。"
-        ],
-        framework: [
-          "棕榈油要按预热、发布、兑现三段来读。",
-          "报告只是窗口，不是全部逻辑。"
-        ],
-        conclusion: [
-          "这类案例本质上属于报告窗口型行情，表面在看一份月报，实质在交易预估差和后续兑现。"
-        ]
-      },
-      {
-        id: "11",
-        title: "铜的行情到底更看宏观，还是更看基本面",
-        category: "品种框架",
-        track: "有色",
-        duration: "10分钟",
-        status: "专题",
-        coreQuestion: "铜价到底更听宏观，还是更听产业？",
-        audience: "有色交易者",
-        description: "用铜的双属性场景解释宏观估值线和产业验证线怎样交替主导。",
-        takeaway: "铜不是二选一品种，而是宏观和产业两条线同时定价。",
-        keywords: ["美元", "利率", "库存", "升贴水", "矿端扰动"],
-        tools: ["LME/SHFE 库存", "升贴水", "美元指数", "TC"],
-        sources: ["lmeStocks"],
-        scene: [
-          "美联储预期转向时，铜往往先按宏观资产反应；但几周后盘面又会回到库存、升贴水和矿端扰动上，很多人容易在这个切换点上判断失真。"
-        ],
-        caseStudy: [
-          "真实案例里，美元回落推动铜价先涨，但如果库存去化和现货升贴水并不配合，盘面后续就会进入估值回吐。"
-        ],
-        surface: [
-          "表面现象是铜一会儿像宏观品，一会儿像基本面品。"
-        ],
-        driver: [
-          "真实驱动是估值线和现实线在不同阶段轮流主导。宏观决定市场愿意给什么价格区间，产业决定这个区间能否被现实接住。"
-        ],
-        signals: [
-          "看美元、利率预期和风险偏好是否在改写铜的估值。",
-          "看库存、升贴水、价差和矿冶扰动是否在做现实验证。"
-        ],
-        mistakes: [
-          "把铜固定理解成单一属性品种。",
-          "只盯宏观或只盯库存。"
-        ],
-        framework: [
-          "先判断当前主导线是宏观还是产业，再看另一条线是确认还是背离。",
-          "双线都顺的时候趋势最好，双线背离时更像节奏行情。"
-        ],
-        conclusion: [
-          "这类案例本质上属于双引擎定价行情，表面看起来反复，实际是主导权在宏观和现实之间轮换。"
-        ]
-      },
-      {
-        id: "12",
-        title: "原油为何经常先交易预期，再交易兑现",
-        category: "品种框架",
-        track: "能化",
-        duration: "10分钟",
-        status: "专题",
-        coreQuestion: "原油为什么总在消息前后来回反复？",
-        audience: "原油和能化交易者",
-        description: "从 OPEC+、地缘和库存周报出发，解释原油的预期与兑现两段式节奏。",
-        takeaway: "原油常先交易风险溢价和供应预期，再用库存和需求数据重新校正。",
-        keywords: ["OPEC+", "地缘风险", "库存", "需求预期", "期限结构"],
-        tools: ["油价走势", "库存周报", "期限结构", "运费"],
-        sources: ["eiaSteo", "eiaWpsr", "opec", "cmeCurve"],
-        scene: [
-          "地缘升温或 OPEC+ 会议临近时，原油经常先涨；但库存周报或需求数据出来后，盘面又可能快速吐回一段。"
-        ],
-        caseStudy: [
-          "真实案例里，供应收缩预期把近月结构先推强，但如果后续 EIA 库存和成品油需求跟不上，风险溢价就会回吐。"
-        ],
-        surface: [
-          "表面现象是原油总在“先涨后跌”或“先跌后修复”。"
-        ],
-        driver: [
-          "真实驱动是市场先交易预期中的风险溢价，随后再看库存、需求和裂解结构是否把预期变成现实。"
-        ],
-        signals: [
-          "看近远月结构和近月强弱，确认市场是否真在交易近端紧张。",
-          "看库存、炼厂开工、成品油裂解和运费是否开始验证。"
-        ],
-        mistakes: [
-          "只看新闻，不看风险溢价何时需要被现实接管。",
-          "把库存周报当作唯一解释框架。"
-        ],
-        framework: [
-          "原油先分预期段和兑现段，再看两段之间有没有现实桥梁。",
-          "风险溢价如果没有验证，盘面迟早会重估。"
-        ],
-        conclusion: [
-          "这类案例本质上属于预期先行、现实校正型行情，是原油最常见的节奏结构。"
-        ]
-      },
-      {
-        id: "13",
-        title: "订单流里最容易被误读的三个信号",
-        category: "工具理解",
-        track: "工具",
-        duration: "8分钟",
-        status: "重点",
-        coreQuestion: "订单流里最容易看错的到底是哪几类信号？",
-        audience: "用订单流和逐笔成交做盘中观察的交易者",
-        description: "从盘中误读场景切入，讲清主动成交、吸收和密集成交区为何不能单独下结论。",
-        takeaway: "订单流不替代场景，只放大场景。",
-        keywords: ["主动成交", "吸收", "密集成交", "成交结构"],
-        tools: ["订单流", "逐笔成交", "K线", "持仓"],
-        sources: ["cmeOi"],
-        scene: [
-          "盘中看到连续主动买单、局部成交密集或某个价位反复吸收，很多人会立刻把它翻译成“多头占优”。"
-        ],
-        caseStudy: [
-          "真实盘面里，突破口上的主动成交放大如果没有继续推升价格，往往说明对手盘在接；而不是说明追价盘一定更强。"
-        ],
-        surface: [
-          "表面现象是局部订单流看上去很强，好像方向已经很明确。"
-        ],
-        driver: [
-          "真实驱动取决于价格位置、波动阶段和后续接受度。订单流只说明局部行为，不说明大级别结果。"
-        ],
-        signals: [
-          "看异常成交发生在什么位置，是关键区、突破区还是中性区。",
-          "看价格是否顺着异常继续推进，以及持仓和更大级别结构是否支持。"
-        ],
-        mistakes: [
-          "把局部信号直接翻译成方向结论。",
-          "只看几分钟细节，不看全天结构。"
-        ],
-        framework: [
-          "订单流先看位置，再看反应，最后才看解释。",
-          "没有价格反应的订单流，参考价值往往被高估。"
-        ],
-        conclusion: [
-          "这类案例本质上属于局部信号误读行情，表面看的是订单流，实质看的是场景和接受度。"
-        ]
-      },
-      {
-        id: "14",
-        title: "资金异动出现后，第一步该联看什么",
-        category: "工具理解",
-        track: "工具",
-        duration: "7分钟",
-        status: "未学",
-        coreQuestion: "盘中异动提示出来后，先看什么最有效？",
-        audience: "使用异动监测和盘中报警的交易者",
-        description: "把“看到异动就下结论”换成“先联看验证”的处理顺序。",
-        takeaway: "异动不是结论，只是提醒你某条链可能开始动了。",
-        keywords: ["异动", "成交", "持仓", "联动品种"],
-        tools: ["资金异动", "成交量", "持仓", "相关品种走势"],
-        sources: ["cmeOi"],
-        scene: [
-          "盘中异动提醒弹出来后，很多人会立刻去猜方向，但真正高质量的处理往往只差一个步骤顺序。"
-        ],
-        caseStudy: [
-          "真实市场里，主力合约突然放量拉升时，如果相关品种、现货和持仓都没有跟，异动常常只是一次局部扫盘。"
-        ],
-        surface: [
-          "表面现象是大单异动出现，盘面像要启动。"
-        ],
-        driver: [
-          "真实驱动可能是消息触发、仓位腾挪、对冲调整或短线流动性挤压，必须联看其它维度才能定性。"
-        ],
-        signals: [
-          "第一时间看成交量和持仓是增量还是减量。",
-          "再看相关品种、现货线索和价格所在位置有没有共振。"
-        ],
-        mistakes: [
-          "只看异动，不看异动发生的位置和链条扩散。",
-          "把单笔异常成交当趋势起点。"
-        ],
-        framework: [
-          "异动先分类，再联看，再定性。",
-          "好的异动处理不是更快下注，而是更快排除噪音。"
-        ],
-        conclusion: [
-          "这类案例本质上属于盘中验证课，表面是资金异动，实质看增量资金是否真的接管盘面。"
-        ]
-      },
-      {
-        id: "15",
-        title: "期限结构什么时候最有参考价值",
-        category: "工具理解",
-        track: "工具",
-        duration: "8分钟",
-        status: "重点",
-        coreQuestion: "期限结构到底适合解释什么，不适合解释什么？",
-        audience: "做月差、看曲线和结构的交易者",
-        description: "从近月走强和结构扭曲场景入手，解释期限结构在实盘里最有用的边界。",
-        takeaway: "结构最擅长回答紧张度和节奏，不擅长独自回答方向。",
-        keywords: ["月差", "期限结构", "交割预期", "现货紧张"],
-        tools: ["月差", "基差", "仓单", "库存"],
-        sources: ["cmeCurve"],
-        scene: [
-          "某个品种近月突然走强、正套快速扩大，盘面看起来很有故事，但不少人会直接把它理解成单边上涨信号。"
-        ],
-        caseStudy: [
-          "真实市场里，近月强远月弱经常只是现货偏紧或交割资源有限，不代表整个曲线都要继续抬升。"
-        ],
-        surface: [
-          "表面现象是月差走扩，好像市场已经明确看多。"
-        ],
-        driver: [
-          "真实驱动更多是时间维度上的紧张度变化。结构在表达近端和远端谁更紧，不一定在表达绝对价格该往哪走。"
-        ],
-        signals: [
-          "看仓单、现货基差、库存和交割资源是否支持近月偏强。",
-          "看结构变化是单点扭曲还是链条共振。"
-        ],
-        mistakes: [
-          "把结构变化直接等同于方向判断。",
-          "不看现货和交割，只看曲线本身。"
-        ],
-        framework: [
-          "结构先回答“哪一段紧”，再回答“为什么紧”。",
-          "只有结构和现实变量同步，参考价值才会上升。"
-        ],
-        conclusion: [
-          "这类案例本质上属于时间维度定价课，表面是月差异动，实质是在交易近端资源和交割压力。"
-        ]
-      },
-      {
-        id: "16",
-        title: "量价分布能帮你看清什么，不能帮你看清什么",
-        category: "工具理解",
-        track: "工具",
-        duration: "7分钟",
-        status: "未学",
-        coreQuestion: "量价分布到底是结构工具，还是信号工具？",
-        audience: "使用 volume profile 和成交分布图的交易者",
-        description: "用密集成交区和分布迁移的典型盘面解释量价分布的边界。",
-        takeaway: "量价分布擅长看市场接受了哪里，不擅长直接告诉你下一步方向。",
-        keywords: ["成交密集区", "价格接受", "博弈区", "分布迁移"],
-        tools: ["量价分布", "成交区间", "K线"],
-        sources: ["cmeOi"],
-        scene: [
-          "很多人一打开分布图，就会把高成交区直接看成支撑阻力，于是形成了一种“看图即有答案”的错觉。"
-        ],
-        caseStudy: [
-          "真实盘面里，某个高密集成交区第一次回踩并不一定有效，关键在于市场回到该区域后是接受还是继续拒绝。"
-        ],
-        surface: [
-          "表面现象是分布峰值很清楚，好像市场已经把关键位写在图上。"
-        ],
-        driver: [
-          "真实驱动在于分布描述的是历史交换，而不是未来方向。真正有价值的是密集区是否迁移，以及价格重返该区域时的反应。"
-        ],
-        signals: [
-          "看成交中心是否在向上或向下迁移。",
-          "看价格回到高密集区后是停留接受，还是迅速离开。"
-        ],
-        mistakes: [
-          "把分布峰值机械理解成必然支撑或阻力。",
-          "不区分趋势环境和震荡环境。"
-        ],
-        framework: [
-          "先看分布在描述什么历史，再看市场如何对待这段历史。",
-          "分布是结构图，不是自动信号。"
-        ],
-        conclusion: [
-          "这类案例本质上属于价格接受度分析，表面看密集成交，实质看市场是否继续认可这个价格区。"
-        ]
-      },
-      {
-        id: "17",
-        title: "强弱订单比该怎么看，才不会看成方向判断",
-        category: "工具理解",
-        track: "工具",
-        duration: "6分钟",
-        status: "未学",
-        coreQuestion: "强弱订单比到底在说什么，不在说什么？",
-        audience: "使用订单结构和强弱比工具的交易者",
-        description: "围绕主动性指标的误用场景，解释为什么它只能做辅助层判断。",
-        takeaway: "强弱订单比更像温度计，不是方向箭头。",
-        keywords: ["主动性", "订单结构", "辅助判断", "价格反应"],
-        tools: ["强弱订单比", "成交量", "价格走势"],
-        sources: ["cmeOi"],
-        scene: [
-          "盘中强弱订单比快速上升时，很多人会直接把它理解成买盘强、方向明朗，但市场常常并不这么配合。"
-        ],
-        caseStudy: [
-          "真实盘面里，强弱比偏强但价格推不动，往往说明对手盘承接很强，这类场景反而不能当作单边强化。"
-        ],
-        surface: [
-          "表面现象是指标明显偏向一边，像是多空已经分出胜负。"
-        ],
-        driver: [
-          "真实驱动要看价格是否愿意顺着主动成交推进。指标只反映谁更着急成交，不反映谁最终占优。"
-        ],
-        signals: [
-          "看强弱订单比出现的位置，是关键区还是中性区。",
-          "看价格、持仓和成交放大是否和指标方向一致。"
-        ],
-        mistakes: [
-          "把指标单独当方向信号。",
-          "忽略价格对主动成交的反应。"
-        ],
-        framework: [
-          "指标先看一致性，再看位置，最后才有解释价值。",
-          "没有价格响应的强弱比，大多只能算噪音。"
-        ],
-        conclusion: [
-          "这类案例本质上属于成交主动性误读，表面看数值偏强，实质要看盘面能不能把主动性转成推进。"
-        ]
-      },
-      {
-        id: "18",
-        title: "季节性分析，什么时候容易失效",
-        category: "工具理解",
-        track: "工具",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "历史季节性为什么到了当年突然不灵？",
-        audience: "使用季节性曲线和历史均值的交易者",
-        description: "通过异常年份场景解释季节性为何只能当背景，不能当剧本。",
-        takeaway: "季节性最大的价值是提示顺序，最大的风险是让人忽略异常年份。",
-        keywords: ["季节性", "异常年份", "政策冲击", "供需突变"],
-        tools: ["季节性曲线", "历史年份对比", "事件线"],
-        sources: ["usdaCrop", "mpob", "eiaSteo"],
-        scene: [
-          "交易者常会说“这个品种历年这个时候该涨了”，但现实里只要遇到天气、政策或地缘扰动，历史均值就可能完全失效。"
-        ],
-        caseStudy: [
-          "农产品在天气异常年份、能化在地缘冲击年份、黑色在政策强干预年份，都出现过季节性完全失灵的场景。"
-        ],
-        surface: [
-          "表面现象是历史规律失效，像是统计本身没价值。"
-        ],
-        driver: [
-          "真实驱动在于季节性隐含的前提是结构稳定。一旦供需约束、政策环境或制度安排改变，历史均值就不再代表当期路径。"
-        ],
-        signals: [
-          "看当年是否存在明显的异常年份特征，如政策、地缘、天气和制度变化。",
-          "看当前现实变量是否与历史季节轨迹背离。"
-        ],
-        mistakes: [
-          "把季节均值当成必然路径。",
-          "只看平均值，不看历史离散度。"
-        ],
-        framework: [
-          "先判断今年是不是“正常年份”，再决定季节性权重。",
-          "季节性适合导航，不适合替代现实。"
-        ],
-        conclusion: [
-          "这类案例本质上属于背景失效行情，表面是规律不见了，实质是现实世界改写了历史前提。"
-        ]
-      },
-      {
-        id: "19",
-        title: "一次典型的库存利多失效案例复盘",
-        category: "复盘训练",
-        track: "复盘",
-        duration: "9分钟",
-        status: "重点",
-        coreQuestion: "为什么看起来标准的利多数据，没有走成趋势？",
-        audience: "想把复盘做出结构感的交易者",
-        description: "通过库存利多失效案例，训练“数据—预期—验证”的复盘框架。",
-        takeaway: "复盘不是记数据，而是弄清市场为什么没信这组数据。",
-        keywords: ["预期", "验证", "失效机制", "时间线"],
-        tools: ["库存图", "价格图", "持仓", "时间线"],
-        sources: ["eiaWpsr", "cmeOi", "cmeCurve"],
-        scene: [
-          "周报出来以后大家都说利多，盘面却只是脉冲一下就转弱。真正的复盘价值，不在数据本身，而在市场为什么不信。"
-        ],
-        caseStudy: [
-          "典型案例是库存超预期下降，但在数据前盘面已经连涨、情绪拥挤，数据后放量却减仓，后续现货和结构没有接力。"
-        ],
-        surface: [
-          "表面现象是数据好、走势弱，像是利多被市场无视。"
-        ],
-        driver: [
-          "真实驱动往往是预期过满、现实未验证或更强变量盖过了库存改善。市场没有交易这组数据的方向，而是在交易它的边际意外程度。"
-        ],
-        signals: [
-          "看数据前有没有连续抢跑和仓位拥挤。",
-          "看数据后现货、基差、月差和相关品种有没有形成共振。"
-        ],
-        mistakes: [
-          "复盘只记“库存减少”，不记市场当时已经预期了什么。",
-          "把失效简单归因于市场不理性。"
-        ],
-        framework: [
-          "复盘先记数据，再记预期，再记验证，最后记失效原因。",
-          "数据没走出来，最值得研究的就是市场不信的那一层。"
-        ],
-        conclusion: [
-          "这个案例本质上属于预期过满型失效行情，表面是数据利多，实质是市场已完成抢跑而现实接力不足。"
-        ]
-      },
-      {
-        id: "20",
-        title: "为什么你总在情绪最强时加仓",
-        category: "复盘训练",
-        track: "复盘",
-        duration: "7分钟",
-        status: "未学",
-        coreQuestion: "为什么最容易犯错的时点，总是盘面最热的时候？",
-        audience: "盘中容易追着波动走的交易者",
-        description: "从情绪极值时的典型盘面出发，解释为什么波动强不等于确定性强。",
-        takeaway: "情绪最热的时候往往是分歧最激烈的时候，不是信息最清楚的时候。",
-        keywords: ["情绪极值", "加仓冲动", "从众心理", "波动放大"],
-        tools: ["分时图", "成交量", "持仓变化"],
-        sources: ["cmeOi"],
-        scene: [
-          "盘中快速拉升、群里情绪一致、盘口速度很快时，很多人会觉得此刻不加就再也来不及。"
-        ],
-        caseStudy: [
-          "真实盘面里，越是临近阶段高点或低点，越容易出现放量、快拉、情绪一致的场景，随后反而常伴随一轮快速回撤。"
-        ],
-        surface: [
-          "表面现象是波动最大的时候，机会也最大。"
-        ],
-        driver: [
-          "真实驱动往往是情绪宣泄和仓位迁移。市场越一致、速度越快，反而说明可持续的增量判断可能正在变少。"
-        ],
-        signals: [
-          "看大涨大跌是否伴随稳定增仓，还是只是情绪化放量。",
-          "看现货和相关品种有没有同步确认，而不是只有一条价格线在冲。"
-        ],
-        mistakes: [
-          "把速度当确定性。",
-          "在没有新增信息的情况下，只因波动放大而加仓。"
-        ],
-        framework: [
-          "情绪最强时先暂停，重看驱动、持仓和现货验证。",
-          "如果只是波动增强而信息没有增加，就不该把它理解成更清楚。"
-        ],
-        conclusion: [
-          "这类案例本质上属于情绪极值误判行情，表面是强波动，实质是资金在最拥挤的地方互相确认。"
-        ]
-      },
-      {
-        id: "21",
-        title: "一轮大行情，通常会经历哪几个阶段",
-        category: "复盘训练",
-        track: "复盘",
-        duration: "9分钟",
-        status: "重点",
-        coreQuestion: "大行情为什么常常前后像两种市场？",
-        audience: "想提升节奏感和阶段感的交易者",
-        description: "把一轮完整行情拆成启动、发酵、扩散、兑现和退潮五个阶段。",
-        takeaway: "很多错误不是方向错，而是阶段识别错。",
-        keywords: ["阶段", "节奏", "兑现", "变量权重"],
-        tools: ["行情时间线", "价格与持仓对照图"],
-        sources: ["cmeOi", "cmeCurve"],
-        scene: [
-          "很多人会发现：一轮大行情前半段看不懂，后半段又追得太猛。其实问题通常不在方向，而在用同一套标准看不同阶段。"
-        ],
-        caseStudy: [
-          "真实行情里，启动阶段往往靠少量线索和抢跑资金，发酵阶段看结构接力，扩散阶段看链条共振，兑现阶段看拥挤与回吐。"
-        ],
-        surface: [
-          "表面现象是行情前后风格完全不同，像换了一个市场。"
-        ],
-        driver: [
-          "真实驱动是不同阶段主导变量不同。启动看预期，发酵看共识，扩散看现实，兑现看仓位，退潮看新的矛盾。"
-        ],
-        signals: [
-          "看价格、持仓、现货、月差和相关品种在不同阶段谁先接力。",
-          "看什么时候盘面开始从交易逻辑本身转向交易拥挤度。"
-        ],
-        mistakes: [
-          "用同一套标准从头看到尾。",
-          "在启动段要求过高验证，在兑现段又忽略兑现风险。"
-        ],
-        framework: [
-          "把每一轮大行情都拆成阶段时间线，再写清每一段的主导变量。",
-          "节奏感的提升，本质上是阶段识别能力的提升。"
-        ],
-        conclusion: [
-          "这类案例本质上属于阶段切换行情，表面看趋势延续，实际每一段都在交易不同的东西。"
-        ]
-      },
-      {
-        id: "22",
-        title: "一次报告行情是如何从预热走向兑现的",
-        category: "复盘训练",
-        track: "复盘",
-        duration: "8分钟",
-        status: "继续",
-        coreQuestion: "报告行情为什么不能只看公布时刻？",
-        audience: "经常做 USDA、MPOB 等报告窗口的交易者",
-        description: "把报告行情拆成预热、发布、兑现三段，训练用户复盘一整条路径。",
-        takeaway: "报告结果只是中间节点，真正有价值的是预期如何变化、兑现如何发生。",
-        keywords: ["报告窗口", "预热", "兑现", "再定价"],
-        tools: ["报告时间线", "价格走势", "市场预期对照"],
-        sources: ["usdaWasde", "usdaCrop", "mpob"],
-        scene: [
-          "很多人做报告行情时只盯发布那一分钟，但真正拉开胜负的，往往是报告前市场在押什么，以及报告后市场信不信。"
-        ],
-        caseStudy: [
-          "真实案例里，报告前两三天价格已经开始偏向单边，报告出来后即便结果偏利多，若只符合市场预期，也会出现高开低走。"
-        ],
-        surface: [
-          "表面现象是报告决定了涨跌。"
-        ],
-        driver: [
-          "真实驱动是报告前的一致预期、报告时的偏离幅度和报告后的现实验证，共同决定了行情是延续还是兑现。"
-        ],
-        signals: [
-          "看报告前持仓、价格和月差是否已经预热。",
-          "看报告后现货、基差和相关品种能否继续接力。"
-        ],
-        mistakes: [
-          "只复盘结果，不复盘预期变化。",
-          "忽略报告后的兑现窗口。"
-        ],
-        framework: [
-          "报告行情复盘至少写三段：预热、发布、兑现。",
-          "真正的经验不在结果本身，而在节奏如何迁移。"
-        ],
-        conclusion: [
-          "这类案例本质上属于事件窗口两段式行情，表面看报告结果，实质在交易预期差与兑现。"
-        ]
-      },
-      {
-        id: "23",
-        title: "伪突破为什么总容易让人上头",
-        category: "复盘训练",
-        track: "复盘",
-        duration: "7分钟",
-        status: "未学",
-        coreQuestion: "为什么图形上最像机会的那一刻，反而最容易失败？",
-        audience: "做突破交易和短线波段的交易者",
-        description: "从真实伪突破场景入手，拆开突破形态、成交验证和持仓确认的关系。",
-        takeaway: "有效突破不只看过线，更看新价格区能不能被市场接受。",
-        keywords: ["突破", "伪突破", "跟风盘", "持仓确认"],
-        tools: ["K线", "成交量", "持仓", "盘口变化"],
-        sources: ["cmeOi"],
-        scene: [
-          "价格刚越过前高、市场情绪最兴奋的时候，通常也是最容易产生跟风盘的时刻。很多失败交易就发生在这一秒。"
-        ],
-        caseStudy: [
-          "真实盘面里，突破后如果成交放大但持仓不增，相关品种也不跟，新价格区很难被接受，回落通常来得很快。"
-        ],
-        surface: [
-          "表面现象是图形已经突破，所以趋势理应继续。"
-        ],
-        driver: [
-          "真实驱动取决于突破后有没有增量资金接力，以及市场是否愿意在新价格区完成交换。单纯过线并不构成充分条件。"
-        ],
-        signals: [
-          "看突破时成交和持仓是否一起配合。",
-          "看突破后价格能否停留在新价格区，相关品种是否同步。"
-        ],
-        mistakes: [
-          "把形态当验证本身。",
-          "忽略突破后接受度和持仓变化。"
-        ],
-        framework: [
-          "先看突破前所处阶段，再看突破后的接力质量。",
-          "突破不是瞬间动作，而是一个被市场接受的过程。"
-        ],
-        conclusion: [
-          "这类案例本质上属于结构验证不足型行情，表面是突破失败，实质是跟风盘先到、确认盘没到。"
-        ]
-      },
-      {
-        id: "24",
-        title: "你的复盘为什么总是记流水账",
-        category: "复盘训练",
-        track: "复盘",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "为什么复盘写了很多，却没有转成下一次判断能力？",
-        audience: "有复盘习惯但提升有限的交易者",
-        description: "把复盘从记新闻和结果，改成记录驱动、结构、验证与失效。",
-        takeaway: "复盘有效不在写得多，而在归因是否真正贴近定价过程。",
-        keywords: ["驱动", "结构", "验证", "失效", "归因"],
-        tools: ["复盘模板", "时间线", "关键数据表"],
-        sources: ["cmeOi", "cmeCurve"],
-        scene: [
-          "很多人每天复盘都很认真，但第二天碰到相似行情还是会犯同样的错，因为记录的其实是新闻摘要，而不是盘面逻辑。"
-        ],
-        caseStudy: [
-          "真实复盘里，最常见的问题是只记“今天因为某条消息涨了”，却没有写市场为什么信、为什么不信、为什么后来失效。"
-        ],
-        surface: [
-          "表面现象是复盘很多，但没形成可迁移经验。"
-        ],
-        driver: [
-          "真实驱动在于复盘没有进入定价过程，只停留在结果层。没有驱动、结构和验证，记录再多也很难转成下一次判断。"
-        ],
-        signals: [
-          "复盘时要记录价格、持仓、现货和结构哪个先动、哪个后验证。",
-          "要写清自己当时知道什么、市场当时知道什么。"
-        ],
-        mistakes: [
-          "只记涨跌结果，不记判断依据。",
-          "把新闻当主角，把盘面当附属。"
-        ],
-        framework: [
-          "每次复盘至少写四栏：驱动、结构、验证、失效。",
-          "把复盘写成流程图，而不是流水账。"
-        ],
-        conclusion: [
-          "这类案例本质上属于复盘视角偏差，表面是写得不够多，实质是没有写到市场真正定价的地方。"
-        ]
-      },
-      {
-        id: "25",
-        title: "美联储预期变化，通常先影响哪些商品",
-        category: "宏观传导",
-        track: "宏观",
-        duration: "9分钟",
-        status: "专题",
-        coreQuestion: "利率预期变化时，商品通常先从哪里开始反应？",
-        audience: "做宏观窗口和跨品种观察的交易者",
-        description: "从利率决议周的真实波动入手，拆开黄金、铜、原油对美联储预期的不同反应路径。",
-        takeaway: "同样是美联储预期变化，最先动的不是“商品整体”，而是对利率、美元和风险偏好最敏感的那一层。",
-        keywords: ["美联储", "利率预期", "美元", "风险偏好", "商品映射"],
-        tools: ["美元指数", "美债收益率", "黄金", "铜油联动"],
-        sources: ["eiaSteo", "lmeStocks"],
-        scene: [
-          "议息周临近时，黄金、铜、原油经常不会同步波动。有人只看到“偏鸽”或“偏鹰”，却没看到各品种映射的不是同一条链。"
-        ],
-        caseStudy: [
-          "真实盘面里，美债收益率回落后黄金往往先反应，铜更多看风险偏好和经济预期，原油还要叠加供应与需求现实。"
-        ],
-        surface: [
-          "表面现象是美联储一句话就能让很多商品一起动。"
-        ],
-        driver: [
-          "真实驱动是利率预期先影响美元和实际利率，再影响贵金属估值、风险资产偏好和工业品需求预期。不同商品承接的是传导链的不同段落。"
-        ],
-        signals: [
-          "先看美元和收益率谁变化更大，判断是利率线还是风险偏好线在主导。",
-          "再看黄金、铜、原油里谁先反应、谁滞后。"
-        ],
-        mistakes: [
-          "把宏观冲击等同于全商品同向反应。",
-          "只盯议息结论，不看收益率和美元的实际反应。"
-        ],
-        framework: [
-          "美联储窗口先看利率与美元，再看各商品承接哪一段传导。",
-          "宏观冲击从来不是“一键群发”到所有商品。"
-        ],
-        conclusion: [
-          "这类案例本质上属于宏观传导分层行情，表面是联储冲击，实质是不同商品接收了不同的宏观变量。"
-        ]
-      },
-      {
-        id: "26",
-        title: "美元走强时，商品为什么不一定全面承压",
-        category: "宏观传导",
-        track: "宏观",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "美元走强，为什么总有一些商品不肯跌？",
-        audience: "做宏观和商品联动的交易者",
-        description: "解释美元关系何时有效、何时会被产业偏紧和结构因素抵消。",
-        takeaway: "美元是重要背景变量，但它很少单独决定所有商品的同一方向。",
-        keywords: ["美元", "宏观压制", "产业偏紧", "分化"],
-        tools: ["美元指数", "基差", "库存", "结构对比"],
-        sources: ["lmeStocks", "eiaSteo"],
-        scene: [
-          "美元指数走强后，很多人会机械预期商品全面承压，但现实里有些商品只是震荡，有些甚至逆势偏强。"
-        ],
-        caseStudy: [
-          "真实盘面中，强美元阶段若碰上库存偏低、近月偏紧或供应扰动，一些工业品和能源品种的跌幅会明显受限。"
-        ],
-        surface: [
-          "表面现象是美元走强与商品走弱经常被当成固定公式。"
-        ],
-        driver: [
-          "真实驱动是美元更多影响估值和资金偏好，而产业偏紧影响现实定价。当两条线冲突时，商品表现会明显分化。"
-        ],
-        signals: [
-          "看美元上涨时，近月结构和现货基差有没有同步转弱。",
-          "看哪些商品库存低、供应扰动强、现货仍偏紧。"
-        ],
-        mistakes: [
-          "把美元当成万能解释器。",
-          "不看产业现实是否在抵消宏观压力。"
-        ],
-        framework: [
-          "美元先看估值层影响，再看现实层是否抵消。",
-          "强美元下更要做横向比较，而不是一刀切。"
-        ],
-        conclusion: [
-          "这类案例本质上属于宏观与现实博弈型行情，表面是美元施压，实质是现实偏紧在做对冲。"
-        ]
-      },
-      {
-        id: "27",
-        title: "国内政策预期，如何影响黑色链和工业品",
-        category: "宏观传导",
-        track: "宏观",
-        duration: "9分钟",
-        status: "专题",
-        coreQuestion: "地产、基建或供给侧预期出来后，为什么先动的是情绪和估值？",
-        audience: "做国内政策窗口和工业品的交易者",
-        description: "围绕国内政策预期，解释黑色链和工业品为什么先走估值，再看现实需求。",
-        takeaway: "政策先改变市场愿不愿意定价，再决定现实能不能承接这份定价。",
-        keywords: ["政策预期", "黑色链", "工业品", "估值修复", "现实验证"],
-        tools: ["黑色联动", "基差", "铁水", "现货成交"],
-        sources: ["worldsteel", "cmeCurve"],
-        scene: [
-          "政策预期一升温，黑色链和工业品常先拉一段，但很快市场又会追问：现实需求到底有没有动。"
-        ],
-        caseStudy: [
-          "真实盘面里，地产政策表态偏暖后，螺纹、铁矿、玻璃等会先走估值修复；若后续铁水、现货成交和终端需求跟不上，涨幅就会明显收敛。"
-        ],
-        surface: [
-          "表面现象是政策消息本身推着盘面涨。"
-        ],
-        driver: [
-          "真实驱动是政策预期先改善情绪和估值，再由现实需求决定这份估值能否留下。"
-        ],
-        signals: [
-          "看政策后黑色链是否整体共振，还是只有一两个品种情绪先动。",
-          "看铁水、现货成交、表需和基差是否开始接力。"
-        ],
-        mistakes: [
-          "把政策口径直接当现实需求。",
-          "只复盘政策当天，不跟踪后续验证。"
-        ],
-        framework: [
-          "政策行情先看估值修复，再看现实接力，再看兑现风险。",
-          "政策窗口里，链条验证比消息标题更重要。"
-        ],
-        conclusion: [
-          "这类案例本质上属于估值先行型行情，表面是政策利好，实质是市场先给估值、后要现实。"
-        ]
-      },
-      {
-        id: "28",
-        title: "通胀预期升温时，哪些商品更容易先动",
-        category: "宏观传导",
-        track: "宏观",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "通胀预期升温时，黄金、原油、有色为什么节奏不同？",
-        audience: "做宏观主线和商品比较的交易者",
-        description: "从资产属性和产业属性切入，解释通胀交易里谁先动、谁后动。",
-        takeaway: "通胀预期不是所有商品的同义词，不同品种承接的是不同层级的通胀逻辑。",
-        keywords: ["通胀预期", "黄金", "原油", "有色", "资产属性"],
-        tools: ["通胀预期指标", "黄金", "原油", "有色联动"],
-        sources: ["eiaSteo", "lmeStocks"],
-        scene: [
-          "通胀预期升温时，市场最常见的误读就是：商品都该一起涨。但现实里，先动的往往是最像资产的品种。"
-        ],
-        caseStudy: [
-          "真实盘面里，黄金会先对实际利率和通胀预期反应，原油常要叠加供应现实，有色则要看工业需求预期有没有同步改善。"
-        ],
-        surface: [
-          "表面现象是“通胀交易”似乎覆盖整个商品板块。"
-        ],
-        driver: [
-          "真实驱动在于黄金承接资产配置逻辑，原油承接能源成本逻辑，有色更多还要看需求预期是否支撑。"
-        ],
-        signals: [
-          "看通胀预期上升时，实际利率、美元和能源价格谁先动。",
-          "看黄金、原油、有色之间是否出现分层联动。"
-        ],
-        mistakes: [
-          "把通胀预期简单理解成商品全面同涨。",
-          "忽略不同商品的传导链并不相同。"
-        ],
-        framework: [
-          "通胀交易先分资产属性和产业属性，再看现实供需是否同步。",
-          "先动的不一定涨得最久，但通常最能说明市场当前在交易哪一层。"
-        ],
-        conclusion: [
-          "这类案例本质上属于宏观主线下的分层反应行情，表面是通胀升温，实质是资产和产业在不同层面被重新定价。"
-        ]
-      },
-      {
-        id: "29",
-        title: "地缘冲突来了，为什么油涨了，有些化工品却不一定跟",
-        category: "宏观传导",
-        track: "宏观",
-        duration: "9分钟",
-        status: "重点",
-        coreQuestion: "上游定价抬升时，下游化工为什么不总是同步偏强？",
-        audience: "做能化链和事件驱动的交易者",
-        description: "从地缘冲突和运力扰动场景出发，解释油和化工的传导为何经常断层。",
-        takeaway: "上游涨价并不自动等于全链条受益，下游常常先面对利润压缩。",
-        keywords: ["地缘冲突", "油化工传导", "成本抬升", "下游利润"],
-        tools: ["油价", "化工品价差", "裂解和加工利润", "运费"],
-        sources: ["eiaSteo", "opec"],
-        scene: [
-          "地缘冲突升温时，原油先涨是常态，但下游化工品经常跟不上，甚至出现上游强、下游弱的结构。"
-        ],
-        caseStudy: [
-          "真实市场里，成本上移会先把化工企业利润压窄，如果下游接受度不足，化工盘面很难等比例跟随原油。"
-        ],
-        surface: [
-          "表面现象是油涨了，化工理应一起涨。"
-        ],
-        driver: [
-          "真实驱动取决于成本传导是否顺畅、库存是否偏低、下游需求能否接受更高价格，以及利润是否在链条中重新分配。"
-        ],
-        signals: [
-          "看化工品现货、基差和利润是否同步改善。",
-          "看成本抬升后下游开工和订单是否受到压制。"
-        ],
-        mistakes: [
-          "把油价上涨线性外推到所有化工品。",
-          "忽略利润压缩和下游接受度。"
-        ],
-        framework: [
-          "油化工联动先看成本，再看传导，再看利润。",
-          "链条中哪个环节利润被压缩，往往就决定了谁最难跟。"
-        ],
-        conclusion: [
-          "这类案例本质上属于成本传导不完全行情，表面是油价冲击，实质是利润重新分配和需求承接能力在定价。"
-        ]
-      },
-      {
-        id: "30",
-        title: "宏观利空下，为什么某些强现实品种反而更抗跌",
-        category: "宏观传导",
-        track: "宏观",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "宏观压力很大时，为什么有些品种就是跌不下去？",
-        audience: "做宏观与基本面对冲比较的交易者",
-        description: "解释宏观压力和现实偏紧并存时，市场如何决定谁更抗跌。",
-        takeaway: "宏观利空压的是估值，现实偏紧托的是价格底部，两者谁强要回到结构上判断。",
-        keywords: ["宏观利空", "现实偏紧", "抗跌", "估值与现实"],
-        tools: ["库存", "基差", "期限结构", "跨品种对比"],
-        sources: ["cmeCurve", "lmeStocks", "eiaSteo"],
-        scene: [
-          "有些时候宏观情绪明显转弱，很多商品都承压，但少数品种只是回踩一下就很快止住。"
-        ],
-        caseStudy: [
-          "真实盘面里，低库存、近月偏强、现货紧张的品种在宏观压力下往往更抗跌，因为市场不愿意对近端资源给出过低价格。"
-        ],
-        surface: [
-          "表面现象是宏观利空应该压所有商品。"
-        ],
-        driver: [
-          "真实驱动是宏观压估值，现实托价格。只要现实紧张度足够高，盘面就会表现出明显的韧性。"
-        ],
-        signals: [
-          "看宏观利空下来时，基差、月差和现货是否仍保持强势。",
-          "看同样受宏观冲击的品种里，谁的库存更低、结构更紧。"
-        ],
-        mistakes: [
-          "只看宏观，不看现实。",
-          "在横向比较里忽略结构位置。"
-        ],
-        framework: [
-          "宏观利空下更要做“谁更弱、谁更抗”的比较，而不是只看绝对涨跌。",
-          "抗跌性来自现实约束，不来自情绪。"
-        ],
-        conclusion: [
-          "这类案例本质上属于估值受压而现实托底的行情，表面是宏观转弱，实质看近端供需是否仍偏紧。"
-        ]
-      },
-      {
-        id: "31",
-        title: "黑色链里，成材和原料为什么经常不同步",
-        category: "产业链联动",
-        track: "联动",
-        duration: "9分钟",
-        status: "专题",
-        coreQuestion: "黑色链上涨或下跌时，为什么成材和原料经常不一起走？",
-        audience: "黑色链和工业品交易者",
-        description: "从钢厂利润、补库和铁水变化入手，解释成材和原料不同步的真实原因。",
-        takeaway: "成材和原料不是简单上下游复制关系，中间隔着利润分配和补库节奏。",
-        keywords: ["成材", "原料", "钢厂利润", "铁水", "补库"],
-        tools: ["钢厂利润", "铁水", "库存", "价差"],
-        sources: ["worldsteel", "cmeCurve"],
-        scene: [
-          "黑色链里最容易困惑的场景之一是：螺纹走弱，铁矿却还很坚挺；或者成材回暖，原料反而没跟上。"
-        ],
-        caseStudy: [
-          "真实市场中，钢厂利润改善但终端需求尚未完全恢复时，原料端会先反应补库；而一旦利润被压缩，原料也可能先跌于成材。"
-        ],
-        surface: [
-          "表面现象是同一条产业链内部走势不一致。"
-        ],
-        driver: [
-          "真实驱动在于利润分配、补库节奏和铁水强度。原料看的是生产意愿和补库，成材看的是终端承接和库存去化。"
-        ],
-        signals: [
-          "看钢厂利润和铁水是否同步变化。",
-          "看成材库存与原料补库有没有错位。"
-        ],
-        mistakes: [
-          "把成材和原料当成必然同步的上下游。",
-          "忽略利润变化才是节奏切换的关键。"
-        ],
-        framework: [
-          "链条判断先看利润，再看生产，再看库存和需求。",
-          "成材和原料不同步时，要先问利润在向谁倾斜。"
-        ],
-        conclusion: [
-          "这类案例本质上属于利润分配驱动的链条分化行情，表面是不同步，实质是上下游在交易不同阶段的变量。"
-        ]
-      },
-      {
-        id: "32",
-        title: "豆系为什么经常出现油强粕弱，或粕强油弱",
-        category: "产业链联动",
-        track: "联动",
-        duration: "9分钟",
-        status: "未学",
-        coreQuestion: "为什么豆油和豆粕常常一强一弱，而不是一起走？",
-        audience: "油脂油料交易者",
-        description: "围绕压榨、油脂需求、饲料需求和政策，解释油粕分化的典型场景。",
-        takeaway: "油粕不是一个方向的两种表达，而是压榨平衡表里的两端利润分配。",
-        keywords: ["油粕比", "压榨", "豆油", "豆粕", "需求分化"],
-        tools: ["压榨利润", "油粕比", "库存", "现货成交"],
-        sources: ["usdaOilseeds", "usdaExport"],
-        scene: [
-          "同样一波豆系行情里，经常会看到豆油大涨、豆粕平淡，或者豆粕发力、豆油不动，很多人会误把它当成随机分化。"
-        ],
-        caseStudy: [
-          "真实盘面中，生柴预期改善、食用油需求偏强时更容易油强粕弱；养殖利润修复、饲料需求回暖时则更容易粕强油弱。"
-        ],
-        surface: [
-          "表面现象是豆系内部方向不一致。"
-        ],
-        driver: [
-          "真实驱动在于压榨后的利润分配。油强还是粕强，取决于哪一端的需求、库存和政策驱动更占优势。"
-        ],
-        signals: [
-          "看油粕比、压榨利润、两边库存和现货成交谁在改善。",
-          "看政策和需求分别偏向生柴、食用油还是饲料端。"
-        ],
-        mistakes: [
-          "把豆系内部关系简单理解成同涨同跌。",
-          "只盯美豆，不看油粕内部平衡。"
-        ],
-        framework: [
-          "豆系分化先看压榨平衡，再看需求偏向哪一边。",
-          "内部比价有时比绝对价格更能说明市场在交易什么。"
-        ],
-        conclusion: [
-          "这类案例本质上属于压榨利润分配行情，表面是油粕分化，实质是需求和政策在重新分配链条利润。"
-        ]
-      },
-      {
-        id: "33",
-        title: "原油涨了，化工品为何有时跟不上",
-        category: "产业链联动",
-        track: "联动",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "上游原油偏强时，为什么下游能化经常只跟一半？",
-        audience: "做原油和化工联动的交易者",
-        description: "从成本传导和下游接受度出发，解释油化工联动的断层位置。",
-        takeaway: "原油给的是成本冲击，化工是否跟上还要看利润和库存状态。",
-        keywords: ["原油", "化工", "成本传导", "利润重分配", "下游接受度"],
-        tools: ["原油", "化工利润", "库存", "现货"],
-        sources: ["eiaSteo", "opec"],
-        scene: [
-          "夜盘原油大涨后，很多人习惯性去找化工补涨，但现实里化工经常高开之后就走不动。"
-        ],
-        caseStudy: [
-          "真实盘面里，如果化工下游订单偏弱、库存偏高或利润已经很薄，原油上涨只能抬高成本，不一定能抬高化工价格。"
-        ],
-        surface: [
-          "表面现象是原油强，化工应该自然跟涨。"
-        ],
-        driver: [
-          "真实驱动是成本能否顺利向下游转嫁。若下游接受度不足，价格传导中途就会断裂，表现为利润受压而不是价格同步抬升。"
-        ],
-        signals: [
-          "看化工品现货、基差和下游利润是否同步改善。",
-          "看库存和开工是支持传导还是压制传导。"
-        ],
-        mistakes: [
-          "把油价变化直接线性外推到下游品种。",
-          "不看库存和利润状态。"
-        ],
-        framework: [
-          "油化工联动先看成本，再看库存，再看利润。",
-          "如果利润先被压，盘面就很难纯靠成本驱动持续走强。"
-        ],
-        conclusion: [
-          "这类案例本质上属于成本冲击与利润承接的博弈行情，表面是传导不顺，实质是下游接受度不足。"
-        ]
-      },
-      {
-        id: "34",
-        title: "铜和铝为什么有时同向，有时背离",
-        category: "产业链联动",
-        track: "联动",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "同样是有色，铜和铝为什么经常一起动，又经常各走各的？",
-        audience: "做有色内部比较的交易者",
-        description: "比较两者在宏观属性、库存、供给扰动和需求结构上的差异。",
-        takeaway: "铜和铝同向时多半在交易宏观，背离时通常是产业自身差异在定价。",
-        keywords: ["铜", "铝", "宏观属性", "库存", "供给扰动"],
-        tools: ["库存", "升贴水", "加工费", "价差"],
-        sources: ["lmeStocks"],
-        scene: [
-          "风险偏好转暖时，铜和铝经常一起动；但一进入产业逻辑阶段，两者又很容易出现明显背离。"
-        ],
-        caseStudy: [
-          "真实盘面里，宏观预期改善时铜铝都能受益；但若铝端受能源、产能和库存变化主导，而铜端受矿端与现货结构主导，背离就会放大。"
-        ],
-        surface: [
-          "表面现象是同属有色，走势理应接近。"
-        ],
-        driver: [
-          "真实驱动在于宏观线相同时，产业线并不相同。铜更敏感于库存和矿冶扰动，铝更容易受供给弹性和电力成本影响。"
-        ],
-        signals: [
-          "看宏观驱动是否强到足以统一带动有色板块。",
-          "看铜铝各自库存、升贴水和供给端消息谁更强。"
-        ],
-        mistakes: [
-          "把铜和铝当成同义品种。",
-          "只看板块情绪，不看各自的现实约束。"
-        ],
-        framework: [
-          "同向先看宏观，背离先看产业。",
-          "有色内部比较最有价值的地方，就是识别同中有异。"
-        ],
-        conclusion: [
-          "这类案例本质上属于板块共振与单品种现实切换行情，表面是同向或背离，实质是主导线变化。"
-        ]
-      },
-      {
-        id: "35",
-        title: "生猪和豆粕，为什么常常不能简单同向理解",
-        category: "产业链联动",
-        track: "联动",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "生猪和豆粕为什么不是简单的成本—价格直线关系？",
-        audience: "做农产品和养殖链观察的交易者",
-        description: "从养殖利润、补栏预期和饲料需求传导解释两者为何常错位。",
-        takeaway: "豆粕影响的是成本和补栏决策，生猪价格还要看供给周期和消费节奏。",
-        keywords: ["生猪", "豆粕", "养殖利润", "补栏", "饲料需求"],
-        tools: ["养殖利润", "豆粕现货", "补栏数据", "库存"],
-        sources: ["usdaExport", "usdaOilseeds"],
-        scene: [
-          "很多人习惯把豆粕上涨和生猪上涨简单串起来，但真实盘面里两者经常并不同步，甚至会短期背离。"
-        ],
-        caseStudy: [
-          "真实市场中，豆粕上涨先抬高饲料成本，可能压缩养殖利润；但若补栏预期仍强，豆粕需求又会被支撑，两者关系远比线性更复杂。"
-        ],
-        surface: [
-          "表面现象是成本上升，终端价格理应同步上升。"
-        ],
-        driver: [
-          "真实驱动在于生猪交易的是供给周期和消费节奏，豆粕交易的是饲料需求和成本端。中间隔着利润、补栏和周期错位。"
-        ],
-        signals: [
-          "看养殖利润、补栏节奏和饲料需求是否同步变化。",
-          "看豆粕基差和生猪现货是否分别有独立驱动。"
-        ],
-        mistakes: [
-          "把豆粕和生猪关系理解成单向传导。",
-          "忽略周期错位和利润约束。"
-        ],
-        framework: [
-          "先看生猪供需周期，再看豆粕成本如何影响补栏与需求。",
-          "两者关系更多是间接传导，而不是同步联动。"
-        ],
-        conclusion: [
-          "这类案例本质上属于周期与成本错位行情，表面看上下游联动，实质是时间尺度不同。"
-        ]
-      },
-      {
-        id: "36",
-        title: "焦煤与焦炭，为什么有时一起涨，有时只涨一个",
-        category: "产业链联动",
-        track: "联动",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "双焦关系为什么有时像一体，有时又明显分化？",
-        audience: "黑色链和煤焦交易者",
-        description: "从库存结构、供给扰动和利润分配解释双焦为何同向或分化。",
-        takeaway: "双焦同时动的时候多在交易总量预期，只动一个时通常在交易利润和供给约束。",
-        keywords: ["焦煤", "焦炭", "利润分配", "库存", "供给扰动"],
-        tools: ["煤焦库存", "焦化利润", "钢厂开工", "价差"],
-        sources: ["worldsteel", "cmeCurve"],
-        scene: [
-          "双焦有时会一起拉升，有时却是焦煤强、焦炭弱，或者反过来，很多人对这种内部关系一直没有稳定解释。"
-        ],
-        caseStudy: [
-          "真实盘面里，煤矿扰动或进口收紧时焦煤往往更强；而钢厂开工改善、焦炭库存去化时，焦炭阶段性弹性也会更大。"
-        ],
-        surface: [
-          "表面现象是两个紧密相关的品种走势并不一致。"
-        ],
-        driver: [
-          "真实驱动在于供给端约束和利润分配位置不同。焦煤更像原料端供给问题，焦炭更容易受焦化利润和钢厂采购节奏影响。"
-        ],
-        signals: [
-          "看煤矿和焦化库存、进口节奏以及钢厂采购力度。",
-          "看焦化利润和钢厂利润是否在重新分配。"
-        ],
-        mistakes: [
-          "把双焦当成必然同向的双胞胎。",
-          "不看供给和利润在链条中分别压向谁。"
-        ],
-        framework: [
-          "双焦先看总需求，再看谁受供给扰动更强，最后看利润往谁那边倾斜。",
-          "内部分化往往比板块方向更有信息量。"
-        ],
-        conclusion: [
-          "这类案例本质上属于链条内部利润与供给分化行情，表面是双焦不同步，实质是约束条件不一致。"
-        ]
-      },
-      {
-        id: "37",
-        title: "基差走强，盘面为什么不一定立刻上涨",
-        category: "结构与交割",
-        track: "结构",
-        duration: "8分钟",
-        status: "专题",
-        coreQuestion: "现货偏紧时，为什么盘面不总是同步拉升？",
-        audience: "看基差和现货结构的交易者",
-        description: "用现货偏紧但盘面平淡的场景，解释基差强弱与盘面上涨之间的区别。",
-        takeaway: "基差强说明现实偏紧，但盘面是否立刻跟，要看市场在交易当下还是未来。",
-        keywords: ["基差", "现货偏紧", "盘面定价", "抢跑"],
-        tools: ["基差", "现货价格", "月差", "仓单"],
-        sources: ["cmeCurve"],
-        scene: [
-          "现货不断提价，基差持续走强，但期货主力却没怎么涨，很多人会觉得盘面对现实“反应迟钝”。"
-        ],
-        caseStudy: [
-          "真实盘面里，如果现货偏紧只集中在局部地区或交割资源，而远月供给预期并不差，期货主力未必需要立刻追随现货大幅上行。"
-        ],
-        surface: [
-          "表面现象是基差走强理应推动盘面同步走强。"
-        ],
-        driver: [
-          "真实驱动在于基差更多表达的是现货紧张度，而期货主力常在交易未来平衡表。若市场认为偏紧只是短期局部现象，盘面不会完全照搬现货。"
-        ],
-        signals: [
-          "看近月月差和仓单是否同步偏强。",
-          "看现货偏紧是局部资源问题还是整体供需问题。"
-        ],
-        mistakes: [
-          "把基差强直接等同于单边上涨。",
-          "不区分近端偏紧和远端预期。"
-        ],
-        framework: [
-          "先判断基差在表达现货局部偏紧，还是系统性平衡变化。",
-          "再看主力合约是否在交易同一个时间维度。"
-        ],
-        conclusion: [
-          "这类案例本质上属于现货与期货时间维度错位行情，表面看基差强，实质是盘面还在交易更远的变量。"
-        ]
-      },
-      {
-        id: "38",
-        title: "仓单变化，到底意味着什么",
-        category: "结构与交割",
-        track: "结构",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "仓单增减，到底是在说现货紧不紧，还是在说交割压力大不大？",
-        audience: "跟踪交割和仓单的交易者",
-        description: "从仓单骤增或骤减的场景解释仓单背后的真实含义。",
-        takeaway: "仓单不是天然利多或利空，它在不同阶段表达的是不同的结构信息。",
-        keywords: ["仓单", "交割资源", "现货流通性", "结构压力"],
-        tools: ["仓单", "基差", "近月持仓", "现货流通"],
-        sources: ["cmeCurve"],
-        scene: [
-          "仓单一变动，很多人就直接给方向判断，但实盘里同样是仓单增加，有时压盘，有时却只是资源回流。"
-        ],
-        caseStudy: [
-          "真实市场中，交割月临近时仓单增加往往会压制近月结构；但在现货流通恢复的阶段，仓单回升也可能只是紧张度缓和，而不是趋势反转。"
-        ],
-        surface: [
-          "表面现象是仓单增减看起来像明确的多空信号。"
-        ],
-        driver: [
-          "真实驱动要看仓单变化发生在什么阶段、对应什么资源属性，以及市场此前在担心什么。仓单本质上表达的是交割资源和现货可流通性。"
-        ],
-        signals: [
-          "看仓单变化是否伴随基差、月差和近月持仓同步变化。",
-          "看仓单增减发生在交割前、交割中还是交割后。"
-        ],
-        mistakes: [
-          "把仓单变化机械理解成方向结论。",
-          "忽略仓单所处阶段。"
-        ],
-        framework: [
-          "仓单先看阶段，再看资源属性，最后看市场预期。",
-          "只有放进交割结构里，仓单变化才真正有含义。"
-        ],
-        conclusion: [
-          "这类案例本质上属于交割资源重定价行情，表面是仓单变化，实质是在交易可交割资源的松紧。"
-        ]
-      },
-      {
-        id: "39",
-        title: "月差异常扩大时，市场通常在担心什么",
-        category: "结构与交割",
-        track: "结构",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "月差突然拉大，市场到底在担心库存、交割，还是事件预期？",
-        audience: "做月差和结构观察的交易者",
-        description: "围绕异常月差场景，解释市场到底在通过结构表达什么忧虑。",
-        takeaway: "异常月差的核心不是“方向”，而是市场对时间和资源的焦虑。",
-        keywords: ["月差", "异常扩大", "库存", "交割", "事件预期"],
-        tools: ["月差", "库存", "仓单", "现货"],
-        sources: ["cmeCurve"],
-        scene: [
-          "某个品种月差突然扩大，市场会立刻出现很多解释：有人说要涨，有人说是逼仓，有人说只是短期错位。"
-        ],
-        caseStudy: [
-          "真实盘面里，近月大幅走强常见于交割资源少、现货偏紧或事件窗口临近；若远月预期没有同步改善，月差异常往往先体现焦虑而不是方向。"
-        ],
-        surface: [
-          "表面现象是月差异常，像是盘面给出了明确信号。"
-        ],
-        driver: [
-          "真实驱动通常是时间维度上的资源担忧。市场在担心的是近端资源、交割约束或短期事件，而不是简单地看多看空。"
-        ],
-        signals: [
-          "看近月持仓、仓单、基差和现货可流通资源。",
-          "看异常扩大是否集中在某个事件窗口前后。"
-        ],
-        mistakes: [
-          "把月差异动直接翻译成趋势方向。",
-          "不去拆是谁在担心、担心哪一端。"
-        ],
-        framework: [
-          "月差先看近端担忧，再看远端预期，最后才看是否外溢到单边价格。",
-          "结构扭曲通常比绝对价格更早暴露问题。"
-        ],
-        conclusion: [
-          "这类案例本质上属于近端焦虑型结构行情，表面是月差放大，实质是在交易短期资源与交割压力。"
-        ]
-      },
-      {
-        id: "40",
-        title: "交割月临近，哪些信号更值得盯",
-        category: "结构与交割",
-        track: "结构",
-        duration: "9分钟",
-        status: "重点",
-        coreQuestion: "交割月前后，哪些变量最容易改变盘面性质？",
-        audience: "做近月、结构和交割观察的交易者",
-        description: "把交割月行情拆成资源、持仓、仓单和替代价差四条线。",
-        takeaway: "交割月不是普通月份，盘面会从交易预期转向交易可交割资源。"
-        ,
-        keywords: ["交割月", "仓单", "近月持仓", "现货资源", "替代价差"],
-        tools: ["仓单", "近月持仓", "基差", "替代品价差"],
-        sources: ["cmeCurve"],
-        scene: [
-          "很多品种一靠近交割月，价格行为就像换了逻辑：近月突然强、持仓异常、现货也开始紧张。"
-        ],
-        caseStudy: [
-          "真实盘面里，交割月前近月持仓降得慢、仓单又不足时，月差和基差会先起反应，绝对价格反而不一定是最早的信号。"
-        ],
-        surface: [
-          "表面现象是临近交割时盘面波动突然加大。"
-        ],
-        driver: [
-          "真实驱动是交割逻辑接管了盘面。市场不再只交易预期，而是在交易谁有资源、谁要平仓、谁会承受交割约束。"
-        ],
-        signals: [
-          "看近月持仓下降速度、仓单变化和现货资源紧张度。",
-          "看近远月价差和替代品价差是否异常。"
-        ],
-        mistakes: [
-          "把交割月当普通月份看。",
-          "只盯绝对价格，不看近月结构。"
-        ],
-        framework: [
-          "交割月先看资源、再看持仓、再看替代关系。",
-          "越临近交割，结构信息权重越大。"
-        ],
-        conclusion: [
-          "这类案例本质上属于交割约束型行情，表面是波动加大，实质是资源和持仓开始主导。"
-        ]
-      },
-      {
-        id: "41",
-        title: "近月强、远月弱，这种结构说明了什么",
-        category: "结构与交割",
-        track: "结构",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "近月强远月弱，到底是在表达短缺，还是在表达远端悲观？",
-        audience: "看结构和期限分层的交易者",
-        description: "通过近强远弱的典型结构场景，解释短期偏紧和中期悲观如何同时存在。",
-        takeaway: "近强远弱往往不是一个结论，而是两个时间维度在同时说话。",
-        keywords: ["近强远弱", "短期偏紧", "中期悲观", "结构分层"],
-        tools: ["月差", "库存", "基差", "仓单"],
-        sources: ["cmeCurve"],
-        scene: [
-          "结构里最容易让人困惑的就是近月很强、远月却没什么反应，看起来像多空同时存在。"
-        ],
-        caseStudy: [
-          "真实盘面中，现货偏紧、仓单少、近端采购急时，近月会先被抬起来；但若市场认为后续供给会恢复、需求会放缓，远月又会保持偏弱。"
-        ],
-        surface: [
-          "表面现象是结构看多，远月却不配合。"
-        ],
-        driver: [
-          "真实驱动是近端交易资源和现实，远端交易修复或转弱预期。两者并不冲突，反而说明市场在细分时间维度。"
-        ],
-        signals: [
-          "看近月基差、仓单和现货偏紧是否成立。",
-          "看远月是否受到供给恢复或需求悲观预期压制。"
-        ],
-        mistakes: [
-          "把近强远弱简化成方向结论。",
-          "忽略近远月在表达不同时间层的逻辑。"
-        ],
-        framework: [
-          "先解释近端为什么强，再解释远端为什么不跟。",
-          "结构分层往往比单边涨跌更有信息量。"
-        ],
-        conclusion: [
-          "这类案例本质上属于时间分层定价行情，表面是结构割裂，实质是近端现实和远端预期在同时定价。"
-        ]
-      },
-      {
-        id: "42",
-        title: "盘面和现货背离时，市场到底在抢跑什么",
-        category: "结构与交割",
-        track: "结构",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "盘面先走、现货没动时，市场到底在交易哪一层未来变量？",
-        audience: "做盘面理解和现货验证的交易者",
-        description: "解释盘面先于现实的典型场景，帮助用户读懂“抢跑”的具体对象。",
-        takeaway: "盘面和现货背离时，市场往往不是错了，而是在提前交易未来变量。",
-        keywords: ["盘面背离", "现货", "抢跑", "未来变量"],
-        tools: ["盘面", "现货", "基差", "期限结构"],
-        sources: ["cmeCurve", "cmeOi"],
-        scene: [
-          "价格已经明显动起来了，现货却还很平静。这种时候很多人会说“盘面脱离基本面”，但其实更重要的是先问它在抢什么。"
-        ],
-        caseStudy: [
-          "真实盘面中，政策预期、供应扰动或进口节奏变化，都可能先体现在期货价格上，等到现货反应时，盘面往往已经走完第一段。"
-        ],
-        surface: [
-          "表面现象是期货和现货出现背离。"
-        ],
-        driver: [
-          "真实驱动是盘面在提前交易未来变量，而现货只反映当下成交。背离不一定意味着盘面错，可能只是时间点不同。"
-        ],
-        signals: [
-          "看盘面走强时月差、持仓和相关品种是否同步。",
-          "看现货没有动，是因为现实真的平稳，还是因为现货反应天然滞后。"
-        ],
-        mistakes: [
-          "看到背离就判盘面失真。",
-          "不去拆背离在抢什么未来变量。"
-        ],
-        framework: [
-          "背离先问时间维度，再问变量来源，最后才问谁会被修正。",
-          "盘面先于现实并不稀奇，关键是抢跑对象是否能被验证。"
-        ],
-        conclusion: [
-          "这类案例本质上属于盘面抢跑型行情，表面是期现背离，实质是市场在提前定价未来。"
-        ]
-      },
-      {
-        id: "43",
-        title: "持仓增加但价格不涨，这种盘面该怎么理解",
-        category: "资金与持仓",
-        track: "资金",
-        duration: "8分钟",
-        status: "专题",
-        coreQuestion: "增仓不涨，到底是多头蓄势，还是分歧加大？",
-        audience: "看持仓和盘面结构的交易者",
-        description: "从增仓滞涨场景入手，解释持仓变化背后不止一种含义。",
-        takeaway: "增仓不涨最重要的信息不是方向，而是分歧正在累积。",
-        keywords: ["增仓滞涨", "分歧", "对冲", "套保压力"],
-        tools: ["持仓", "成交量", "价格走势", "套保线索"],
-        sources: ["cmeOi"],
-        scene: [
-          "盘中或日线上，持仓持续增加，但价格几乎不动。很多人会把这种状态理解成“主力在吸筹”。"
-        ],
-        caseStudy: [
-          "真实盘面里，增仓滞涨经常出现在分歧放大的阶段：一边在建立方向仓位，一边在做套保或对冲，结果价格被暂时钉住。"
-        ],
-        surface: [
-          "表面现象是有新增仓位进入，但价格没有推进。"
-        ],
-        driver: [
-          "真实驱动是市场多空两边都在加仓，或产业和投机在同一位置对冲。持仓在增加，不代表同向力量在增强。"
-        ],
-        signals: [
-          "看成交是否放大、价格波动是否收窄，判断分歧是否在积累。",
-          "看套保、现货和相关品种线索，区分投机增仓还是产业对冲。"
-        ],
-        mistakes: [
-          "把增仓直接理解成方向蓄势。",
-          "忽略分歧扩大也会带来增仓。"
-        ],
-        framework: [
-          "增仓先问是谁在加、为什么加，再问价格为什么走不动。",
-          "静价增仓的意义常在后面，而不在当下。"
-        ],
-        conclusion: [
-          "这类案例本质上属于分歧积累型行情，表面是增仓不涨，实质是市场在堆积下一轮波动条件。"
-        ]
-      },
-      {
-        id: "44",
-        title: "缩量上涨和放量上涨，哪个更值得警惕",
-        category: "资金与持仓",
-        track: "资金",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "上涨质量到底该怎么看，不能只看涨幅时，最先看哪一维？",
-        audience: "做趋势、波段和盘中切换的交易者",
-        description: "比较缩量上涨和放量上涨的不同含义，帮助交易者读懂上涨质量。",
-        takeaway: "放量和缩量都不天然好或坏，关键在于发生位置、持仓配合和后续接力。",
-        keywords: ["缩量上涨", "放量上涨", "上涨质量", "接力"],
-        tools: ["成交量", "持仓", "价格结构"],
-        sources: ["cmeOi"],
-        scene: [
-          "同样是上涨，一种是悄悄往上爬，一种是剧烈放量冲高。大多数人直觉会觉得放量上涨更可靠。"
-        ],
-        caseStudy: [
-          "真实盘面中，放量上涨如果伴随减仓和冲高回落，反而更可能是空头回补；缩量上涨若在强结构里缓慢推进，持续性未必差。"
-        ],
-        surface: [
-          "表面现象是放量上涨更强，缩量上涨更弱。"
-        ],
-        driver: [
-          "真实驱动取决于是谁贡献了成交、价格所处阶段是什么，以及后续有没有新增接力。量只是形态，不是结论。"
-        ],
-        signals: [
-          "看放量上涨是否配合增仓、突破后能否站稳。",
-          "看缩量上涨是否发生在强现实和偏紧结构背景里。"
-        ],
-        mistakes: [
-          "只按量大或量小判断上涨质量。",
-          "忽略位置和持仓。"
-        ],
-        framework: [
-          "上涨质量=位置+量能+持仓+后续接力。",
-          "量只是其中一环，不应单独定性。"
-        ],
-        conclusion: [
-          "这类案例本质上属于量价质量识别行情，表面看量，实质看接力和背景。"
-        ]
-      },
-      {
-        id: "45",
-        title: "盘中快速拉升后回落，通常暴露了什么问题",
-        category: "资金与持仓",
-        track: "资金",
-        duration: "7分钟",
-        status: "未学",
-        coreQuestion: "快速冲高回落时，盘面通常在暴露什么弱点？",
-        audience: "做盘中节奏和日内结构的交易者",
-        description: "从冲高回落场景入手，解释这类行情暴露的常见脆弱点。",
-        takeaway: "冲高回落最常见的问题不是“方向不对”，而是验证、承接和上方供给同时缺位。",
-        keywords: ["冲高回落", "追价资金", "承接不足", "验证缺失"],
-        tools: ["分时", "成交量", "持仓", "盘口结构"],
-        sources: ["cmeOi"],
-        scene: [
-          "盘中快速拉升最容易刺激情绪，但只要回落速度同样快，说明这波上冲并没有真正把市场重心抬上去。"
-        ],
-        caseStudy: [
-          "真实盘面里，消息刺激后的冲高若缺少现货、持仓和相关品种配合，常见的结果就是短线资金抢跑、追价盘被套。"
-        ],
-        surface: [
-          "表面现象是市场先强后弱，好像只是一段噪音。"
-        ],
-        driver: [
-          "真实驱动通常是追价资金脆弱、验证不足或上方抛压依旧存在。价格冲过去了，但市场没有在更高位置完成接受。"
-        ],
-        signals: [
-          "看冲高时是否增仓，回落时是否放量。",
-          "看上冲后相关品种和现货有没有跟。"
-        ],
-        mistakes: [
-          "把冲高本身当作逻辑加强。",
-          "忽略新价格区有没有被接受。"
-        ],
-        framework: [
-          "冲高回落先看上冲质量，再看回落速度和量能。",
-          "回落越快，越说明上方承接不足。"
-        ],
-        conclusion: [
-          "这类案例本质上属于价格接受失败行情，表面是盘中异动，实质是更高价格区没有获得市场认可。"
-        ]
-      },
-      {
-        id: "46",
-        title: "持仓大减后的上涨，是真强还是空头回补",
-        category: "资金与持仓",
-        track: "资金",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "价格涨了但持仓大减，怎样判断这波上涨的性质？",
-        audience: "看持仓结构和上涨质量的交易者",
-        description: "用减仓上涨场景区分主动做多和空头回补两种完全不同的力量。",
-        takeaway: "减仓上涨先怀疑回补，再寻找现实接力，别把所有上涨都当成新趋势。",
-        keywords: ["减仓上涨", "空头回补", "主动做多", "上涨性质"],
-        tools: ["持仓", "成交量", "价格结构", "现货验证"],
-        sources: ["cmeOi"],
-        scene: [
-          "很多上涨看起来很顺，但翻开持仓一看却是大减仓。这时最容易犯的错，就是把回补行情当成新一轮主动做多。"
-        ],
-        caseStudy: [
-          "真实盘面里，利空消退或空头集中止损时，价格能快速拉升，但持仓明显回落；若后面没有现货接力，这类上涨通常走不远。"
-        ],
-        surface: [
-          "表面现象是价格很强，像是在启动一轮新行情。"
-        ],
-        driver: [
-          "真实驱动可能只是旧空头离场，而不是新多头进场。两种上涨的持续性和节奏要求完全不同。"
-        ],
-        signals: [
-          "看上涨时持仓是下降还是重新回升。",
-          "看现货、基差和相关品种是否开始接力。"
-        ],
-        mistakes: [
-          "把所有上涨都视为主动做多。",
-          "忽略减仓上涨的持续性通常更依赖后续验证。"
-        ],
-        framework: [
-          "先分回补上涨和增量上涨，再判断这波上涨能否转化成现实驱动。",
-          "减仓上涨不是不能强，而是要更快看到第二层接力。"
-        ],
-        conclusion: [
-          "这类案例本质上属于空头回补型上涨，表面很强，实质要看后续有没有增量资金和现实变量接手。"
-        ]
-      },
-      {
-        id: "47",
-        title: "价格没怎么动，持仓却大幅变化，说明什么",
-        category: "资金与持仓",
-        track: "资金",
-        duration: "8分钟",
-        status: "未学",
-        coreQuestion: "静价大持仓，为什么常常比大涨大跌更值得警惕？",
-        audience: "做结构和持仓观察的交易者",
-        description: "解释“价格平静、持仓剧变”通常意味着什么样的分歧积累。",
-        takeaway: "价格安静不代表市场平静，持仓剧变往往说明真正的波动还在后面。",
-        keywords: ["静价大持仓", "分歧积累", "波动前兆", "对冲"],
-        tools: ["持仓", "成交量", "价格波幅", "相关品种"],
-        sources: ["cmeOi"],
-        scene: [
-          "有时价格一整天没怎么动，但持仓却明显增加或减少。很多人会因为盘面平淡而忽略这类结构。"
-        ],
-        caseStudy: [
-          "真实市场中，静价增仓常见于分歧堆积和对冲加深的阶段，之后一旦外部变量出现，波动会比平时更剧烈。"
-        ],
-        surface: [
-          "表面现象是价格没变化，所以市场好像也没什么事。"
-        ],
-        driver: [
-          "真实驱动恰恰相反：价格没动只是因为多空暂时僵持，持仓大变说明双方正在提高暴露度或快速平衡头寸。"
-        ],
-        signals: [
-          "看持仓变化是否持续几天，以及成交量是否同步放大。",
-          "看相关品种有没有先行异动，判断僵局可能朝哪边被打破。"
-        ],
-        mistakes: [
-          "只盯价格，不看持仓。",
-          "把低波动误判成低风险。"
-        ],
-        framework: [
-          "静价大持仓先理解为分歧积累，再寻找打破僵局的触发变量。",
-          "越安静的价格，有时越需要警惕。"
-        ],
-        conclusion: [
-          "这类案例本质上属于分歧蓄势行情，表面平静，实质是波动条件在积累。"
-        ]
-      },
-      {
-        id: "48",
-        title: "市场拥挤时，为什么越一致越危险",
-        category: "资金与持仓",
-        track: "资金",
-        duration: "9分钟",
-        status: "重点",
-        coreQuestion: "为什么人人看懂的逻辑，最后反而最容易先走反方向？",
-        audience: "经常参与热门主线和共识交易的交易者",
-        description: "围绕拥挤交易和一致预期，解释为什么共识越强，盘面越脆弱。",
-        takeaway: "市场最危险的时刻，不是没人看懂，而是大家都看懂且都已经上车。",
-        keywords: ["拥挤交易", "一致预期", "脆弱性", "仓位风险"],
-        tools: ["持仓", "净多空", "价格走势", "成交放大"],
-        sources: ["cmeOi"],
-        scene: [
-          "某条主线几乎所有人都认可，研究、社群和盘面表现都高度一致，结果真正出问题时，反而是这种人人看懂的逻辑先被打穿。"
-        ],
-        caseStudy: [
-          "真实盘面里，当共识交易持续一段时间后，哪怕新增利多还在，价格对利多的反应也会越来越钝；一旦出现小级别不及预期，就会触发集中兑现。"
-        ],
-        surface: [
-          "表面现象是逻辑越一致，确定性应该越高。"
-        ],
-        driver: [
-          "真实驱动在于仓位脆弱性。人人看懂意味着大部分交易者已经在同一边，市场更缺新的推动者，却多了很多潜在的兑现者。"
-        ],
-        signals: [
-          "看价格对利多消息是否开始钝化，对小利空是否过度敏感。",
-          "看持仓、成交和结构是否已经显示出拥挤特征。"
-        ],
-        mistakes: [
-          "把共识强等同于风险低。",
-          "只看逻辑正确与否，不看仓位是否已经过满。"
-        ],
-        framework: [
-          "拥挤交易先看新增驱动够不够，再看盘面对同样信息是否还敏感。",
-          "市场越一致，越要把仓位风险单独拎出来看。"
-        ],
-        conclusion: [
-          "这类案例本质上属于共识拥挤型行情，表面是人人看懂，实质是盘面已经缺少新的接力者。"
-        ]
-      }
-    ];
-
-    const featuredId = "01";
-    const categories = ["全部", "通用方法", "品种框架", "工具理解", "复盘训练", "宏观传导", "产业链联动", "结构与交割", "资金与持仓"];
-    const tracks = ["全部", "方法", "黑色", "油脂油料", "有色", "能化", "工具", "复盘", "宏观", "联动", "结构", "资金"];
-    const chapterOrder = ["通用方法", "品种框架", "工具理解", "复盘训练", "宏观传导", "产业链联动", "结构与交割", "资金与持仓"];
-    const chapterCoverMap = {
-      "通用方法": "https://img.jin10.com/gallary/26/04/74j_D8i-nklOW6N2l0Qj7.png/lite",
-      "品种框架": "https://img.jin10.com/gallary/26/04/82iouo1aKx5KMWzE26CWJ.png/lite",
-      "工具理解": "https://img.jin10.com/gallary/26/04/LFvHZQru2keWKQUEosGB2.png/lite",
-      "复盘训练": "https://img.jin10.com/gallary/26/04/R2Ox_REUNkEGMHF3T8vtQ.png/lite",
-      "宏观传导": "https://img.jin10.com/gallary/26/04/idajjt2y2KiTmAB4FPdt9.png/lite",
-      "产业链联动": "https://img.jin10.com/gallary/26/04/BN4Ddyf_oafLLnBqjh2ZS.png/lite",
-      "结构与交割": "https://img.jin10.com/gallary/26/04/LZ_2LrrK79LMBR7hBUzSU.png/lite",
-      "资金与持仓": "https://img.jin10.com/gallary/26/04/tPZWLNbTztXaaJjKHryAi.png/lite"
-    };
-    const screenHashMap = {
-      continueScreen: "learn",
-      catalogScreen: "catalog"
-    };
-    const reverseScreenHashMap = Object.fromEntries(Object.entries(screenHashMap).map(([key, value]) => [value, key]));
-
-    function buildInitialReadHistory(lastRead) {
-      const idx = courses.findIndex(course => course.id === lastRead);
-      if (idx < 0) return [];
-      return courses.slice(0, idx + 1).map(course => course.id);
-    }
-
-    const storedLastRead = localStorage.getItem("academyLastRead") || featuredId;
-    const storedReadHistory = JSON.parse(localStorage.getItem("academyReadHistory") || "null");
 
     const state = {
-      screen: "catalogScreen",
-      lastNonLessonScreen: "catalogScreen",
-      category: "全部",
-      track: "全部",
-      pendingTrack: "全部",
-      activeId: storedLastRead,
-      lastRead: storedLastRead,
-      favorites: new Set(JSON.parse(localStorage.getItem("academyFavorites") || "[]")),
-      readHistory: new Set(storedReadHistory && storedReadHistory.length ? storedReadHistory : buildInitialReadHistory(storedLastRead))
+      viewYear: currentYear,
+      viewMonth: currentMonthIndex,
+      selectedKey: todayKey
     };
 
-    const app = document.querySelector(".app");
-    const screenTabs = document.getElementById("screenTabs");
-    const headerProgressText = document.getElementById("headerProgressText");
-    const headerSideText = document.getElementById("headerSideText");
-    const recommendedList = document.getElementById("recommendedList");
-    const openCatalogLink = document.getElementById("openCatalogLink");
-    const categoryTabs = document.getElementById("categoryTabs");
-    const courseCatalog = document.getElementById("courseCatalog");
-    const continueBar = document.getElementById("continueBar");
-    const continueBarTitle = document.getElementById("continueBarTitle");
-    const resumeBtn = document.getElementById("resumeBtn");
-    const lessonBar = document.getElementById("lessonBar");
-    const lessonCatalogBtn = document.getElementById("lessonCatalogBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const lessonBackBtn = document.getElementById("lessonBackBtn");
-    const lessonProgressText = document.getElementById("lessonProgressText");
-    const lessonLabel = document.getElementById("lessonLabel");
-    const lessonTitle = document.getElementById("lessonTitle");
-    const lessonQuestion = document.getElementById("lessonQuestion");
-    const lessonAudience = document.getElementById("lessonAudience");
-    const lessonArticle = document.getElementById("lessonArticle");
-    const signalList = document.getElementById("signalList");
-    const mistakeList = document.getElementById("mistakeList");
-    const frameworkList = document.getElementById("frameworkList");
-    const nextPreviewBtn = document.getElementById("nextPreviewBtn");
-    const nextLessonTitle = document.getElementById("nextLessonTitle");
-    const nextLessonCopy = document.getElementById("nextLessonCopy");
+    const calendarGrid = document.getElementById('calendarGrid');
+    const calendarMonth = document.getElementById('calendarMonth');
+    const calendarSummary = document.getElementById('calendarSummary');
+    const calendarRoot = document.getElementById('calendarRoot');
+    const calendarToggle = document.getElementById('calendarToggle');
+    const calendarWeekdays = document.getElementById('calendarWeekdays');
+    const feedContainer = document.getElementById('feedContainer');
+    const sharePageBtn = document.getElementById('sharePageBtn');
+    const downloadBtn = document.getElementById('download-btn');
 
-    function getCourseById(id) {
-      return courses.find(course => course.id === id);
+    function formatFullDate(key) {
+      const [year, month, day] = key.split('-');
+      return `${year}年${parseInt(month)}月${parseInt(day)}日`;
     }
 
-    function getCourseIndex(id) {
-      return courses.findIndex(course => course.id === id);
+    function formatShortDate(key) {
+      const [year, month, day] = key.split('-');
+      return `${parseInt(month)}月${parseInt(day)}日`;
     }
 
-    function getCurrentCourse() {
-      return getCourseById(state.lastRead) || getCourseById(featuredId) || courses[0];
+    function dateKey(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
     }
 
-    function getChapterCourses(category) {
-      return courses.filter(course => course.category === category);
-    }
+    function buildMonthCells(year, monthIndex) {
+      const firstDay = new Date(year, monthIndex, 1);
+      const startWeekday = firstDay.getDay();
+      const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+      const cells = [];
 
-    function getChapterProgress(category) {
-      const items = getChapterCourses(category);
-      const done = items.filter(course => state.readHistory.has(course.id)).length;
-      return `${done}/${items.length}`;
-    }
-
-    function getNextCourse(id) {
-      const currentIndex = getCourseIndex(id);
-      if (currentIndex < 0) return courses[0];
-      return courses[(currentIndex + 1) % courses.length];
-    }
-
-    function getRecommendedCourses() {
-      const current = getCurrentCourse();
-      const next = getNextCourse(current.id);
-      const sibling = courses.find(course => course.category === current.category && course.id !== current.id && course.id !== next.id) || courses.find(course => course.id !== current.id && course.id !== next.id);
-      return [next, sibling].filter(Boolean);
-    }
-
-    function getFilteredCourses() {
-      return courses.filter(course => {
-        const categoryMatch = state.category === "全部" || course.category === state.category;
-        const trackMatch = state.track === "全部" || course.track === state.track;
-        return categoryMatch && trackMatch;
-      });
-    }
-
-    function saveProgress() {
-      localStorage.setItem("academyLastRead", state.lastRead);
-      localStorage.setItem("academyReadHistory", JSON.stringify([...state.readHistory]));
-      localStorage.setItem("academyFavorites", JSON.stringify([...state.favorites]));
-      localStorage.setItem("academyScreen", state.lastNonLessonScreen);
-    }
-
-    function splitAsteriskContent(value) {
-      return String(value || "")
-        .split(/\s*\*\s*/g)
-        .map(item => item.trim())
-        .filter(item => item && item !== "---");
-    }
-
-    function fillList(el, items) {
-      const normalizedItems = (items || []).flatMap(splitAsteriskContent);
-      el.innerHTML = normalizedItems.map(item => `<li>${item}</li>`).join("");
-    }
-
-    function fillParagraphs(items) {
-      return (items || []).map(item => {
-        const normalized = splitAsteriskContent(item);
-        if (!normalized.length) return "";
-        return `<p class="article-paragraph">${normalized.join("<br>")}</p>`;
-      }).join("");
-    }
-
-    function buildLessonArticle(course) {
-      const article = articleContent[course.title];
-      if (article) {
-        return `
-          <div class="article-section">
-            <p class="article-intro">${article.intro || course.description}</p>
-          </div>
-          <div class="article-section">
-            ${fillParagraphs(article.body && article.body.length ? article.body : [course.description, course.takeaway])}
-          </div>
-          ${article.summary && article.summary.length ? `
-            <div class="article-section">
-              <h3 class="article-subhead">小结</h3>
-              ${fillParagraphs(article.summary)}
-            </div>
-          ` : ''}
-        `;
+      for (let i = startWeekday - 1; i >= 0; i--) {
+        const d = new Date(year, monthIndex, -i);
+        cells.push({ date: d, outside: true });
       }
-      return `
-        <div class="article-section">
-          <p class="article-intro">${course.description}</p>
-          <p class="article-paragraph">这节课真正要回答的，不是概念定义，而是${course.coreQuestion}${course.takeaway}</p>
-        </div>
-        <div class="article-section">
-          <h3 class="article-subhead">场景切入</h3>
-          ${fillParagraphs(course.scene)}
-          ${fillParagraphs(course.caseStudy)}
-        </div>
-        <div class="article-section">
-          <h3 class="article-subhead">市场表面在走什么，真实又在交易什么</h3>
-          ${fillParagraphs(course.surface)}
-          ${fillParagraphs(course.driver)}
-        </div>
-        <div class="article-section">
-          <h3 class="article-subhead">如何理解这类盘面</h3>
-          ${fillParagraphs(course.framework)}
-        </div>
-        <div class="article-section">
-          <h3 class="article-subhead">小结</h3>
-          ${fillParagraphs(course.conclusion)}
-        </div>
-      `;
-    }
-
-    function setScreen(screen, updateHash = true) {
-      state.screen = screen;
-      if (screen !== "lessonScreen") {
-        state.lastNonLessonScreen = screen;
+      for (let day = 1; day <= daysInMonth; day++) {
+        cells.push({ date: new Date(year, monthIndex, day), outside: false });
       }
-
-      document.querySelectorAll(".screen").forEach(node => {
-        node.classList.toggle("active", node.id === screen);
-      });
-
-      screenTabs.querySelectorAll(".screen-tab").forEach(tab => {
-        tab.classList.toggle("active", tab.dataset.screen === screen);
-      });
-
-      const lessonMode = screen === "lessonScreen";
-      app.classList.toggle("lesson-mode", lessonMode);
-      continueBar.classList.toggle("hidden", lessonMode);
-      lessonBar.classList.toggle("hidden", !lessonMode);
-
-      if (updateHash) {
-        if (lessonMode) {
-          history.replaceState(null, "", `#course-${state.activeId}`);
-        } else {
-          history.replaceState(null, "", `#${screenHashMap[screen]}`);
-        }
+      while (cells.length % 7 !== 0) {
+        cells.push({ date: new Date(year, monthIndex + 1, cells.length - startWeekday - daysInMonth + 1), outside: true });
       }
-
-      saveProgress();
-      window.scrollTo({ top: 0, behavior: "auto" });
+      return cells;
     }
 
-    function renderHeader() {
-      const current = getCurrentCourse();
-      headerProgressText.textContent = "";
-      headerSideText.textContent = "";
-      continueBarTitle.textContent = current.title;
+    function renderCalendar() {
+      calendarMonth.textContent = `${state.viewYear}年${state.viewMonth + 1}月`;
+      calendarWeekdays.innerHTML = WEEKDAY_LABELS.map(l => `<div class="calendar__weekday">${l}</div>`).join('');
+
+      const cells = buildMonthCells(state.viewYear, state.viewMonth);
+      calendarGrid.innerHTML = cells.map(cell => {
+        const key = dateKey(cell.date);
+        const isActive = key === state.selectedKey;
+        const isToday = key === todayKey;
+        
+        let classes = ['calendar__cell'];
+        if (cell.outside) classes.push('is-outside');
+        if (isActive) classes.push('is-active');
+        if (isToday) classes.push('is-today');
+
+        return `<button class="${classes.join(' ')}" data-date="${key}">${cell.date.getDate()}</button>`;
+      }).join('');
     }
 
-    function renderContinueScreen() {
-      const history = [...state.readHistory]
-        .map(id => getCourseById(id))
-        .filter(Boolean)
-        .reverse()
-        .slice(0, 6);
-      const list = history.length ? history : [getCurrentCourse()];
-
-      recommendedList.innerHTML = list.map(course => `
-        <button class="lesson-row ${course.id === state.lastRead ? "current" : ""}" data-open-course="${course.id}">
-          <div class="lesson-no">${course.id}</div>
-          <div class="lesson-main">
-            <div class="lesson-title-line">${course.title}</div>
-          </div>
-          <div class="lesson-side">&gt;</div>
-        </button>
-      `).join("");
-
-      recommendedList.querySelectorAll("[data-open-course]").forEach(button => {
-        button.addEventListener("click", () => openCourse(button.dataset.openCourse));
-      });
-    }
-
-    function renderCategoryTabs() {
-      categoryTabs.innerHTML = categories.map(category => `
-        <button class="category-tab ${state.category === category ? "active" : ""}" data-category="${category}">${category}</button>
-      `).join("");
-
-      categoryTabs.querySelectorAll(".category-tab").forEach(tab => {
-        tab.addEventListener("click", () => {
-          state.category = tab.dataset.category;
-          renderCategoryTabs();
-          renderCatalogScreen();
-        });
-      });
-    }
-
-    function bindChapterHeads() {
-      courseCatalog.querySelectorAll(".chapter-head").forEach(head => {
-        head.addEventListener("click", () => {
-          const group = head.closest(".chapter-group");
-          courseCatalog.querySelectorAll(".chapter-group").forEach(node => {
-            node.classList.toggle("open", node === group ? !node.classList.contains("open") : false);
-          });
-        });
-      });
-    }
-
-    function bindCourseRows() {
-      courseCatalog.querySelectorAll("[data-open-course]").forEach(button => {
-        button.addEventListener("click", () => openCourse(button.dataset.openCourse));
-      });
-    }
-
-    function rowMarkup(course, currentId) {
-      return `
-        <button class="lesson-row ${course.id === currentId ? "current" : ""}" data-open-course="${course.id}">
-          <div class="lesson-no">${course.id}</div>
-          <div class="lesson-main">
-            <div class="lesson-title-line">${course.title}</div>
-          </div>
-          <div class="lesson-side">&gt;</div>
-        </button>
-      `;
-    }
-
-    function renderCatalogScreen() {
-      const current = getCurrentCourse();
-      const list = getFilteredCourses();
-
-      if (!list.length) {
-        courseCatalog.innerHTML = `<div class="research-copy" style="padding:18px 0;">当前筛选下暂无课程。</div>`;
+    function renderFeed() {
+      const sortedDates = Object.keys(cardStore).sort((a, b) => new Date(b) - new Date(a));
+      
+      if (sortedDates.length === 0) {
+        feedContainer.innerHTML = '<div class="empty-state">暂无盘中异动数据</div>';
         return;
       }
 
-      if (state.category === "全部" && state.track === "全部") {
-        courseCatalog.innerHTML = chapterOrder.map((category, index) => {
-          const items = list.filter(course => course.category === category);
-          if (!items.length) return "";
-          return `
-            <section class="chapter-group ${category === current.category || index === 0 ? "open" : ""}">
-              <button class="chapter-head" type="button">
-                <div class="chapter-thumb">
-                  <img src="${chapterCoverMap[category]}" alt="${category}">
-                </div>
-                <div class="chapter-meta">
-                  <div class="chapter-kicker">课程 ${String(index + 1).padStart(2, "0")}</div>
-                  <div class="chapter-title">${category}</div>
-                  <div class="chapter-copy">${categoryInfo[category]}</div>
-                </div>
-              </button>
-              <div class="chapter-body">
-                ${items.map(course => rowMarkup(course, current.id)).join("")}
-              </div>
-            </section>
-          `;
-        }).join("");
-      } else {
-        courseCatalog.innerHTML = list.map(course => rowMarkup(course, current.id)).join("");
-      }
-
-      bindChapterHeads();
-      bindCourseRows();
-    }
-
-    function renderLessonScreen() {
-      const course = getCourseById(state.activeId) || getCurrentCourse();
-      const currentIndex = getCourseIndex(course.id) + 1;
-      const nextCourse = getNextCourse(course.id);
-
-      const article = articleContent[course.title];
-
-      lessonProgressText.textContent = `第 ${String(currentIndex).padStart(2, "0")} 讲`;
-      lessonLabel.textContent = `课程 ${course.id} · ${course.category}`;
-      lessonTitle.textContent = course.title;
-      lessonQuestion.textContent = course.coreQuestion;
-      lessonAudience.textContent = course.audience;
-
-      lessonArticle.innerHTML = buildLessonArticle(course);
-      fillList(signalList, article && article.signals && article.signals.length ? article.signals : course.signals);
-      fillList(mistakeList, article && article.mistakes && article.mistakes.length ? article.mistakes : course.mistakes);
-      fillList(frameworkList, article && article.framework && article.framework.length ? article.framework : course.framework);
-      nextLessonTitle.textContent = nextCourse.title;
-      nextLessonCopy.textContent = nextCourse.coreQuestion;
-      nextPreviewBtn.onclick = () => openCourse(nextCourse.id);
-      nextBtn.textContent = `下一讲 · ${nextCourse.id}`;
-      nextBtn.onclick = () => openCourse(nextCourse.id);
-    }
-
-    function openCourse(id) {
-      const course = getCourseById(id);
-      if (!course) return;
-      state.activeId = id;
-      state.lastRead = id;
-      if (state.readHistory.has(id)) {
-        state.readHistory.delete(id);
-      }
-      state.readHistory.add(id);
-      saveProgress();
-      renderAll();
-      setScreen("lessonScreen");
-    }
-
-    function closeLesson() {
-      renderAll();
-      setScreen(state.lastNonLessonScreen || "catalogScreen");
-    }
-
-    function renderAll() {
-      renderHeader();
-      renderContinueScreen();
-      renderCategoryTabs();
-      renderCatalogScreen();
-      renderLessonScreen();
-    }
-
-    screenTabs.querySelectorAll(".screen-tab").forEach(tab => {
-      tab.addEventListener("click", () => {
-        renderAll();
-        setScreen(tab.dataset.screen);
+      let html = '';
+      sortedDates.forEach(dateStr => {
+        const items = cardStore[dateStr];
+        const dateLabel = dateStr === todayKey ? `今天 (${formatShortDate(dateStr)})` : formatFullDate(dateStr);
+        
+        html += `
+          <div class="date-section" id="section-${dateStr}">
+            <div class="date-header">${dateLabel}</div>
+            <div class="waterfall">
+              ${items.map(item => `
+                <article class="xhs-card" data-image="${item.image}">
+                  <img class="xhs-card__image" src="${item.image}" alt="${item.title}" loading="lazy">
+                  <div class="xhs-card__body">
+                    <div class="xhs-card__title">${item.title}</div>
+                    <div class="xhs-card__desc">${item.desc}</div>
+                  </div>
+                </article>
+              `).join('')}
+            </div>
+          </div>
+        `;
       });
+      feedContainer.innerHTML = html;
+    }
+
+    calendarToggle.addEventListener('click', () => {
+      calendarRoot.classList.toggle('is-open');
     });
 
-    openCatalogLink.addEventListener("click", () => {
-      renderAll();
-      setScreen("catalogScreen");
+    calendarGrid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.calendar__cell');
+      if (!btn) return;
+      
+      const targetDate = btn.dataset.date;
+      state.selectedKey = targetDate;
+      calendarSummary.textContent = formatFullDate(targetDate);
+      
+      renderCalendar();
+      calendarRoot.classList.remove('is-open');
+
+      const targetSection = document.getElementById(`section-${targetDate}`);
+      if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        alert(`${formatFullDate(targetDate)} 暂无数据`);
+      }
     });
 
-    resumeBtn.addEventListener("click", () => openCourse(state.lastRead));
-    lessonBackBtn.addEventListener("click", closeLesson);
-    lessonCatalogBtn.addEventListener("click", closeLesson);
+    document.getElementById('prevMonth').addEventListener('click', () => {
+      state.viewMonth--;
+      if (state.viewMonth < 0) { state.viewMonth = 11; state.viewYear--; }
+      renderCalendar();
+    });
 
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") {
-        if (state.screen === "lessonScreen") {
-          closeLesson();
+    document.getElementById('nextMonth').addEventListener('click', () => {
+      state.viewMonth++;
+      if (state.viewMonth > 11) { state.viewMonth = 0; state.viewYear++; }
+      renderCalendar();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (calendarRoot.classList.contains('is-open') && !calendarRoot.contains(e.target)) {
+        calendarRoot.classList.remove('is-open');
+      }
+    });
+
+    renderCalendar();
+    renderFeed();
+
+    /* === 大图查看器交互逻辑 === */
+    const imageViewer = document.getElementById('imageViewer');
+    const viewerImg = document.getElementById('viewerImg');
+    let currentImgUrl = '';
+
+    // 监听卡片点击事件
+    feedContainer.addEventListener('click', (e) => {
+      const card = e.target.closest('.xhs-card');
+      if (!card) return;
+      
+      const imgUrl = card.getAttribute('data-image');
+      if (imgUrl) {
+        currentImgUrl = imgUrl;
+        viewerImg.src = imgUrl;
+        imageViewer.classList.add('is-active');
+      }
+    });
+
+    // 关闭查看器
+    function closeViewer() {
+      imageViewer.classList.remove('is-active');
+      setTimeout(() => { viewerImg.src = ''; }, 300); // 等待动画结束后清空 src
+    }
+
+    document.getElementById('viewerClose').addEventListener('click', closeViewer);
+    document.getElementById('viewerImgContainer').addEventListener('click', (e) => {
+      // 点击图片外围区域也可以关闭
+      if (e.target !== viewerImg) {
+        closeViewer();
+      }
+    });
+
+    function handleSharePage() {
+      if (typeof window.Jin10JSBridge !== 'undefined') {
+        try {
+          const bridge = new window.Jin10JSBridge();
+          if (bridge.isApp) {
+            bridge.dispatch('appShare', { url: location.href });
+            return;
+          }
+        } catch (e) {
+          // Fall back to browser sharing below.
         }
       }
-    });
 
-    renderAll();
+      if (navigator.share) {
+        navigator.share({
+          title: document.title,
+          url: location.href
+        }).catch(() => {});
+        return;
+      }
 
-    const courseHashMatch = location.hash.match(/course-(\d{2})/);
-    if (courseHashMatch && getCourseById(courseHashMatch[1])) {
-      openCourse(courseHashMatch[1]);
-    } else {
-      const screenHash = location.hash.replace("#", "");
-      const targetScreen = reverseScreenHashMap[screenHash];
-      if (targetScreen) {
-        setScreen(targetScreen, false);
-      } else {
-        setScreen(state.screen, false);
+      navigator.clipboard.writeText(location.href).then(() => {
+        alert('页面链接已复制到剪贴板！');
+      }).catch(() => {
+        alert('复制失败，请重试');
+      });
+    }
+
+    function initAppEnvironment() {
+      if (typeof window.Jin10JSBridge !== 'undefined') {
+        try {
+          const bridge = new window.Jin10JSBridge();
+          if (bridge.isApp) {
+            if (sharePageBtn) sharePageBtn.style.display = '';
+            if (downloadBtn) downloadBtn.style.display = 'none';
+            if (sharePageBtn) sharePageBtn.classList.add('is-app');
+          } else {
+            if (downloadBtn) downloadBtn.style.display = '';
+          }
+        } catch (e) {
+          if (downloadBtn) downloadBtn.style.display = '';
+        }
       }
     }
+
+    if (sharePageBtn) {
+      sharePageBtn.addEventListener('click', handleSharePage);
+    }
+
+    document.addEventListener('DOMContentLoaded', initAppEnvironment);
   </script>
 </body>
 </html>
