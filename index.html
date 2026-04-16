@@ -298,17 +298,20 @@
 
     .xhs-card__body {
       padding: 8px 10px 12px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
     }
 
     .xhs-card__title {
       font-size: 12.5px;
       font-weight: 700;
-      color: var(--text-main);
+      color: var(--text-light);
       line-height: 1.45;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+      display: inline-block;
       overflow: hidden;
+      white-space: nowrap;
+      text-align: right;
     }
 
     .empty-state {
@@ -675,9 +678,7 @@
         const dateLabel = dateStr === todayKey ? `今天 (${formatShortDate(dateStr)})` : formatFullDate(dateStr);
 
         function buildCardTitle(item) {
-          const firstSentence = item.desc.split(/[。；;]/)[0].trim();
-          const shortSentence = firstSentence.length > 18 ? `${firstSentence.slice(0, 18)}…` : firstSentence;
-          return shortSentence ? `${item.title} · ${shortSentence}` : item.title;
+          return '分享大图>';
         }
         
         html += `
