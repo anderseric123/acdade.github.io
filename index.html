@@ -1,300 +1,3573 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>今晚看什么 - 金十期货特别专栏</title>
-    <style>
-        :root {
-            --bg-dark: #0a0e17;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --text-main: #ffffff;
-            --text-sub: #8b95a5;
-            --accent-gold: #f5c518;
-            --accent-gold-glow: rgba(245, 197, 24, 0.3);
-            --up-red: #ff4d4f;
-            --down-green: #00e676;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>生猪产业链数据监测</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --ink: #101828;
+      --muted: #667085;
+      --line: #e5e7eb;
+      --gold: #c59955;
+      --gold-soft: #fcf6e8;
+      --blue-900: #092741;
+      --blue-700: #144a79;
+      --blue-500: #2f7bc5;
+      --green-zone: rgba(66, 175, 94, 0.15);
+      --yellow-zone: rgba(244, 185, 66, 0.2);
+      --red-zone: rgba(205, 66, 66, 0.15);
+      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.06);
+      --shadow-strong: 0 18px 42px rgba(15, 23, 42, 0.08);
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-        }
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+    }
 
-        /* 模拟手机屏幕容器 */
-        .app-container {
-            width: 100%;
-            max-width: 400px;
-            min-height: 100vh;
-            background: radial-gradient(circle at top right, #1a2235 0%, var(--bg-dark) 40%);
-            padding: 20px 16px 100px 16px;
-            position: relative;
-            overflow-x: hidden;
-        }
+    body {
+      background:
+        radial-gradient(circle at top, rgba(197, 153, 85, 0.08), transparent 28%),
+        linear-gradient(180deg, #f8fafc 0%, #f8fafc 100%);
+      color: var(--ink);
+      font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
 
-        /* 顶部 Header */
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-            padding-top: 20px;
-        }
-        .header h1 {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            background: linear-gradient(180deg, #ffffff 0%, #a0aabf 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
-        .header p {
-            font-size: 13px;
-            color: var(--accent-gold);
-            letter-spacing: 4px;
-        }
+    .page {
+      width: min(440px, calc(100vw - 16px));
+      margin: 12px auto 24px;
+      padding-bottom: 136px;
+    }
 
-        /* 模块通用样式 */
-        .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            color: #e2e8f0;
-        }
-        .section-title::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 16px;
-            background-color: var(--accent-gold);
-            margin-right: 8px;
-            border-radius: 2px;
-            box-shadow: 0 0 8px var(--accent-gold-glow);
-        }
+    .hero {
+      position: relative;
+      background: transparent;
+      color: #12314d;
+      border: 0;
+      border-radius: 0;
+      padding: 6px 4px 4px;
+      box-shadow: none;
+      text-align: left;
+      overflow: hidden;
+    }
 
-        /* 宏观风暴眼 - 时间轴 */
-        .timeline-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
-            backdrop-filter: blur(10px);
-        }
-        .timeline-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 16px;
-            position: relative;
-        }
-        .timeline-item:last-child {
-            margin-bottom: 0;
-        }
-        .time-col {
-            width: 50px;
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--accent-gold);
-            margin-right: 12px;
-        }
-        .content-col {
-            flex: 1;
-        }
-        .event-title {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .event-sub {
-            font-size: 12px;
-            color: var(--text-sub);
-        }
-        .alert-btn {
-            background: rgba(245, 197, 24, 0.1);
-            color: var(--accent-gold);
-            border: 1px solid var(--accent-gold-glow);
-            border-radius: 20px;
-            padding: 2px 8px;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+    .hero::after {
+      content: none;
+    }
 
-        /* 焦点品种卡片 */
-        .variety-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            position: relative;
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 12px;
-        }
-        .variety-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--up-red); /* 默认偏强情绪色 */
-        }
-        .variety-tag {
-            font-size: 12px;
-            background: rgba(255, 77, 79, 0.15);
-            color: var(--up-red);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-        .logic-list {
-            list-style: none;
-        }
-        .logic-item {
-            font-size: 13px;
-            line-height: 1.6;
-            margin-bottom: 8px;
-            color: #cbd5e1;
-            display: flex;
-            align-items: baseline;
-        }
-        .logic-label {
-            color: var(--accent-gold);
-            font-weight: bold;
-            margin-right: 6px;
-            flex-shrink: 0;
-        }
-        .divergence-highlight {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 8px;
-            border-radius: 6px;
-            margin-top: 12px;
-            border-left: 2px solid var(--up-red);
-        }
+    .hero-brand {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 8px;
+    }
 
-        /* 底部悬浮按钮 */
-        .fixed-bottom {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 400px;
-            background: linear-gradient(0deg, var(--bg-dark) 60%, transparent 100%);
-            padding: 24px 16px 30px 16px;
-        }
-        .share-btn {
-            width: 100%;
-            background: var(--accent-gold);
-            color: #000;
-            border: none;
-            border-radius: 24px;
-            padding: 14px 0;
-            font-size: 16px;
-            font-weight: bold;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 16px var(--accent-gold-glow);
-            cursor: pointer;
-        }
-        .share-btn span {
-            margin-right: 6px;
-        }
-    </style>
+    .hero-brand-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .hero-brand-badge img {
+      display: block;
+      height: 18px;
+      width: auto;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(30px, 6vw, 44px);
+      letter-spacing: -0.8px;
+      line-height: 1.05;
+      color: #101828;
+      font-weight: 900;
+    }
+
+    .hero .subtitle {
+      margin: 10px 0 8px;
+      color: #475467;
+      font-size: 14px;
+      max-width: none;
+      line-height: 1.6;
+      white-space: nowrap;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-bottom: 0;
+      font-size: 12px;
+      color: #667085;
+      justify-items: flex-start;
+    }
+
+    .hero .summary {
+      margin: 0;
+      color: #e8f0fb;
+      font-size: 14px;
+      max-width: 980px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-title {
+      margin: 24px 0 10px;
+      font-size: 20px;
+      color: #111827;
+      letter-spacing: -0.2px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::before {
+      content: "";
+      width: 4px;
+      height: 18px;
+      border-radius: 999px;
+      background: var(--gold);
+      flex: 0 0 auto;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .metric-card {
+      background: #fff;
+      border-right: 1px solid #eef2f6;
+      border-bottom: 1px solid #eef2f6;
+      padding: 14px 12px 12px;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-height: 136px;
+    }
+
+    .metric-card:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .metric-card:nth-last-child(-n + 2) {
+      border-bottom: 0;
+    }
+
+    .metric-name-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .metric-name {
+      margin: 0;
+      font-size: 13px;
+      color: #475467;
+      font-weight: 650;
+      letter-spacing: 0.05px;
+      line-height: 1.35;
+    }
+
+    .metric-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #101828;
+      letter-spacing: 0.1px;
+      margin-top: 1px;
+      line-height: 1.05;
+    }
+
+    .metric-unit {
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: 4px;
+      font-weight: 500;
+    }
+
+    .metric-row {
+      display: flex;
+      gap: 10px;
+      font-size: 11px;
+      color: #667085;
+      flex-wrap: wrap;
+      line-height: 1.45;
+    }
+
+    .metric-row.stack {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .change-up {
+      color: #d83535;
+      font-weight: 700;
+    }
+
+    .change-down {
+      color: #1f9e55;
+      font-weight: 700;
+    }
+
+    .change-flat {
+      color: #607386;
+      font-weight: 700;
+    }
+
+    .metric-note {
+      margin-top: auto;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px dashed #e1e7ee;
+      padding-top: 8px;
+    }
+
+    .insight-panel {
+      margin-top: 10px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .insight-title {
+      margin: 0 0 8px;
+      font-size: 15px;
+      color: #101828;
+      font-weight: 800;
+    }
+
+    .insight-conclusion {
+      margin: 0 0 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: var(--gold-soft);
+      border: 1px solid rgba(197, 153, 85, 0.18);
+      color: #4b3b20;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .insight-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #334155;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .showcase {
+      margin-top: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.98));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 12px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .showcase-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .showcase-head .section-title {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .showcase-video {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #0b2034;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+    }
+
+    .showcase-video video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      background: #0b2034;
+    }
+
+    .showcase-cta {
+      width: 100%;
+      min-height: 36px;
+      padding: 0 14px;
+      border-radius: 10px;
+      background: #f3f5f8;
+      color: #111827;
+      border: 1px solid #d9e0ea;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      appearance: none;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: none;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+
+    .showcase-cta:active {
+      transform: scale(0.98);
+      background: #eaedf2;
+    }
+
+    .market-shell {
+      margin-top: 14px;
+    }
+
+    .market-tabs {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .market-tab-btn {
+      flex: 1 1 0;
+      min-height: 36px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: #475467;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .market-tab-btn.active {
+      background: linear-gradient(135deg, #d7b170, var(--gold));
+      color: #fffaf0;
+      box-shadow: 0 8px 18px rgba(197, 153, 85, 0.14);
+    }
+
+    .market-tab-btn:active {
+      transform: scale(0.99);
+    }
+
+    .market-tab-panel[hidden] {
+      display: none !important;
+    }
+
+    .stock-panel {
+      margin-top: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(250, 251, 253, 0.99));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .stock-panel-inner {
+      padding: 14px;
+    }
+
+    .stock-panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .stock-panel-desc {
+      margin: 8px 0 0;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #475467;
+    }
+
+    .stock-panel-highlights {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .stock-highlight {
+      padding: 10px 10px 9px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid #edf0f4;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+      min-height: 64px;
+    }
+
+    .stock-highlight-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: #8a6a2d;
+      text-transform: uppercase;
+    }
+
+    .stock-highlight-name {
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.35;
+      color: #101828;
+    }
+
+    .stock-highlight-value {
+      margin-top: 5px;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1;
+      color: #c85d35;
+    }
+
+    .stock-highlight-value.strong {
+      color: #b8322b;
+    }
+
+    .stock-highlight-value.mid {
+      color: #c85d35;
+    }
+
+    .stock-highlight-value.soft {
+      color: #cd7f2e;
+    }
+
+    .stock-highlight-value.neg {
+      color: #c53f4a;
+    }
+
+    .stock-list {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .stock-row {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #edf0f4;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+    }
+
+    .stock-row-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0;
+      background: linear-gradient(90deg, rgba(197, 153, 85, 0.11), rgba(197, 153, 85, 0.28));
+      pointer-events: none;
+    }
+
+    .stock-row-fill.neg {
+      background: linear-gradient(90deg, rgba(224, 94, 101, 0.14), rgba(224, 94, 101, 0.22));
+    }
+
+    .stock-row-main {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 12px;
+    }
+
+    .stock-row-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .stock-rank {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: #4b5563;
+      background: #f2f4f7;
+      flex: 0 0 auto;
+    }
+
+    .stock-rank.top1 {
+      color: #fff8ec;
+      background: linear-gradient(135deg, #d7b170, var(--gold));
+    }
+
+    .stock-rank.top2 {
+      color: #fff8ec;
+      background: linear-gradient(135deg, #6ea7de, #2f7bc5);
+    }
+
+    .stock-rank.top3 {
+      color: #fff8ec;
+      background: linear-gradient(135deg, #4fb18b, #1f8f59);
+    }
+
+    .stock-name-wrap {
+      min-width: 0;
+    }
+
+    .stock-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #101828;
+      line-height: 1.25;
+    }
+
+    .stock-price {
+      margin-top: 3px;
+      font-size: 11px;
+      color: #667085;
+      line-height: 1.35;
+    }
+
+    .stock-return {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .stock-return.up {
+      color: #c85d35;
+    }
+
+    .stock-return.strong {
+      color: #b8322b;
+    }
+
+    .stock-return.mid {
+      color: #d16a2d;
+    }
+
+    .stock-return.soft {
+      color: #be7a29;
+    }
+
+    .stock-return.neutral {
+      color: #5f6b7a;
+    }
+
+    .hot-news-panel {
+      margin-top: 14px;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .hot-news-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid #eef2f6;
+    }
+
+    .hot-news-toggle {
+      flex: 0 0 auto;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid #d9e0ea;
+      background: #f3f5f8;
+      color: #344054;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.18s ease, transform 0.18s ease, color 0.18s ease;
+    }
+
+    .hot-news-toggle.active {
+      background: linear-gradient(135deg, #d7b170, var(--gold));
+      color: #fffaf0;
+      border-color: rgba(197, 153, 85, 0.22);
+    }
+
+    .hot-news-toggle:active {
+      transform: scale(0.98);
+    }
+
+    .hot-news-list {
+      padding: 4px 14px 8px;
+    }
+
+    .hot-news-item {
+      display: block;
+      padding: 12px 0;
+      border-top: 1px solid #eef2f6;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .hot-news-item:first-child {
+      border-top: 0;
+      padding-top: 8px;
+    }
+
+    .hot-news-item:hover .hot-news-title {
+      color: #8a6a2d;
+    }
+
+    .hot-news-topline {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .hot-news-meta {
+      font-size: 11px;
+      color: #98a2b3;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .hot-news-time {
+      font-size: 11px;
+      color: #98a2b3;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .hot-news-title {
+      margin-top: 6px;
+      font-size: 14px;
+      line-height: 1.5;
+      font-weight: 700;
+      color: #101828;
+    }
+
+    .hot-news-summary {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #667085;
+    }
+
+    .hot-news-footer {
+      padding: 0 14px 14px;
+    }
+
+    .hot-news-footer-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 10px;
+      border: 1px solid #d9e0ea;
+      background: #f3f5f8;
+      color: #111827;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+
+    .hot-news-footer-cta:active {
+      transform: scale(0.99);
+      background: #eaedf2;
+    }
+
+    .module {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px 12px 8px;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .panel-title-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 16px;
+      color: #101828;
+      font-weight: 800;
+      letter-spacing: -0.15px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      gap: 4px;
+      padding: 2px;
+      border: 1px solid #e4e7ec;
+      border-radius: 10px;
+      background: #f8fafc;
+    }
+
+    button.btn,
+    select.selector,
+    .switch {
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #344054;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      min-height: 28px;
+    }
+
+    button.btn.active {
+      background: var(--gold);
+      color: #fffaf0;
+    }
+
+    select.selector {
+      border: 1px solid #e4e7ec;
+      background: #fff;
+      min-width: 165px;
+      outline: none;
+    }
+
+    .switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid #e4e7ec;
+      background: #fff;
+    }
+
+    .chart {
+      width: 100%;
+      height: 340px;
+      overflow: visible;
+    }
+
+    .chart.tall {
+      height: 380px;
+    }
+
+    .panel-note {
+      margin: 8px 0 0;
+      font-size: 12px;
+      color: #475467;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      border-radius: 0;
+      line-height: 1.55;
+    }
+
+    .warning-box {
+      margin-top: 6px;
+      border: 1px solid rgba(197, 153, 85, 0.26);
+      background: #fffaf2;
+      color: #7a5b2a;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+
+    .profit-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .nbs-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .stat-box {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 10px;
+      background: #ffffff;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #667085;
+    }
+
+    .stat-value {
+      margin-top: 4px;
+      font-size: 24px;
+      color: #101828;
+      font-weight: 800;
+    }
+
+    .nbs-stats .stat-value {
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .nbs-source {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .help-btn {
+      border: 1px solid rgba(197, 153, 85, 0.34);
+      background: rgba(255, 255, 255, 0.98);
+      color: #8a6a2d;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 0;
+      cursor: pointer;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .help-btn.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #fffaf0;
+    }
+
+    .help-popover {
+      position: fixed;
+      z-index: 2500;
+      max-width: min(236px, calc(100vw - 20px));
+      background: rgba(255, 255, 255, 0.98);
+      color: #344054;
+      border: 1px solid rgba(229, 231, 235, 0.98);
+      border-radius: 14px;
+      padding: 8px 10px;
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+      font-size: 12px;
+      line-height: 1.5;
+      pointer-events: auto;
+      backdrop-filter: blur(16px);
+    }
+
+    .help-popover[hidden] {
+      display: none;
+    }
+
+    .help-popover .help-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: #101828;
+    }
+
+    .help-popover .help-desc {
+      color: #475467;
+    }
+
+    .help-popover .help-meta {
+      margin-top: 4px;
+      color: #98a2b3;
+    }
+
+    .help-popover::after {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      background: inherit;
+      top: -4px;
+      left: 18px;
+      transform: rotate(45deg);
+      border-left: 1px solid rgba(229, 231, 235, 0.98);
+      border-top: 1px solid rgba(229, 231, 235, 0.98);
+    }
+
+    .module-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 6px;
+      margin: 2px 0 12px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      position: sticky;
+      top: 10px;
+      z-index: 40;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(229, 231, 235, 0.96);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    .module-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      border: 1px solid #e5e7eb;
+      background: rgba(255, 255, 255, 0.96);
+      color: #475467;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #fff, #fff);
+      border-color: rgba(197, 153, 85, 0.36);
+      color: #8a6a2d;
+      box-shadow: 0 6px 14px rgba(197, 153, 85, 0.12);
+    }
+
+    .tab-btn:active {
+      transform: scale(0.98);
+    }
+
+    .module-tab[hidden] {
+      display: none !important;
+    }
+
+    .module-shell {
+      margin-top: 18px;
+    }
+
+    .module-shell .section-title {
+      margin-bottom: 8px;
+    }
+
+    .module-shell .module {
+      margin-top: 0;
+    }
+
+    .module-tab-panels {
+      display: grid;
+      gap: 18px;
+    }
+
+    .bottom-actions {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2400;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(229, 231, 235, 0.98);
+      box-shadow: 0 -6px 24px rgba(15, 23, 42, 0.08);
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px));
+    }
+
+    .bottom-actions-inner {
+      width: min(440px, calc(100vw - 16px));
+      margin: 0 auto;
+      padding: 8px 0 8px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-btn,
+    .download-btn {
+      flex: 1 1 0;
+      min-height: 44px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
+      user-select: none;
+    }
+
+    .share-btn {
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      color: #344054;
+      display: none;
+    }
+
+    .share-btn svg,
+    .download-btn svg {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+    }
+
+    .download-btn {
+      color: #fffaf0;
+      background: linear-gradient(135deg, #d7b170, var(--gold));
+      box-shadow: 0 10px 24px rgba(197, 153, 85, 0.2);
+      flex-direction: column;
+      gap: 1px;
+      line-height: 1.12;
+    }
+
+    .share-btn:active,
+    .download-btn:active {
+      transform: scale(0.98);
+    }
+
+    .share-btn .action-subtitle,
+    .download-btn .action-subtitle {
+      display: block;
+      font-size: 10px;
+      font-weight: 500;
+      opacity: 0.72;
+      line-height: 1.1;
+      margin-top: 1px;
+    }
+
+    .download-btn .action-subtitle {
+      margin-top: 0;
+    }
+
+    @keyframes cycleNodeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes cyclePulse {
+      0% {
+        transform: translateX(-24%);
+        opacity: 0.25;
+      }
+      50% {
+        transform: translateX(24%);
+        opacity: 0.95;
+      }
+      100% {
+        transform: translateX(-24%);
+        opacity: 0.25;
+      }
+    }
+
+    @keyframes arrowFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(2px);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .nbs-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-risk {
+      margin-top: 10px;
+      margin-bottom: 6px;
+      padding: 0 2px;
+      font-size: 12px;
+      color: #667085;
+      line-height: 1.6;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
+    @media (max-width: 1100px) {
+      .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .profit-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(440px, calc(100vw - 16px));
+        max-width: 440px;
+        padding: 0 0 156px;
+        margin: 12px auto 24px;
+      }
+
+      .hero {
+        border-radius: 16px;
+        padding: 16px;
+      }
+
+      .bottom-actions-inner {
+        width: min(440px, calc(100vw - 16px));
+      }
+
+      .hero-meta {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 19px;
+      }
+
+      .panel-head {
+        align-items: flex-start;
+      }
+
+      .controls {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .btn-group {
+        width: 100%;
+        overflow: visible;
+        white-space: normal;
+        flex-wrap: wrap;
+      }
+
+      button.btn,
+      select.selector,
+      .switch {
+        font-size: 11px;
+        min-height: 30px;
+      }
+
+      button.btn {
+        flex: 1 1 auto;
+      }
+
+      select.selector {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .profit-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        padding: 10px 8px 6px;
+      }
+
+      .chart,
+      .chart.tall {
+        height: 280px;
+      }
+
+      .help-popover {
+        max-width: calc(100vw - 20px);
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-brand">
+        <div class="hero-brand-badge">
+          <img src="./jin10-logo.svg" alt="金十期货" />
+        </div>
+      </div>
+      <h1>生猪产业链数据监测</h1>
+      <p class="subtitle">从能繁母猪到养殖利润，追踪生猪产业链核心指标的历史变化。</p>
+      <div class="hero-meta">
+        <div id="updateTime">更新时间：--</div>
+      </div>
+    </header>
 
-<div class="app-container">
-    <div class="header">
-        <h1>今晚看什么</h1>
-        <p>◎ 金十期货特别专栏 ◎</p>
-    </div>
+    <section class="market-shell" aria-label="行情表现">
+      <h2 class="section-title">行情表现</h2>
+      <div class="market-tabs" id="marketTabs" role="tablist" aria-label="行情表现切换">
+        <button type="button" class="market-tab-btn active" data-tab="futures" role="tab" aria-selected="true">期货</button>
+        <button type="button" class="market-tab-btn" data-tab="stocks" role="tab" aria-selected="false">股价</button>
+      </div>
 
-    <div class="section-title">宏观风暴眼 🚨</div>
-    <div class="timeline-card">
-        <div class="timeline-item">
-            <div class="time-col">20:30</div>
-            <div class="content-col">
-                <div class="event-title">
-                    美国3月核心PCE物价指数
-                    <button class="alert-btn">🔔 提醒</button>
-                </div>
-                <div class="event-sub">预期维持高位，留意降息预期降温风险</div>
+      <section class="market-tab-panel" data-tab="futures" role="tabpanel">
+        <div class="showcase" aria-label="生猪期货近期表现">
+          <div class="showcase-head">
+            <h3 class="section-title" style="margin: 0;">生猪期货近期表现</h3>
+          </div>
+          <div class="showcase-video">
+            <video
+              id="showcaseVideo"
+              muted
+              autoplay
+              loop
+              playsinline
+              preload="auto"
+              webkit-playsinline="true"
+              x5-video-player-type="h5"
+              x5-playsinline="true"
+              x5-video-orientation="portraint"
+              poster="https://cdn.jin10.com/assets/img/commons/jin10.png"
+            >
+              <source src="https://media.jin10.com/video/6c84c566821743b19a438d5992878b1b/lgvideoclipv120260417.mp4" type="video/mp4" />
+              您的浏览器不支持视频标签。
+            </video>
+          </div>
+          <div class="showcase-footer" style="margin-top: 10px;">
+            <button
+              type="button"
+              class="showcase-cta"
+              onclick="window.open('https://qihuo.jin10.com/vip/watch/index.html?group_id=qh_lh_monitor&from=qihuoWeb#/desktop', '_blank', 'noreferrer')"
+            >
+              点击生猪盯盘神器
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="market-tab-panel" data-tab="stocks" role="tabpanel" hidden>
+        <section class="stock-panel" aria-label="猪企股价4月以来表现">
+          <div class="stock-panel-inner" id="pigStockPanel"></div>
+        </section>
+      </section>
+    </section>
+
+    <section class="hot-news-panel" aria-label="热点资讯">
+      <div class="hot-news-head">
+        <div>
+          <h2 class="section-title" style="margin: 0;">生猪热点资讯</h2>
+        </div>
+        <button type="button" class="hot-news-toggle" id="hotNewsToggle">机构观点</button>
+      </div>
+      <div id="hotNewsList" class="hot-news-list" aria-live="polite"></div>
+      <div class="hot-news-footer">
+        <a class="hot-news-footer-cta" href="https://qihuo.jin10.com/tag.html?tag=%E7%94%9F%E7%8C%AA" target="_blank" rel="noreferrer">查看更多生猪资讯</a>
+      </div>
+    </section>
+
+    <h2 class="section-title">核心指标</h2>
+    <section class="card-grid" id="metricCards"></section>
+    <section class="insight-panel" id="objectiveInsight"></section>
+
+    <section class="module-shell">
+      <h2 class="section-title">产业模块</h2>
+      <div class="module-tabs" id="moduleTabs" role="tablist" aria-label="生猪产业链模块切换">
+        <button type="button" class="tab-btn active" data-tab="capacity" role="tab" aria-selected="true">产能</button>
+        <button type="button" class="tab-btn" data-tab="price" role="tab" aria-selected="false">价格链条</button>
+        <button type="button" class="tab-btn" data-tab="slaughter" role="tab" aria-selected="false">屠宰与流通</button>
+        <button type="button" class="tab-btn" data-tab="profit" role="tab" aria-selected="false">养殖利润</button>
+        <button type="button" class="tab-btn" data-tab="consumption" role="tab" aria-selected="false">消费与进出口</button>
+      </div>
+
+      <div class="module-tab-panels">
+        <section class="module-tab" data-tab="capacity" role="tabpanel">
+          <div class="module">
+            <div class="panel">
+              <div class="panel-head">
+                <h3 class="panel-title">A1. 能繁母猪存栏 vs 政策区间图</h3>
+              </div>
+              <div id="chartA1" class="chart"></div>
+              <p class="panel-note">指标说明：能繁母猪存栏是农业农村部生猪产能调控的核心观察指标，可用于跟踪产能是否处于正常波动区间。</p>
             </div>
-        </div>
-        <div class="timeline-item">
-            <div class="time-col">22:30</div>
-            <div class="content-col">
-                <div class="event-title">
-                    EIA原油库存数据
-                    <button class="alert-btn">🔔 提醒</button>
+
+            <div class="panel">
+              <div class="panel-head">
+                <h3 class="panel-title">A2. 生猪存栏 / 生猪出栏 / 猪肉产量</h3>
+                <div class="controls">
+                  <div class="btn-group" id="a2MetricBtns"></div>
+                  <select id="a2RangeSelect" class="selector"></select>
                 </div>
-                <div class="event-sub">API库存超预期去化，关注EIA能否印证</div>
+              </div>
+              <div id="chartA2" class="chart"></div>
+              <p class="panel-note">说明：用于观察供给基数与供给兑现情况。数据来自国家统计局，更新于2026年4月17日。</p>
             </div>
+
+          </div>
+        </section>
+
+        <section class="module-tab" data-tab="price" role="tabpanel" hidden>
+          <div class="module">
+            <div class="panel">
+              <div class="panel-head">
+                <h3 class="panel-title">B1. 二元母猪价格 / 仔猪价格 / 生猪出场价格</h3>
+                <div class="controls"><div class="btn-group" id="b1RangeBtns"></div></div>
+              </div>
+              <div id="chartB1" class="chart"></div>
+              <p class="panel-note">数据来源：农业农村部</p>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <h3 class="panel-title">B2. 生猪出场价 / 白条猪价格 / 猪肉零售价传导图</h3>
+                <div class="controls"><div class="btn-group" id="b2RangeBtns"></div></div>
+              </div>
+              <div id="chartB2" class="chart tall"></div>
+              <p class="panel-note">解释：展示不同环节价格变化节奏及传导关系。数据来源：农业农村部</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-tab" data-tab="slaughter" role="tabpanel" hidden>
+          <div class="module">
+            <div class="panel">
+              <div class="panel-head">
+                <h3 class="panel-title">C1. 月度屠宰量柱状图</h3>
+              </div>
+              <div id="chartC1" class="chart"></div>
+              <p class="panel-note">数据来源：农业农村部</p>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <h3 class="panel-title">C2. 年度累计屠宰量对比</h3>
+                <div class="controls">
+                  <select id="c2YearSelect" class="selector"></select>
+                </div>
+              </div>
+              <div id="chartC2" class="chart"></div>
+              <p class="panel-note">数据来源：农业农村部</p>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <h3 class="panel-title">C3. 数据口径提示</h3>
+              </div>
+              <div class="warning-box">自2025年7月起，因统计口径变化，屠宰量指标由“规模以上生猪定点屠宰企业屠宰量”调整为“生猪定点屠宰企业屠宰量”，同比和环比按照可比口径计算。</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-tab" data-tab="profit" role="tabpanel" hidden>
+          <div class="module">
+            <div class="panel">
+              <div class="panel-head">
+                <h3 class="panel-title">D1. 生猪养殖利润周度对比图（外购仔猪 / 自繁自养）</h3>
+                <div class="controls"><div class="btn-group" id="d1RangeBtns"></div></div>
+              </div>
+              <div id="chartD1" class="chart"></div>
+              <p class="panel-note">自繁自养与外购仔猪两条利润线分别反映不同养殖模式在销售价格、仔猪成本和饲料成本变化下的经营表现。两者都受生猪价格、补栏节奏、饲料成本和季节性波动影响，不直接对应市场价格判断。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-tab" data-tab="consumption" role="tabpanel" hidden>
+          <div class="module">
+            <div class="panel">
+              <div class="panel-head">
+                <h3 class="panel-title">E1. 居民家庭人均猪肉消费量</h3>
+              </div>
+              <div id="chartE1" class="chart"></div>
+              <p class="panel-note">数据来源：农业农村部</p>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <h3 class="panel-title">E2. 猪肉及猪杂碎进出口</h3>
+                <div class="controls">
+                  <select id="e2MetricSelect" class="selector"></select>
+                  <div class="btn-group" id="e2RangeBtns"></div>
+                </div>
+              </div>
+              <div id="chartE2" class="chart"></div>
+              <p class="panel-note">数据来源：农业农村部</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <div class="footer-risk">免责声明：本页面内容基于国家统计局、农业农村部等公开信息整理，页面布局由AI辅助生成，仅用于资讯展示与行业信息参考，不构成对任何市场、品种、合约或价格走势的判断，也不构成任何投资建议、交易依据或收益承诺。相关数据可能因统计口径、发布时间、样本范围或后续修订而发生变化，用户据此使用所产生的风险需自行承担。</div>
+  </div>
+
+  <div class="bottom-actions">
+    <div class="bottom-actions-inner">
+      <button type="button" class="share-btn" onclick="handleSharePage()">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M14 5l5 0 0 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M19 5l-8.5 8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M7 7h-1.5A2.5 2.5 0 0 0 3 9.5v9A2.5 2.5 0 0 0 5.5 21h9A2.5 2.5 0 0 0 17 18.5V17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>分享专题</span>
+      </button>
+
+      <a id="download-btn" class="download-btn" href="https://qihuo.jin10.com/app/index.html" target="_blank" rel="noreferrer">
+        <span>下载金十期货APP</span>
+        <span class="action-subtitle">捕捉生猪最新动态</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="./echarts.min.js"></script>
+  <script src="./hog-chain-topic-data.js"></script>
+  <script>
+    const DATA = window.HOG_CHAIN_TOPIC_DATA || { meta: {}, series: {}, profit_weekly: [], profit_external_weekly: [] };
+
+    const NBS_QUARTERLY_SOURCE = "国家统计局 2026/04/17 10:00";
+
+    const NBS_QUARTERLY_SERIES = {
+      hog_slaughter: [
+        { date: "2024-03-01", value: 19455 },
+        { date: "2024-06-01", value: 16940 },
+        { date: "2024-09-01", value: 15635 },
+        { date: "2024-12-01", value: 18226 },
+        { date: "2025-03-01", value: 19476 },
+        { date: "2025-06-01", value: 17143 },
+        { date: "2025-09-01", value: 16373 },
+        { date: "2025-12-01", value: 18981 },
+        { date: "2026-03-01", value: 20026 }
+      ],
+      pork_output: [
+        { date: "2024-03-01", value: 1583 },
+        { date: "2024-06-01", value: 1398 },
+        { date: "2024-09-01", value: 1259 },
+        { date: "2024-12-01", value: 1466 },
+        { date: "2025-03-01", value: 1602 },
+        { date: "2025-06-01", value: 1418 },
+        { date: "2025-09-01", value: 1368 },
+        { date: "2025-12-01", value: 1570 },
+        { date: "2026-03-01", value: 1669 }
+      ]
+    };
+
+    function quarterLabelFromDate(dateStr) {
+      if (!dateStr) return "";
+      const year = dateStr.slice(0, 4);
+      const month = Number(dateStr.slice(5, 7));
+      const quarter = Math.ceil(month / 3);
+      return `${year}年Q${quarter}`;
+    }
+
+    function buildNBSQuarterlySeries(key) {
+      const source = NBS_QUARTERLY_SERIES[key] || [];
+      return source.map((item, index) => {
+        const prev = index > 0 ? source[index - 1] : null;
+        const prevYear = index >= 4 ? source[index - 4] : null;
+        const mom = prev ? (item.value - prev.value) / (Math.abs(prev.value) || 1) : null;
+        const yoy = prevYear ? (item.value - prevYear.value) / (Math.abs(prevYear.value) || 1) : null;
+        return {
+          key,
+          date: item.date,
+          value: item.value,
+          mom,
+          yoy,
+          ratio_to_normal: null,
+          indicator: `${quarterLabelFromDate(item.date)}${key === "hog_slaughter" ? "生猪出栏（万头）" : "猪肉产量（万吨）"}`,
+          value_text: String(item.value),
+          source_page: "国家统计局季度表",
+          source_month: item.date.slice(0, 7),
+          source_xlsx: "",
+          source: "国家统计局",
+          source_label: NBS_QUARTERLY_SOURCE,
+          period_label: `${quarterLabelFromDate(item.date)}${key === "hog_slaughter" ? "（生猪出栏）" : "（猪肉产量）"}`
+        };
+      });
+    }
+
+    const NBS_QUARTERLY_SUMMARY = {
+      source: NBS_QUARTERLY_SOURCE,
+      periodLabel: "2026年3月（一季度）",
+      periodDate: "2026-03-01",
+      items: [
+        {
+          key: "hog_slaughter",
+          label: "一季度生猪出栏",
+          value: 20026,
+          unit: "万头",
+          yoy: 0.028,
+          detail: "同比增加550万头，增长2.8%"
+        },
+        {
+          key: "pork_output",
+          label: "一季度猪肉产量",
+          value: 1669,
+          unit: "万吨",
+          yoy: 0.042,
+          detail: "同比增加67万吨，增长4.2%"
+        },
+        {
+          key: "hog_inventory",
+          label: "一季度末生猪存栏",
+          value: 42358,
+          unit: "万头",
+          yoy: 0.015,
+          detail: "同比增加627万头，增长1.5%"
+        },
+        {
+          key: "sow_inventory",
+          label: "一季度末能繁母猪存栏",
+          value: 3904,
+          unit: "万头",
+          yoy: -0.033,
+          detail: "同比减少135万头，下降3.3%；正常保有量的100.1%"
+        }
+      ]
+    };
+
+    const HOT_NEWS_ITEMS = [
+      {
+        date: "2026-04-17 16:51:41",
+        title: "【今日盘面线索·4月17日复盘】",
+        summary: "今日值得回溯的四个行情：①碳酸锂：矿端多维收缩预期与终端双轨需求上移的定价博弈；②生猪：短期情绪修复与长周期产能压制的期限博弈；③集运欧线：地缘余波与旺季提涨预期的期现结构重塑；④铂钯：地缘缓和预期与贸易关税约束的反复定价。",
+        url: "https://qihuo.jin10.com/flashDetail.html?id=20260417165141933800"
+      },
+      {
+        date: "2026-04-17 16:35:08",
+        title: "【大商所禽畜仓单日报】",
+        summary: "金十期货4月17日讯，4月17日，大商所禽畜仓单及变化数据：1.生猪期货仓单1210手，环比上个交易日减少40手。",
+        url: "https://qihuo.jin10.com/flashDetail.html?id=20260417163508449800"
+      },
+      {
+        date: "2026-04-17 15:00:31",
+        title: "午盘收盘，国内期货主力合约涨多跌少。集运欧线涨超6%，碳酸锂、不锈钢（SS）、生猪涨超2%，尿素、鸡蛋、玻璃涨近2%；跌幅方面，铂跌超2%，钯、丁二烯橡胶、20号胶、橡胶、沪银跌超1%。",
+        summary: "",
+        url: "https://qihuo.jin10.com/flashDetail.html?id=20260417150031882800"
+      },
+      {
+        date: "2026-04-17 14:43:27",
+        title: "【生猪：价格连续三日低位反弹】",
+        summary: "金十期货4月17日讯，据卓创资讯监测数据显示，截至4月16日，全国生猪交易均价8.87元/公斤，环比上涨0.20元/公斤，这是今年跌价以来猪价首次连续两日反弹。今日（4月17日）全国各地生猪价格仍保持上涨势头，华北、华东、华中养殖企业牌价普遍上涨0.3-0.4元/公斤，华南、西南养殖企业牌价上涨0.2-0.3元/公斤。养殖企业出栏减少，屠宰企业低价采购不畅，被动跟涨，散户惜售情绪渐起。市场情绪支撑，周末猪价或延续小涨。（卓创资讯）",
+        url: "https://qihuo.jin10.com/flashDetail.html?id=20260417144327462800"
+      },
+      {
+        date: "2026-04-17 14:35:35",
+        title: "生猪主力合约日内涨幅达2.00%，现报11255.00元/吨。",
+        summary: "",
+        url: "https://qihuo.jin10.com/flashDetail.html?id=20260417143535414800"
+      },
+      {
+        date: "2026-04-17 14:28:56",
+        title: "【4月17日：“农产品批发价格200指数”比昨天下降0.21个点】",
+        summary: "金十期货4月17日讯，据农业农村部监测，4月17日“农产品批发价格200指数”为116.79，比昨天下降0.21个点，“菜篮子”产品批发价格指数为117.50，比昨天下降0.25个点。截至今日14:00时，全国农产品批发市场猪肉平均价格为14.40元/公斤，比昨天下降0.1%；牛肉66.67元/公斤，比昨天上升0.3%；羊肉64.59元/公斤，比昨天上升0.1%；鸡蛋8.30元/公斤，比昨天上升2.1%；白条鸡17.26元/公斤，比昨天上升0.3%。",
+        url: "https://qihuo.jin10.com/flashDetail.html?id=20260417142856621800"
+      }
+    ];
+
+    const HOT_RESEARCH_ITEMS = [
+      {
+        source: "华鑫期货",
+        date: "2026-04-17 16:26",
+        title: "生猪专题报告0417：猪价深跌近十年谷底，期价探底反弹博弈去产能预期",
+        summary: "点击查看原文研报，关注猪价深跌后的去产能预期与期价反弹博弈。",
+        url: "https://mp.weixin.qq.com/s/zObaZeGEMhyX9MDPukTvnw"
+      },
+      {
+        source: "东航期货",
+        date: "2026-04-17 14:13",
+        title: "生猪：现货低位博弈加剧，反弹一触即发",
+        summary: "点击查看原文研报，跟踪现货低位博弈与反弹触发条件。",
+        url: "https://mp.weixin.qq.com/s/0Bxb2XYw2B125XssN6iXfQ"
+      },
+      {
+        source: "新湖期货",
+        date: "2026-04-17 09:18",
+        title: "专题 | 新湖农产（生猪）专题：生猪的春天到了吗？",
+        summary: "点击查看原文研报，观察产能、价格与周期修复的拐点线索。",
+        url: "https://mp.weixin.qq.com/s/2-cvxLKqddpqd4_GL1Dzkw"
+      },
+      {
+        source: "期货日报",
+        date: "2026-04-17 07:25",
+        title: "猪价，连日反弹！“猪周期”拐点来了？",
+        summary: "点击查看原文研报，关注猪价连续反弹与周期拐点讨论。",
+        url: "https://mp.weixin.qq.com/s/m2VXwVQTgf2BrgL49EWyuA"
+      }
+    ];
+
+    const PIG_STOCK_PERFORMANCE = [
+      { rank: 1, name: "天邦食品", open: 2.36, close: 3.08, gain: 30.51 },
+      { rank: 2, name: "华统股份", open: 11.10, close: 13.56, gain: 22.16 },
+      { rank: 3, name: "巨星农牧", open: 15.48, close: 18.59, gain: 20.09 },
+      { rank: 4, name: "牧原股份", open: 42.20, close: 45.53, gain: 7.89 },
+      { rank: 5, name: "神农集团", open: 27.25, close: 30.06, gain: 10.31 },
+      { rank: 6, name: "新希望", open: 8.23, close: 8.80, gain: 6.93 },
+      { rank: 7, name: "唐人神", open: 4.05, close: 4.23, gain: 4.44 },
+      { rank: 8, name: "温氏股份", open: 16.43, close: 16.83, gain: 2.43 },
+      { rank: 9, name: "东瑞股份", open: 13.23, close: 13.22, gain: -0.08 }
+    ];
+
+    const CHARTS = [];
+    const NORMAL_BREEDING_SOW = 3900;
+
+    const seriesMeta = {
+      sow_inventory: { name: "能繁母猪存栏", unit: "万头", digits: 0 },
+      hog_inventory: { name: "生猪存栏", unit: "万头", digits: 0 },
+      hog_slaughter: { name: "生猪出栏", unit: "万头", digits: 0 },
+      pork_output: { name: "猪肉产量", unit: "万吨", digits: 0 },
+      sow_sale_price: { name: "二元母猪销售价格", unit: "元/公斤", digits: 2 },
+      piglet_price: { name: "仔猪价格", unit: "元/公斤", digits: 2 },
+      hog_exit_price: { name: "生猪出场价格", unit: "元/公斤", digits: 2 },
+      wholesale_carcass_price: { name: "批发市场白条猪价格", unit: "元/公斤", digits: 2 },
+      city_wholesale_carcass_price: { name: "36城批发白条猪价格", unit: "元/公斤", digits: 2 },
+      lean_meat_retail_price: { name: "36城精瘦肉零售价", unit: "元/公斤", digits: 2 },
+      hind_leg_retail_price: { name: "36城后腿肉零售价", unit: "元/公斤", digits: 2 },
+      county_market_retail_price: { name: "县乡集贸猪肉零售价", unit: "元/公斤", digits: 2 },
+      slaughter_volume_monthly: { name: "生猪定点屠宰量", unit: "万头", digits: 0 },
+      slaughter_volume_cum: { name: "累计生猪定点屠宰量", unit: "万头", digits: 0 },
+      per_capita_pork_consumption: { name: "居民家庭人均猪肉消费量", unit: "公斤/年·人", digits: 1 },
+      import_pork_monthly: { name: "月度进口猪肉", unit: "万吨", digits: 2 },
+      import_offal_monthly: { name: "月度进口猪杂碎", unit: "万吨", digits: 2 },
+      export_pork_monthly: { name: "月度出口猪肉", unit: "万吨", digits: 2 },
+      export_offal_monthly: { name: "月度出口猪杂碎", unit: "万吨", digits: 2 },
+      import_pork_cum: { name: "累计进口猪肉", unit: "万吨", digits: 2 },
+      import_offal_cum: { name: "累计进口猪杂碎", unit: "万吨", digits: 2 },
+      export_pork_cum: { name: "累计出口猪肉", unit: "万吨", digits: 2 },
+      export_offal_cum: { name: "累计出口猪杂碎", unit: "万吨", digits: 2 }
+    };
+
+    const palette = ["#2d6ca2", "#4ea3d8", "#18a87b", "#c58a2f", "#c95d45", "#7a6ac5"];
+
+    const state = {
+      marketTab: "futures",
+      hotPanelMode: "news",
+      a2Metric: "hog_inventory",
+      a2Range: "3y",
+      b1Range: "3y",
+      b2Range: "3y",
+      d1Range: "1y",
+      e2Metric: "import_pork_monthly",
+      e2Range: "3y",
+      c2Year: null,
+      moduleTab: "capacity"
+    };
+    let APP_CHARTS = null;
+    let resizeRerenderTimer = null;
+
+    const rangeOptions = [
+      { key: "1y", label: "近1年" },
+      { key: "3y", label: "近3年" },
+      { key: "5y", label: "近5年" },
+      { key: "all", label: "全历史" }
+    ];
+
+    const profitRangeOptions = [
+      { key: "6m", label: "近半年" },
+      { key: "1y", label: "近1年" },
+      { key: "all", label: "全部" }
+    ];
+
+    function toDate(dateStr) {
+      return new Date(dateStr + "T00:00:00");
+    }
+
+    function formatDate(dateStr, granular = "month") {
+      if (!dateStr) return "--";
+      const d = toDate(dateStr);
+      if (Number.isNaN(d.getTime())) return dateStr;
+      const y = d.getFullYear();
+      const m = d.getMonth() + 1;
+      const day = d.getDate();
+      if (granular === "week") return `${y}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      return `${y}年${m}月`;
+    }
+
+    function compactDate(dateStr) {
+      if (!dateStr) return "--";
+      const d = toDate(dateStr);
+      if (Number.isNaN(d.getTime())) return dateStr;
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    }
+
+    function formatNumber(value, digits = 2) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+      const num = Number(value);
+      return num.toLocaleString("zh-CN", {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      });
+    }
+
+    function formatPct(value, digits = 1) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+      return `${(Number(value) * 100).toFixed(digits)}%`;
+    }
+
+    function formatChangeHTML(value, digits = 1) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return `<span class="change-flat">--</span>`;
+      const num = Number(value);
+      const pct = `${Math.abs(num * 100).toFixed(digits)}%`;
+      if (num > 0) return `<span class="change-up">↑ ${pct}</span>`;
+      if (num < 0) return `<span class="change-down">↓ ${pct}</span>`;
+      return `<span class="change-flat">0.0%</span>`;
+    }
+
+    function getSeries(key) {
+      return (DATA.series && DATA.series[key]) ? DATA.series[key].slice() : [];
+    }
+
+    function buildHelpBody(lines) {
+      return lines
+        .filter(Boolean)
+        .map((line, index) => (index === 0 ? `<div class="help-desc">${line}</div>` : `<div class="help-meta">${line}</div>`))
+        .join("");
+    }
+
+    function setHelpText(key, title, lines) {
+      HELP_TEXTS[key] = {
+        title,
+        body: buildHelpBody(lines)
+      };
+    }
+
+    const PROFIT_SERIES_META = {
+      external: { key: "external", label: "外购仔猪养殖利润" },
+      self: { key: "self", label: "自繁自养生猪养殖利润" }
+    };
+
+    function getProfitSeries(mode) {
+      if (mode === PROFIT_SERIES_META.external.key) {
+        return (DATA.profit_external_weekly || []).slice();
+      }
+      return (DATA.profit_weekly || []).slice();
+    }
+
+    function getProfitLatestPoint(mode) {
+      const list = getProfitSeries(mode);
+      return list.length ? list[list.length - 1] : null;
+    }
+
+    function getProfitComparisonSeries() {
+      const external = getProfitSeries(PROFIT_SERIES_META.external.key);
+      const self = getProfitSeries(PROFIT_SERIES_META.self.key);
+      const dates = Array.from(new Set([
+        ...external.map((item) => item.date),
+        ...self.map((item) => item.date)
+      ])).sort((a, b) => a.localeCompare(b));
+      const externalMap = new Map(external.map((item) => [item.date, item]));
+      const selfMap = new Map(self.map((item) => [item.date, item]));
+
+      return dates.map((date) => ({
+        date,
+        external: externalMap.get(date) || null,
+        self: selfMap.get(date) || null
+      }));
+    }
+
+    const HELP_TEXTS = {
+      nbs_sow_inventory: {
+        title: "能繁母猪存栏",
+        body: "这是生猪产能调控的核心观察指标，偏高通常意味着后续供给压力更大，偏低则意味着中长期产能收缩。"
+      },
+      nbs_hog_inventory: {
+        title: "生猪存栏",
+        body: "它反映阶段性在栏规模，属于供给基数的直接观察项，常用于判断后续出栏压力。"
+      },
+      nbs_hog_slaughter: {
+        title: "生猪出栏",
+        body: "它衡量生猪从养殖端转化为供给的兑现规模，当前按国家统计局季度表展示 2024Q1-2026Q1 的累计数据。"
+      },
+      nbs_pork_output: {
+        title: "猪肉产量",
+        body: "它反映生猪出栏最终转化到猪肉供给的规模，当前按国家统计局季度表展示 2024Q1-2026Q1 的累计数据。"
+      },
+      hog_exit_price: {
+        title: "生猪出场价",
+        body: "这是养殖端出栏环节的价格水平，最直接影响养殖利润，也是价格链条的上游信号。"
+      },
+      profit: {
+        title: "养殖利润",
+        body: "这里并列展示外购仔猪和自繁自养两种模式的周度利润，便于观察行业亏损或修复节奏。"
+      },
+      panel_a1: {
+        title: "A1. 能繁母猪存栏 vs 政策区间图",
+        body: "用于对照能繁母猪存栏与政策区间，判断当前产能是否处于正常波动带。"
+      },
+      panel_a2: {
+        title: "A2. 生猪存栏 / 生猪出栏 / 猪肉产量",
+        body: "可在存栏、出栏和产量三种口径间切换，出栏与产量当前使用国家统计局季度表 2024Q1-2026Q1 数据，分别观察供给基数、兑现节奏和产出规模。"
+      },
+      panel_b1: {
+        title: "B1. 二元母猪价格 / 仔猪价格 / 生猪出场价格",
+        body: "用于看补栏端、仔猪端和出栏端价格联动，观察价格链条的节奏变化。"
+      },
+      panel_b2: {
+        title: "B2. 生猪出场价 / 白条猪价格 / 猪肉零售价传导图",
+        body: "用于看从出场到批发再到零售的价格传导，观察终端消费对链条的影响。"
+      },
+      panel_c1: {
+        title: "C1. 月度屠宰量柱状图",
+        body: "用于观察屠宰加工活跃度与流通节奏，辅助判断供应出清与消费承接。"
+      },
+      panel_c2: {
+        title: "C2. 年度累计屠宰量对比",
+        body: "用于比较年度累计进度和同期水平，判断全年加工和流通的节奏。"
+      },
+      panel_d1: {
+        title: "D1. 生猪养殖利润周度对比图（外购仔猪 / 自繁自养）",
+        body: "双线比较两种养殖模式的周度利润，便于观察亏损扩张或修复。"
+      },
+      panel_e1: {
+        title: "E1. 居民家庭人均猪肉消费量",
+        body: "用于观察居民端猪肉消费规模和变化节奏，反映需求侧的长期变化。"
+      },
+      panel_e2: {
+        title: "E2. 猪肉及猪杂碎进出口",
+        body: "用于观察进口和出口对国内供需的补充情况，以及贸易节奏变化。"
+      }
+    };
+
+    const PANEL_HELP_MAP = {
+      "A1. 能繁母猪存栏 vs 政策区间图": "panel_a1",
+      "A2. 生猪存栏 / 生猪出栏 / 猪肉产量": "panel_a2",
+      "B1. 二元母猪价格 / 仔猪价格 / 生猪出场价格": "panel_b1",
+      "B2. 生猪出场价 / 白条猪价格 / 猪肉零售价传导图": "panel_b2",
+      "C1. 月度屠宰量柱状图": "panel_c1",
+      "C2. 年度累计屠宰量对比": "panel_c2",
+      "D1. 生猪养殖利润周度对比图（外购仔猪 / 自繁自养）": "panel_d1",
+      "E1. 居民家庭人均猪肉消费量": "panel_e1",
+      "E2. 猪肉及猪杂碎进出口": "panel_e2"
+    };
+
+    let helpPopover = null;
+    let activeHelpButton = null;
+
+    function ensureHelpPopover() {
+      if (helpPopover) return helpPopover;
+      helpPopover = document.createElement("div");
+      helpPopover.className = "help-popover";
+      helpPopover.hidden = true;
+      document.body.appendChild(helpPopover);
+      return helpPopover;
+    }
+
+    function hideHelpPopover() {
+      if (!helpPopover) return;
+      helpPopover.hidden = true;
+      if (activeHelpButton) activeHelpButton.classList.remove("active");
+      activeHelpButton = null;
+    }
+
+    function positionHelpPopover(button) {
+      const pop = ensureHelpPopover();
+      const rect = button.getBoundingClientRect();
+      const width = Math.min(252, window.innerWidth - 20);
+      pop.style.width = `${width}px`;
+      const popRect = pop.getBoundingClientRect();
+      const left = Math.max(10, Math.min(window.innerWidth - popRect.width - 10, rect.left + rect.width / 2 - popRect.width / 2));
+      let top = rect.bottom + 10;
+      if (top + popRect.height + 12 > window.innerHeight) {
+        top = Math.max(12, rect.top - popRect.height - 10);
+      }
+      pop.style.left = `${left}px`;
+      pop.style.top = `${top}px`;
+    }
+
+    function showHelpPopover(button) {
+      const key = button.dataset.helpId;
+      const item = HELP_TEXTS[key];
+      if (!item) return;
+      const pop = ensureHelpPopover();
+      pop.innerHTML = `<div class="help-title">${item.title}</div>${item.body}`;
+      pop.hidden = false;
+      if (activeHelpButton && activeHelpButton !== button) {
+        activeHelpButton.classList.remove("active");
+      }
+      activeHelpButton = button;
+      button.classList.add("active");
+      positionHelpPopover(button);
+    }
+
+    function toggleHelpPopover(button) {
+      if (activeHelpButton === button && helpPopover && !helpPopover.hidden) {
+        hideHelpPopover();
+        return;
+      }
+      showHelpPopover(button);
+    }
+
+    function decoratePanelHelpButtons() {
+      document.querySelectorAll(".panel-title").forEach((el) => {
+        const key = PANEL_HELP_MAP[el.textContent.trim()];
+        if (!key || el.querySelector(".help-btn")) return;
+        const label = el.textContent.trim();
+        el.textContent = "";
+        el.classList.add("panel-title-row");
+        el.insertAdjacentHTML("beforeend", `${label}<button type="button" class="help-btn" data-help-id="${key}" aria-label="${label} 说明">?</button>`);
+      });
+    }
+
+    function bindHelpInteractions() {
+      document.addEventListener("click", (event) => {
+        const btn = event.target.closest(".help-btn");
+        if (btn) {
+          event.preventDefault();
+          event.stopPropagation();
+          toggleHelpPopover(btn);
+          return;
+        }
+        if (helpPopover && !helpPopover.hidden && !helpPopover.contains(event.target)) {
+          hideHelpPopover();
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        if (activeHelpButton) {
+          positionHelpPopover(activeHelpButton);
+        }
+      });
+
+      window.addEventListener("scroll", hideHelpPopover, true);
+    }
+
+    const MODULE_TAB_CONFIG = {
+      capacity: {
+        buttons: ["a2MetricBtns", "a2RangeSelect"],
+        charts: [
+          { key: "a1", elId: "chartA1", render: renderA1 },
+          { key: "a2", elId: "chartA2", render: renderA2 }
+        ],
+        render(charts) {
+          renderA1(charts.a1);
+          renderA2(charts.a2);
+        }
+      },
+      price: {
+        buttons: ["b1RangeBtns", "b2RangeBtns"],
+        charts: [
+          { key: "b1", elId: "chartB1", render: (chart) => renderMultiLine(chart, ["sow_sale_price", "piglet_price", "hog_exit_price"], state.b1Range) },
+          {
+            key: "b2",
+            elId: "chartB2",
+            render: (chart) => renderMultiLine(
+              chart,
+              [
+                "hog_exit_price",
+                "wholesale_carcass_price",
+                "city_wholesale_carcass_price",
+                "lean_meat_retail_price",
+                "hind_leg_retail_price",
+                "county_market_retail_price"
+              ],
+              state.b2Range
+            )
+          }
+        ],
+        render(charts) {
+          renderMultiLine(charts.b1, ["sow_sale_price", "piglet_price", "hog_exit_price"], state.b1Range);
+          renderMultiLine(
+            charts.b2,
+            [
+              "hog_exit_price",
+              "wholesale_carcass_price",
+              "city_wholesale_carcass_price",
+              "lean_meat_retail_price",
+              "hind_leg_retail_price",
+              "county_market_retail_price"
+            ],
+            state.b2Range
+          );
+        }
+      },
+      slaughter: {
+        buttons: ["c2YearSelect"],
+        charts: [
+          { key: "c1", elId: "chartC1", render: renderC1 },
+          { key: "c2", elId: "chartC2", render: renderC2 }
+        ],
+        render(charts) {
+          renderC1(charts.c1);
+          renderC2(charts.c2);
+        }
+      },
+      profit: {
+        buttons: ["d1RangeBtns"],
+        charts: [
+          { key: "d1", elId: "chartD1", render: renderD1 }
+        ],
+        render(charts) {
+          renderD1(charts.d1);
+        }
+      },
+      consumption: {
+        buttons: ["e2MetricSelect", "e2RangeBtns"],
+        charts: [
+          { key: "e1", elId: "chartE1", render: renderE1 },
+          { key: "e2", elId: "chartE2", render: renderE2 }
+        ],
+        render(charts) {
+          renderE1(charts.e1);
+          renderE2(charts.e2);
+        }
+      }
+    };
+
+    function ensureChartsForTab(tabKey, charts) {
+      const config = MODULE_TAB_CONFIG[tabKey];
+      if (!config) return;
+      config.charts.forEach((item) => {
+        if (!charts[item.key]) {
+          charts[item.key] = initChart(item.elId);
+        }
+      });
+    }
+
+    function renderTabByKey(tabKey, charts) {
+      const config = MODULE_TAB_CONFIG[tabKey];
+      if (!config) return;
+      config.render(charts);
+    }
+
+    function syncTabUI(tabKey) {
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        const active = btn.dataset.tab === tabKey;
+        btn.classList.toggle("active", active);
+        btn.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      document.querySelectorAll(".module-tab").forEach((panel) => {
+        const active = panel.dataset.tab === tabKey;
+        panel.hidden = !active;
+      });
+    }
+
+    function activateModuleTab(tabKey, charts, options = {}) {
+      state.moduleTab = tabKey;
+      syncTabUI(tabKey);
+      ensureChartsForTab(tabKey, charts);
+      renderTabByKey(tabKey, charts);
+      if (options.silent) return;
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event("resize"));
+        rerenderAllCharts(charts);
+      });
+    }
+
+    function initModuleTabs(charts) {
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (state.moduleTab === btn.dataset.tab) return;
+          activateModuleTab(btn.dataset.tab, charts);
+        });
+      });
+      activateModuleTab(state.moduleTab, charts, { silent: true });
+    }
+
+    function handleSharePage() {
+      if (typeof window.Jin10JSBridge !== "undefined") {
+        try {
+          const bridge = new window.Jin10JSBridge();
+          if (bridge.isApp) {
+            bridge.dispatch("appShare", { url: location.href });
+          }
+        } catch (e) {
+          // Silent fallback.
+        }
+      }
+    }
+
+    function initAppEnvironment() {
+      const downloadBtn = document.getElementById("download-btn");
+      const shareBtn = document.querySelector(".share-btn");
+
+      if (typeof window.Jin10JSBridge !== "undefined") {
+        try {
+          const bridge = new window.Jin10JSBridge();
+          if (bridge.isApp) {
+            if (shareBtn) shareBtn.style.display = "inline-flex";
+            if (downloadBtn) downloadBtn.style.display = "none";
+            return;
+          }
+        } catch (e) {
+          // Fallback to browser mode.
+        }
+      }
+
+      if (downloadBtn) {
+        downloadBtn.style.display = "";
+      }
+      if (shareBtn) {
+        shareBtn.style.display = "none";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", initAppEnvironment);
+    if (document.readyState !== "loading") {
+      initAppEnvironment();
+    }
+
+    function isWeixin() {
+      return /micromessenger/i.test(navigator.userAgent || "");
+    }
+
+    function playVideo(video, index = 0) {
+      if (!video) return;
+      video.muted = true;
+      if (!video.poster) {
+        video.poster = "https://cdn.jin10.com/assets/img/commons/jin10.png";
+      }
+
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          const retryPlay = () => {
+            video.muted = true;
+            video.play().catch(() => {});
+          };
+
+          video.addEventListener("click", retryPlay, { once: true });
+          video.addEventListener("touchstart", retryPlay, { once: true, passive: true });
+
+          if ("IntersectionObserver" in window && isWeixin()) {
+            const retryObserver = new IntersectionObserver((entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting && video.paused) {
+                  retryPlay();
+                  retryObserver.unobserve(video);
+                }
+              });
+            }, { threshold: 0.5 });
+            retryObserver.observe(video);
+          }
+        });
+      }
+    }
+
+    function playShowcaseVideos() {
+      const videos = document.querySelectorAll(".showcase-video video");
+      if (!videos.length) return;
+      const weixinEnv = isWeixin();
+
+      if (weixinEnv) {
+        videos.forEach((video) => {
+          video.style.display = "block";
+          if (video.readyState < 2) {
+            video.load();
+          }
+        });
+
+        setTimeout(() => {
+          videos.forEach((video, index) => {
+            playVideo(video, index);
+          });
+        }, 300);
+        return;
+      }
+
+      videos.forEach((video, index) => {
+        video.style.display = "block";
+        if (video.readyState >= 2) {
+          playVideo(video, index);
+        } else {
+          video.addEventListener("loadedmetadata", () => {
+            playVideo(video, index);
+          }, { once: true });
+          video.load();
+        }
+      });
+    }
+
+    function initWeixinVideoAutoplay() {
+      let hasPlayed = false;
+
+      function tryPlayVideos() {
+        if (hasPlayed) return;
+        hasPlayed = true;
+        playShowcaseVideos();
+      }
+
+      if (isWeixin()) {
+        if (typeof WeixinJSBridge !== "undefined") {
+          tryPlayVideos();
+        } else {
+          document.addEventListener("WeixinJSBridgeReady", tryPlayVideos, false);
+        }
+
+        document.addEventListener("touchstart", function onFirstTouch() {
+          tryPlayVideos();
+          setTimeout(() => {
+            document.querySelectorAll(".showcase-video video").forEach((video) => {
+              if (video.paused) {
+                video.muted = true;
+                video.play().catch(() => {});
+              }
+            });
+          }, 500);
+        }, { once: true, passive: true });
+
+        let scrollRetried = false;
+        document.addEventListener("scroll", function onFirstScroll() {
+          if (!scrollRetried) {
+            scrollRetried = true;
+            setTimeout(() => {
+              document.querySelectorAll(".showcase-video video").forEach((video) => {
+                if (video.paused) {
+                  video.muted = true;
+                  video.play().catch(() => {});
+                }
+              });
+            }, 300);
+          }
+        }, { once: true, passive: true });
+      } else {
+        window.addEventListener("load", () => {
+          setTimeout(() => {
+            tryPlayVideos();
+          }, 100);
+        });
+      }
+
+      const firstInteraction = () => {
+        tryPlayVideos();
+      };
+      document.addEventListener("click", firstInteraction, { once: true });
+      document.addEventListener("scroll", firstInteraction, { once: true, passive: true });
+    }
+
+    function initVideoLazyPlay() {
+      if (isWeixin()) return;
+      if (!("IntersectionObserver" in window)) return;
+
+      const videos = document.querySelectorAll(".showcase-video video");
+      const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+          const videoIndex = Array.from(videos).indexOf(video);
+          if (entry.isIntersecting) {
+            if (video.paused) {
+              playVideo(video, videoIndex);
+            }
+            videoObserver.unobserve(video);
+          }
+        });
+      }, {
+        threshold: 0.25,
+        rootMargin: "50px"
+      });
+
+      videos.forEach((video) => {
+        videoObserver.observe(video);
+      });
+    }
+
+    function initVideoErrorHandling() {
+      const videos = document.querySelectorAll(".showcase-video video");
+      videos.forEach((video) => {
+        video.addEventListener("stalled", () => {
+          setTimeout(() => {
+            video.load();
+          }, 1000);
+        });
+      });
+    }
+
+    function getSeriesWithNBS(key) {
+      if (NBS_QUARTERLY_SERIES[key]) {
+        return buildNBSQuarterlySeries(key);
+      }
+      const base = getSeries(key);
+      const nbsItem = NBS_QUARTERLY_SUMMARY.items.find((item) => item.key === key);
+      if (!nbsItem) return base;
+      const merged = base.filter((item) => item.date !== NBS_QUARTERLY_SUMMARY.periodDate).slice();
+      const prev = merged.length ? merged[merged.length - 1] : null;
+      const mom = prev && prev.value ? (nbsItem.value - prev.value) / Math.abs(prev.value) : null;
+      merged.push({
+        date: NBS_QUARTERLY_SUMMARY.periodDate,
+        value: nbsItem.value,
+        mom,
+        yoy: nbsItem.value === null ? null : (nbsItem.yoy != null ? nbsItem.yoy : null),
+        source: "国家统计局",
+        source_label: NBS_QUARTERLY_SUMMARY.source,
+        period_label: NBS_QUARTERLY_SUMMARY.periodLabel
+      });
+      merged.sort((a, b) => a.date.localeCompare(b.date));
+      return merged;
+    }
+
+    function clipSeries(points, rangeKey) {
+      if (!points || points.length === 0 || rangeKey === "all") return points.slice();
+      const dayMap = { "6m": 183, "1y": 365, "3y": 1095, "5y": 1825 };
+      const days = dayMap[rangeKey];
+      if (!days) return points.slice();
+      const latest = toDate(points[points.length - 1].date).getTime();
+      const floor = latest - days * 24 * 3600 * 1000;
+      return points.filter((item) => toDate(item.date).getTime() >= floor);
+    }
+
+    function makeButtons(containerId, options, activeKey, onClick) {
+      const el = document.getElementById(containerId);
+      el.innerHTML = "";
+      options.forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.className = `btn${opt.key === activeKey ? " active" : ""}`;
+        btn.textContent = opt.label;
+        btn.addEventListener("click", () => onClick(opt.key));
+        el.appendChild(btn);
+      });
+    }
+
+    function getResponsiveGrid(chart, base) {
+      const width = chart.getWidth ? chart.getWidth() : window.innerWidth;
+      const compact = width < 760;
+      const mobile = width < 560;
+      return {
+        ...base,
+        left: mobile ? 42 : (compact ? Math.max(44, base.left - 8) : base.left),
+        right: mobile ? 12 : (compact ? Math.max(14, base.right - 12) : base.right),
+        bottom: mobile ? Math.max(52, base.bottom + 12) : (compact ? Math.max(48, base.bottom + 6) : base.bottom),
+        containLabel: true
+      };
+    }
+
+    function getCategoryAxisLabel(chart, pointsCount) {
+      const width = chart.getWidth ? chart.getWidth() : window.innerWidth;
+      const compact = width < 760;
+      const mobile = width < 560;
+      const targetTicks = mobile ? 5 : (compact ? 7 : 11);
+      const interval = pointsCount > targetTicks ? Math.ceil(pointsCount / targetTicks) - 1 : 0;
+      return {
+        color: "#4f6781",
+        hideOverlap: true,
+        interval,
+        rotate: mobile ? 35 : (compact ? 24 : 0),
+        fontSize: mobile ? 10 : 12
+      };
+    }
+
+    function buildCategoryXAxis(chart, data, withAxisLine = true) {
+      const axis = {
+        type: "category",
+        data,
+        axisLabel: getCategoryAxisLabel(chart, data.length)
+      };
+      if (withAxisLine) axis.axisLine = { lineStyle: { color: "#b9c8d8" } };
+      return axis;
+    }
+
+    function rightTooltipPosition(point, params, dom, rect, size) {
+      const margin = 12;
+      const viewWidth = size && size.viewSize ? size.viewSize[0] : window.innerWidth;
+      const viewHeight = size && size.viewSize ? size.viewSize[1] : window.innerHeight;
+      const tooltipWidth = dom ? dom.offsetWidth : 0;
+      const tooltipHeight = dom ? dom.offsetHeight : 0;
+      const x = Math.max(margin, viewWidth - tooltipWidth - margin);
+      const y = Math.max(margin, Math.min(point[1] - tooltipHeight / 2, viewHeight - tooltipHeight - margin));
+      return [x, y];
+    }
+
+    function setHeader() {
+      const updateEl = document.getElementById("updateTime");
+      const generatedAt = DATA.meta && DATA.meta.generated_at ? DATA.meta.generated_at : "--";
+      const generatedDate = generatedAt && generatedAt !== "--" ? String(generatedAt).slice(0, 10) : "--";
+      updateEl.textContent = `更新时间：${generatedDate}`;
+    }
+
+    function getLatestPoint(key) {
+      const list = getSeries(key);
+      return list.length ? list[list.length - 1] : null;
+    }
+
+    function getLatestPointFromSeries(list) {
+      return list && list.length ? list[list.length - 1] : null;
+    }
+
+    function zoneByRatio(ratio) {
+      if (ratio == null) return "区间待补充";
+      if (ratio < 0.85 || ratio > 1.10) return "红色区间（过度波动）";
+      if ((ratio >= 0.85 && ratio < 0.92) || (ratio > 1.05 && ratio <= 1.10)) return "黄色区间（大幅波动）";
+      return "绿色区间（正常波动）";
+    }
+
+    function renderObjectiveInsight() {
+      const sow = getLatestPointFromSeries(getSeriesWithNBS("sow_inventory"));
+      const hogInv = getLatestPointFromSeries(getSeriesWithNBS("hog_inventory"));
+      const hogSlaughter = getLatestPointFromSeries(getSeriesWithNBS("hog_slaughter"));
+      const porkOutput = getLatestPointFromSeries(getSeriesWithNBS("pork_output"));
+      const hogExit = getLatestPoint("hog_exit_price");
+      const piglet = getLatestPoint("piglet_price");
+      const retail = getLatestPoint("county_market_retail_price");
+      const externalProfit = getProfitLatestPoint(PROFIT_SERIES_META.external.key);
+      const selfProfit = getProfitLatestPoint(PROFIT_SERIES_META.self.key);
+
+      const ratio = sow ? (sow.ratio_to_normal != null ? sow.ratio_to_normal : (sow.value / NORMAL_BREEDING_SOW)) : null;
+      const lines = [];
+      const zone = zoneByRatio(ratio);
+      const slaughterYoYText = hogSlaughter ? formatPct(hogSlaughter.yoy, 1) : "--";
+      const yoyPriceText = hogExit ? formatPct(hogExit.yoy, 1) : "--";
+      const externalProfitText = externalProfit ? `${formatNumber(externalProfit.value, 2)}元/头` : "—";
+      const selfProfitText = selfProfit ? `${formatNumber(selfProfit.value, 2)}元/头` : "—";
+      const conclusion = `核心结论：国家统计局季度口径下，当前样本显示产能位于${zone}，一季度生猪出栏同比为${slaughterYoYText}，生猪出场价同比为${yoyPriceText}，外购仔猪与自繁自养两条利润线均已更新至2026年4月17日且仍处亏损区间。产业链运行以“产能、价格、出栏、利润”联动监测为主。`;
+
+      lines.push(
+        `产能端：最新能繁母猪存栏为${sow ? `${formatNumber(sow.value, 0)}万头` : "—"}，约为正常保有量的${ratio != null ? `${formatPct(ratio, 1)}` : "—"}，处于${zoneByRatio(ratio)}；生猪存栏为${hogInv ? `${formatNumber(hogInv.value, 0)}万头` : "—"}。`
+      );
+      lines.push(
+        `供给兑现端：国家统计局季度口径显示，最新一季度生猪出栏为${hogSlaughter ? `${formatNumber(hogSlaughter.value, 0)}万头` : "—"}，同比${hogSlaughter ? formatPct(hogSlaughter.yoy, 1) : "—"}，猪肉产量为${porkOutput ? `${formatNumber(porkOutput.value, 0)}万吨` : "—"}，用于观察供给兑现节奏。`
+      );
+      lines.push(
+        `价格链条端：仔猪价格${piglet ? `${formatNumber(piglet.value, 2)}元/公斤` : "—"}、生猪出场价${hogExit ? `${formatNumber(hogExit.value, 2)}元/公斤` : "—"}、县乡集贸零售价${retail ? `${formatNumber(retail.value, 2)}元/公斤` : "—"}，反映从养殖到消费环节的价格传导。`
+      );
+      lines.push(
+        `利润端：外购仔猪养殖利润最新为${externalProfitText}，自繁自养生猪养殖利润最新为${selfProfitText}，两条利润线同步反映行业亏损压力。`
+      );
+      const box = document.getElementById("objectiveInsight");
+      box.innerHTML = `<h3 class="insight-title">客观解读（基于当前数据）</h3><p class="insight-conclusion">${conclusion}</p><ul class="insight-list">${lines.map((line) => `<li>${line}</li>`).join("")}</ul>`;
+    }
+
+    function renderNBSQuarterlySummary() {
+      const container = document.getElementById("nbsStats");
+      if (!container) return;
+      container.innerHTML = NBS_QUARTERLY_SUMMARY.items
+        .map((item) => `
+          <div class="stat-box">
+            <div class="stat-label">${item.label}</div>
+            <div class="stat-value">${formatNumber(item.value, 0)}</div>
+            <div class="metric-note" style="border-top: 0; padding-top: 6px; margin-top: 4px;">${item.detail}</div>
+          </div>
+        `)
+        .join("");
+    }
+
+    function renderNBSQuarterlyChart(chart) {
+      const items = NBS_QUARTERLY_SUMMARY.items;
+      chart.setOption({
+        grid: getResponsiveGrid(chart, { left: 56, right: 48, top: 56, bottom: 36 }),
+        color: ["#2d79bf", "#4ea3d8", "#18a87b", "#c58a2f"],
+        tooltip: {
+          trigger: "axis",
+          axisPointer: { type: "shadow" },
+          formatter() {
+            return [
+              `${NBS_QUARTERLY_SUMMARY.periodLabel}`,
+              `${items[0].label}：${formatNumber(items[0].value, 0)} ${items[0].unit}`,
+              `${items[1].label}：${formatNumber(items[1].value, 0)} ${items[1].unit}`,
+              `${items[2].label}：${formatNumber(items[2].value, 0)} ${items[2].unit}`,
+              `${items[3].label}：${formatNumber(items[3].value, 0)} ${items[3].unit}`
+            ].join("<br/>");
+          }
+        },
+        legend: {
+          top: 10,
+          type: "scroll",
+          textStyle: { color: "#355677", fontSize: 12 }
+        },
+        xAxis: buildCategoryXAxis(chart, [NBS_QUARTERLY_SUMMARY.periodLabel], true),
+        yAxis: [
+          {
+            type: "value",
+            name: "万头",
+            axisLabel: { color: "#4f6781" },
+            splitLine: { lineStyle: { color: "#e4ecf4" } }
+          },
+          {
+            type: "value",
+            name: "万吨",
+            axisLabel: { color: "#4f6781" },
+            splitLine: { show: false }
+          }
+        ],
+        series: [
+          {
+            name: items[0].label,
+            type: "bar",
+            data: [items[0].value],
+            itemStyle: { color: "#2d79bf" },
+            yAxisIndex: 0
+          },
+          {
+            name: items[2].label,
+            type: "bar",
+            data: [items[2].value],
+            itemStyle: { color: "#4ea3d8" },
+            yAxisIndex: 0
+          },
+          {
+            name: items[3].label,
+            type: "bar",
+            data: [items[3].value],
+            itemStyle: { color: "#18a87b" },
+            yAxisIndex: 0
+          },
+          {
+            name: items[1].label,
+            type: "bar",
+            data: [items[1].value],
+            itemStyle: { color: "#c58a2f" },
+            yAxisIndex: 1
+          }
+        ]
+      });
+    }
+
+    function syncHotPanelUI() {
+      const toggle = document.getElementById("hotNewsToggle");
+      const footer = document.querySelector(".hot-news-footer");
+      if (toggle) {
+        if (state.hotPanelMode === "research") {
+          toggle.textContent = "生猪热点资讯";
+          toggle.classList.add("active");
+        } else {
+          toggle.textContent = "机构观点";
+          toggle.classList.remove("active");
+        }
+      }
+      if (footer) {
+        footer.hidden = state.hotPanelMode === "research";
+      }
+    }
+
+    function renderHotNews() {
+      const container = document.getElementById("hotNewsList");
+      if (!container) return;
+      const isResearch = state.hotPanelMode === "research";
+      const items = isResearch ? HOT_RESEARCH_ITEMS : HOT_NEWS_ITEMS;
+      const renderItem = (item) => `
+        <a class="hot-news-item" href="${item.url}" target="_blank" rel="noreferrer">
+          <div class="hot-news-topline">
+            ${isResearch ? `<span class="hot-news-meta">${item.source}</span>` : ""}
+            <span class="hot-news-time">${item.date}</span>
+          </div>
+          <div class="hot-news-title">${item.title}</div>
+          ${item.summary ? `<div class="hot-news-summary">${item.summary}</div>` : ""}
+        </a>
+      `;
+      container.innerHTML = items.map((item) => renderItem(item)).join("");
+      syncHotPanelUI();
+    }
+
+    function toggleHotPanelMode() {
+      state.hotPanelMode = state.hotPanelMode === "news" ? "research" : "news";
+      renderHotNews();
+    }
+
+    function syncMarketTabUI(tabKey) {
+      document.querySelectorAll("#marketTabs .market-tab-btn").forEach((btn) => {
+        const active = btn.dataset.tab === tabKey;
+        btn.classList.toggle("active", active);
+        btn.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      document.querySelectorAll(".market-tab-panel").forEach((panel) => {
+        panel.hidden = panel.dataset.tab !== tabKey;
+      });
+    }
+
+    function activateMarketTab(tabKey) {
+      state.marketTab = tabKey;
+      syncMarketTabUI(tabKey);
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event("resize"));
+      });
+    }
+
+    function initMarketTabs() {
+      document.querySelectorAll("#marketTabs .market-tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (state.marketTab === btn.dataset.tab) return;
+          activateMarketTab(btn.dataset.tab);
+        });
+      });
+      activateMarketTab(state.marketTab);
+    }
+
+    function renderPigStockPerformance() {
+      const container = document.getElementById("pigStockPanel");
+      if (!container) return;
+      const maxGain = Math.max(...PIG_STOCK_PERFORMANCE.map((item) => item.gain));
+      const leader = PIG_STOCK_PERFORMANCE[0];
+      const headWinner = PIG_STOCK_PERFORMANCE.find((item) => item.name === "牧原股份");
+      const tempWinner = PIG_STOCK_PERFORMANCE.find((item) => item.name === "温氏股份");
+
+      const highlightCards = [
+        { label: "领涨", name: leader.name, value: `+${formatNumber(leader.gain, 2)}%`, tone: "strong" },
+        { label: "头部靠前", name: headWinner ? headWinner.name : "牧原股份", value: headWinner ? `+${formatNumber(headWinner.gain, 2)}%` : "--", tone: "mid" },
+        { label: "涨幅温和", name: tempWinner ? tempWinner.name : "温氏股份", value: tempWinner ? `+${formatNumber(tempWinner.gain, 2)}%` : "--", tone: "soft" }
+      ];
+
+      const rowHtml = (item) => {
+        const fillWidth = Math.max(6, Math.round(Math.max(item.gain, 0) / maxGain * 100));
+        const returnClass = item.gain >= 15 ? "strong" : item.gain >= 8 ? "mid" : item.gain >= 0 ? "soft" : "neutral";
+        const rankClass = item.rank === 1 ? "top1" : item.rank === 2 ? "top2" : item.rank === 3 ? "top3" : "";
+        const fillClass = item.gain < 0 ? "neg" : "";
+        const sign = item.gain > 0 ? "+" : "";
+        const tidyPrice = (value) => Number(value).toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+        const openText = tidyPrice(item.open);
+        const closeText = tidyPrice(item.close);
+        return `
+          <div class="stock-row">
+            <div class="stock-row-fill ${fillClass}" style="width: ${fillWidth}%;"></div>
+            <div class="stock-row-main">
+              <div class="stock-row-meta">
+                <span class="stock-rank ${rankClass}">${item.rank}</span>
+                <div class="stock-name-wrap">
+                  <div class="stock-name">${item.name}</div>
+                  <div class="stock-price">4月1日 ${openText} → 4月17日 ${closeText}</div>
+                </div>
+              </div>
+              <div class="stock-return ${returnClass}">${sign}${formatNumber(item.gain, 2)}%</div>
+            </div>
+          </div>
+        `;
+      };
+
+      container.innerHTML = `
+        <div class="stock-panel-head">
+          <div>
+            <h2 class="section-title" style="margin: 0;">猪企股价4月以来表现</h2>
+            <p class="stock-panel-desc">4月以来，猪企股票出现集体反弹，但涨幅分化明显。天邦食品、华统股份、巨星农牧等猪企弹性更强，头部猪企中牧原股份表现相对靠前，温氏股份、新希望涨幅较温和。</p>
+          </div>
         </div>
-    </div>
 
-    <div class="section-title">夜盘焦点逻辑 🎯</div>
-    
-    <div class="variety-card">
-        <div class="card-header">
-            <div class="variety-name">沪银 2406</div>
-            <div class="variety-tag">偏强震荡</div>
+        <div class="stock-panel-highlights">
+          ${highlightCards.map((item) => `
+            <div class="stock-highlight">
+              <div class="stock-highlight-label">${item.label}</div>
+              <div class="stock-highlight-name">${item.name}</div>
+              <div class="stock-highlight-value ${item.tone === "neutral" ? "neg" : item.tone}">${item.value}</div>
+            </div>
+          `).join("")}
         </div>
-        <ul class="logic-list">
-            <li class="logic-item">
-                <span class="logic-label">✧ 触发:</span> 美联储释放鹰派信号，但避险情绪支撑下方空间
-            </li>
-            <li class="logic-item">
-                <span class="logic-label">✧ 联动:</span> 黄金高位震荡，有色板块整体情绪偏暖
-            </li>
-            <li class="logic-item divergence-highlight">
-                <span class="logic-label">⚡ 分歧:</span> 多头押注工业属性共振及逼空情绪（交割意愿大于实物供给）；空头认为高位波动加剧，需警惕获利盘集中踩踏。
-            </li>
-        </ul>
-    </div>
 
-    <div class="variety-card">
-        <div class="card-header">
-            <div class="variety-name" style="color: var(--down-green);">SC原油 2405</div>
-            <div class="variety-tag" style="background: rgba(0, 230, 118, 0.15); color: var(--down-green);">高位回调</div>
+        <div class="stock-list">
+          ${PIG_STOCK_PERFORMANCE.map((item) => rowHtml(item)).join("")}
         </div>
-        <ul class="logic-list">
-            <li class="logic-item">
-                <span class="logic-label">✧ 触发:</span> 地缘政治溢价阶段性回落，盘面获利了结
-            </li>
-            <li class="logic-item">
-                <span class="logic-label">✧ 基本面:</span> 关注晚间EIA原油产量及进出口数据，前期多头逻辑在于二季度去库预期。
-            </li>
-            <li class="logic-item divergence-highlight" style="border-left-color: var(--down-green);">
-                <span class="logic-label">⚡ 分歧:</span> 短期地缘情绪退潮引发多头平仓；但中长期供需缺口仍在，下方支撑强劲，等待进一步指引。
-            </li>
-        </ul>
-    </div>
+      `;
+    }
 
-    <div class="fixed-bottom">
-        <button class="share-btn">
-            <span>生成夜盘战备海报</span> ➔
-        </button>
-    </div>
-</div>
+    function rerenderAllCharts(charts) {
+      if (!charts) return;
+      if (charts.a1) renderA1(charts.a1);
+      if (charts.a2) renderA2(charts.a2);
+      if (charts.b1) renderMultiLine(charts.b1, ["sow_sale_price", "piglet_price", "hog_exit_price"], state.b1Range);
+      if (charts.b2) {
+        renderMultiLine(
+          charts.b2,
+          [
+            "hog_exit_price",
+            "wholesale_carcass_price",
+            "city_wholesale_carcass_price",
+            "lean_meat_retail_price",
+            "hind_leg_retail_price",
+            "county_market_retail_price"
+          ],
+          state.b2Range
+        );
+      }
+      if (charts.c1) renderC1(charts.c1);
+      if (charts.c2) renderC2(charts.c2);
+      if (charts.d1) renderD1(charts.d1);
+      if (charts.e1) renderE1(charts.e1);
+      if (charts.e2) renderE2(charts.e2);
+    }
 
+    function setupChartAutoResize(charts) {
+      const triggerRerender = () => {
+        if (resizeRerenderTimer) clearTimeout(resizeRerenderTimer);
+        resizeRerenderTimer = setTimeout(() => rerenderAllCharts(charts), 90);
+      };
+      const resizeAll = () => {
+        CHARTS.forEach((chart) => {
+          if (!chart || chart.isDisposed()) return;
+          chart.resize({ animation: { duration: 0 } });
+        });
+        triggerRerender();
+      };
+
+      window.addEventListener("resize", resizeAll);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", resizeAll);
+      }
+
+      if (window.ResizeObserver) {
+        const observer = new ResizeObserver(resizeAll);
+        const page = document.querySelector(".page");
+        if (page) observer.observe(page);
+        document.querySelectorAll(".panel, .hero").forEach((el) => observer.observe(el));
+        CHARTS.forEach((chart) => {
+          const dom = chart.getDom();
+          if (dom) observer.observe(dom);
+        });
+      }
+
+      const sizeCache = new WeakMap();
+      setInterval(() => {
+        let changed = false;
+        CHARTS.forEach((chart) => {
+          if (!chart || chart.isDisposed()) return;
+          const dom = chart.getDom();
+          if (!dom) return;
+          const key = sizeCache.get(dom) || { w: 0, h: 0 };
+          const w = dom.clientWidth;
+          const h = dom.clientHeight;
+          if (w !== key.w || h !== key.h) {
+            sizeCache.set(dom, { w, h });
+            changed = true;
+          }
+        });
+        if (changed) resizeAll();
+      }, 300);
+
+      setTimeout(resizeAll, 120);
+      setTimeout(resizeAll, 420);
+      setTimeout(resizeAll, 900);
+    }
+
+    function buildCoreMetrics() {
+      const cards = [
+        {
+          key: "nbs_sow_inventory",
+          momLabel: "较2025年末",
+          desc: "国家统计局季度口径：一季度末能繁母猪存栏。"
+        },
+        {
+          key: "nbs_hog_inventory",
+          momLabel: "较2025年末",
+          desc: "国家统计局季度口径：一季度末生猪存栏。"
+        },
+        {
+          key: "nbs_hog_slaughter",
+          momLabel: "较2025年末",
+          desc: "国家统计局季度口径：2024Q1-2026Q1生猪出栏累计序列。"
+        },
+        {
+          key: "nbs_pork_output",
+          momLabel: "较2025年末",
+          desc: "国家统计局季度口径：2024Q1-2026Q1猪肉产量累计序列。"
+        },
+        {
+          key: "hog_exit_price",
+          desc: "用于展示养殖端生猪出场价格变化。"
+        },
+        {
+          key: "profit",
+          desc: "用于反映自繁自养模式阶段经营表现。"
+        }
+      ];
+
+      const profitSeries = getProfitSeries(PROFIT_SERIES_META.self.key);
+      const latestProfit = profitSeries[profitSeries.length - 1] || null;
+      const prev52 = profitSeries.length >= 53 ? profitSeries[profitSeries.length - 53] : null;
+      const latestExternalProfit = getProfitLatestPoint(PROFIT_SERIES_META.external.key);
+
+      const container = document.getElementById("metricCards");
+      container.innerHTML = "";
+
+      cards.forEach((card) => {
+        let title = "";
+        let unit = "";
+        let latestValue = "--";
+        let mom = "--";
+        let yoy = "--";
+        let momLabel = "环比";
+        let momHtml = `<span class="change-flat">--</span>`;
+        let yoyHtml = `<span class="change-flat">--</span>`;
+        let extraLineHtml = "";
+        let helpLines = [];
+        let updateLabel = "--";
+
+        if (card.key === "nbs_sow_inventory") {
+          title = "能繁母猪存栏";
+          unit = "万头";
+          const series = getSeriesWithNBS("sow_inventory");
+          const latest = getLatestPointFromSeries(series);
+          const prev = series.length > 1 ? series[series.length - 2] : null;
+          if (latest) {
+            latestValue = formatNumber(latest.value, 0);
+            mom = prev ? formatPct((latest.value - prev.value) / (Math.abs(prev.value) || 1), 1) : "--";
+            yoy = formatPct(latest.yoy, 1);
+            momLabel = card.momLabel || "环比";
+            momHtml = prev ? formatChangeHTML((latest.value - prev.value) / (Math.abs(prev.value) || 1), 1) : `<span class="change-flat">--</span>`;
+            yoyHtml = latest.yoy != null ? formatChangeHTML(latest.yoy, 1) : `<span class="change-flat">--</span>`;
+            helpLines = [card.desc];
+          }
+        } else if (card.key === "nbs_hog_inventory") {
+          title = "生猪存栏";
+          unit = "万头";
+          const series = getSeriesWithNBS("hog_inventory");
+          const latest = getLatestPointFromSeries(series);
+          const prev = series.length > 1 ? series[series.length - 2] : null;
+          if (latest) {
+            latestValue = formatNumber(latest.value, 0);
+            mom = prev ? formatPct((latest.value - prev.value) / (Math.abs(prev.value) || 1), 1) : "--";
+            yoy = formatPct(latest.yoy, 1);
+            momLabel = card.momLabel || "环比";
+            momHtml = prev ? formatChangeHTML((latest.value - prev.value) / (Math.abs(prev.value) || 1), 1) : `<span class="change-flat">--</span>`;
+            yoyHtml = latest.yoy != null ? formatChangeHTML(latest.yoy, 1) : `<span class="change-flat">--</span>`;
+            helpLines = [card.desc];
+          }
+        } else if (card.key === "nbs_hog_slaughter") {
+          title = "生猪出栏";
+          unit = "万头";
+          const series = getSeriesWithNBS("hog_slaughter");
+          const latest = getLatestPointFromSeries(series);
+          const prev = series.length > 1 ? series[series.length - 2] : null;
+          if (latest) {
+            latestValue = formatNumber(latest.value, 0);
+            mom = prev ? formatPct((latest.value - prev.value) / (Math.abs(prev.value) || 1), 1) : "--";
+            yoy = formatPct(latest.yoy, 1);
+            momLabel = card.momLabel || "环比";
+            momHtml = prev
+              ? `<span class="${latest.value >= prev.value ? "change-up" : "change-down"}">${latest.value >= prev.value ? "↑" : "↓"} ${formatNumber(Math.abs(latest.value - prev.value), 0)} ${unit}</span>`
+              : `<span class="change-flat">--</span>`;
+            yoyHtml = latest.yoy != null ? formatChangeHTML(latest.yoy, 1) : `<span class="change-flat">--</span>`;
+            helpLines = [card.desc];
+          }
+        } else if (card.key === "nbs_pork_output") {
+          title = "猪肉产量";
+          unit = "万吨";
+          const series = getSeriesWithNBS("pork_output");
+          const latest = getLatestPointFromSeries(series);
+          const prev = series.length > 1 ? series[series.length - 2] : null;
+          if (latest) {
+            latestValue = formatNumber(latest.value, 0);
+            mom = prev ? formatPct((latest.value - prev.value) / (Math.abs(prev.value) || 1), 1) : "--";
+            yoy = formatPct(latest.yoy, 1);
+            momLabel = card.momLabel || "环比";
+            momHtml = prev
+              ? `<span class="${latest.value >= prev.value ? "change-up" : "change-down"}">${latest.value >= prev.value ? "↑" : "↓"} ${formatNumber(Math.abs(latest.value - prev.value), 0)} ${unit}</span>`
+              : `<span class="change-flat">--</span>`;
+            yoyHtml = latest.yoy != null ? formatChangeHTML(latest.yoy, 1) : `<span class="change-flat">--</span>`;
+            helpLines = [card.desc];
+          }
+        } else if (card.key === "profit") {
+          title = "养殖利润";
+          unit = "元/头";
+          if (latestProfit) {
+            latestValue = formatNumber(latestProfit.value, 2);
+            mom = latestProfit.wow === null ? "--" : formatPct(latestProfit.wow, 1);
+            yoy = prev52 ? formatPct((latestProfit.value - prev52.value) / (Math.abs(prev52.value) || 1), 1) : "--";
+            momHtml = formatChangeHTML(latestProfit.wow, 1);
+            yoyHtml = prev52
+              ? formatChangeHTML((latestProfit.value - prev52.value) / (Math.abs(prev52.value) || 1), 1)
+              : `<span class="change-flat">--</span>`;
+            updateLabel = formatDate(latestProfit.date, "week");
+            extraLineHtml = latestExternalProfit
+              ? `<span>外购仔猪：${formatNumber(latestExternalProfit.value, 2)}元/头</span>`
+              : "";
+            helpLines = [
+              card.desc,
+              `更新时间：${updateLabel}`
+            ];
+          }
+        } else {
+          const list = getSeries(card.key);
+          const latest = list[list.length - 1];
+          const meta = seriesMeta[card.key] || { name: card.key, unit: "", digits: 2 };
+          title = meta.name;
+          unit = meta.unit;
+          if (latest) {
+            latestValue = formatNumber(latest.value, meta.digits);
+            mom = formatPct(latest.mom, 1);
+            yoy = formatPct(latest.yoy, 1);
+            momHtml = formatChangeHTML(latest.mom, 1);
+            yoyHtml = formatChangeHTML(latest.yoy, 1);
+            updateLabel = formatDate(latest.date, "month");
+            helpLines = [
+              card.desc,
+              `数据来源：${latest.indicator || meta.name}`,
+              `更新时间：${updateLabel}`
+            ];
+          }
+        }
+
+        if (!helpLines.length) {
+          helpLines = [
+            card.desc,
+            `数据来源：${card.key.startsWith("nbs_") ? NBS_QUARTERLY_SUMMARY.source : "公开数据整理"}`,
+            `更新时间：${updateLabel}`
+          ];
+        }
+
+        setHelpText(card.key, title, helpLines);
+
+        const node = document.createElement("article");
+        node.className = "metric-card";
+        const metricRowHtml = card.key === "nbs_hog_inventory"
+          ? `
+          <div class="metric-row">
+            <span>${momLabel}：${momHtml}</span>
+          </div>
+          <div class="metric-row stack">
+            <span>同比：${yoyHtml}</span>
+          </div>
+          ${extraLineHtml ? `<div class="metric-row">${extraLineHtml}</div>` : ""}
+        `
+          : `
+          <div class="metric-row">
+            <span>${momLabel}：${momHtml}</span>
+            <span>同比：${yoyHtml}</span>
+          </div>
+          ${extraLineHtml ? `<div class="metric-row">${extraLineHtml}</div>` : ""}
+        `;
+        node.innerHTML = `
+          <div class="metric-name-row">
+            <h3 class="metric-name">${title}</h3>
+            <button type="button" class="help-btn" data-help-id="${card.key}" aria-label="${title} 说明">?</button>
+          </div>
+          <div class="metric-value">${latestValue}<span class="metric-unit">${unit}</span></div>
+          ${metricRowHtml}
+        `;
+        container.appendChild(node);
+      });
+    }
+
+    function initChart(elId) {
+      const chart = echarts.init(document.getElementById(elId));
+      CHARTS.push(chart);
+      return chart;
+    }
+
+    function renderA1(chart) {
+      const raw = getSeriesWithNBS("sow_inventory");
+      const xData = raw.map((d) => compactDate(d.date));
+      const yData = raw.map((d) => d.value);
+      const zone85 = NORMAL_BREEDING_SOW * 0.85;
+      const zone92 = NORMAL_BREEDING_SOW * 0.92;
+      const zone105 = NORMAL_BREEDING_SOW * 1.05;
+      const zone110 = NORMAL_BREEDING_SOW * 1.10;
+      const maxVal = Math.max(...yData, zone110) + 180;
+      const minVal = Math.min(...yData, zone85) - 180;
+
+      chart.setOption({
+        color: ["#205f99"],
+        grid: getResponsiveGrid(chart, { left: 48, right: 40, top: 56, bottom: 44 }),
+        tooltip: {
+          trigger: "axis",
+          position: rightTooltipPosition,
+          confine: true,
+          formatter(params) {
+            const idx = params[0].dataIndex;
+            const p = raw[idx];
+            const ratio = p.ratio_to_normal != null ? p.ratio_to_normal : (p.value / NORMAL_BREEDING_SOW);
+            const sourceLine = p.source_label ? `<br/>来源：${p.source_label}` : "";
+            return `${compactDate(p.date)}<br/>能繁母猪存栏：${formatNumber(p.value, 0)} 万头` +
+              `<br/>占正常保有量比例：${formatPct(ratio, 1)}` +
+              `<br/>环比：${formatPct(p.mom, 1)}` +
+              `<br/>同比：${formatPct(p.yoy, 1)}` +
+              sourceLine;
+          }
+        },
+        xAxis: buildCategoryXAxis(chart, xData, true),
+        yAxis: {
+          type: "value",
+          min: Math.floor(minVal / 100) * 100,
+          max: Math.ceil(maxVal / 100) * 100,
+          axisLabel: { color: "#4f6781", formatter: "{value}" },
+          splitLine: { lineStyle: { color: "#e4ecf4" } }
+        },
+        series: [
+          {
+            type: "line",
+            name: "能繁母猪存栏",
+            data: yData,
+            smooth: 0.25,
+            symbol: "circle",
+            symbolSize: 5,
+            lineStyle: { width: 2.4 },
+            markPoint: {
+              symbol: "circle",
+              symbolSize: 10,
+              itemStyle: { color: "#e85b4e" },
+              label: { show: true, formatter: "最新", color: "#d94435" },
+              data: [{ coord: [xData[xData.length - 1], yData[yData.length - 1]] }]
+            },
+            markLine: {
+              symbol: "none",
+              lineStyle: { color: "#2f7bc5", type: "dashed", width: 1.5 },
+              label: { formatter: "正常保有量3900万头", color: "#2f7bc5", position: "insideEndTop" },
+              data: [{ yAxis: NORMAL_BREEDING_SOW }]
+            },
+            markArea: {
+              silent: true,
+              data: [
+                [{ yAxis: 0, itemStyle: { color: "rgba(205,66,66,0.16)" } }, { yAxis: zone85 }],
+                [{ yAxis: zone85, itemStyle: { color: "rgba(244,185,66,0.2)" } }, { yAxis: zone92 }],
+                [{ yAxis: zone92, itemStyle: { color: "rgba(66,175,94,0.14)" } }, { yAxis: zone105 }],
+                [{ yAxis: zone105, itemStyle: { color: "rgba(244,185,66,0.2)" } }, { yAxis: zone110 }],
+                [{ yAxis: zone110, itemStyle: { color: "rgba(205,66,66,0.16)" } }, { yAxis: maxVal }]
+              ]
+            }
+          }
+        ]
+      });
+    }
+
+    function renderA2(chart) {
+      const source = clipSeries(getSeriesWithNBS(state.a2Metric), state.a2Range);
+      const meta = seriesMeta[state.a2Metric];
+      const xData = source.map((d) => d.period_label || compactDate(d.date));
+
+      chart.setOption({
+        color: ["#1e689f"],
+        grid: getResponsiveGrid(chart, { left: 56, right: 34, top: 54, bottom: 40 }),
+        tooltip: {
+          trigger: "axis",
+          position: rightTooltipPosition,
+          confine: true,
+          formatter(params) {
+            const idx = params[0].dataIndex;
+            const p = source[idx];
+            return `${p.period_label || compactDate(p.date)}<br/>${meta.name}：${formatNumber(p.value, meta.digits)} ${meta.unit}` +
+              `<br/>环比：${formatPct(p.mom, 1)}` +
+              `<br/>同比：${formatPct(p.yoy, 1)}`;
+          }
+        },
+        xAxis: buildCategoryXAxis(chart, xData, true),
+        yAxis: {
+          type: "value",
+          axisLabel: { color: "#4f6781" },
+          splitLine: { lineStyle: { color: "#e4ecf4" } }
+        },
+        series: [
+          {
+            name: meta.name,
+            type: "line",
+            data: source.map((d) => d.value),
+            smooth: 0.2,
+            symbolSize: 6,
+            lineStyle: { width: 2.2, color: "#1e689f" },
+            markPoint: {
+              symbol: "circle",
+              symbolSize: 10,
+              itemStyle: { color: "#e85b4e" },
+              label: { show: true, formatter: "最新", color: "#d94435" },
+              data: source.length ? [{ coord: [xData[xData.length - 1], source[source.length - 1].value] }] : []
+            },
+            areaStyle: { color: "rgba(47,123,197,0.1)" }
+          }
+        ]
+      });
+    }
+
+    function renderMultiLine(chart, keys, rangeKey) {
+      const base = clipSeries(getSeries(keys[0]), rangeKey);
+      const dates = base.map((d) => d.date);
+      const xData = dates.map(compactDate);
+
+      const series = keys.map((key, idx) => {
+        const list = clipSeries(getSeries(key), rangeKey);
+        const map = new Map(list.map((item) => [item.date, item]));
+        return {
+          name: seriesMeta[key].name,
+          type: "line",
+          showSymbol: false,
+          smooth: 0.15,
+          lineStyle: { width: 2 },
+          itemStyle: { color: palette[idx % palette.length] },
+          data: dates.map((date) => (map.get(date) ? map.get(date).value : null))
+        };
+      });
+
+      chart.setOption({
+        grid: getResponsiveGrid(chart, { left: 56, right: 34, top: 64, bottom: 40 }),
+        color: palette,
+        tooltip: {
+          trigger: "axis",
+          position: rightTooltipPosition,
+          confine: true,
+          backgroundColor: "rgba(16,39,62,0.9)",
+          borderColor: "#2f638f",
+          textStyle: { color: "#eff4fb" }
+        },
+        legend: {
+          top: 10,
+          type: "scroll",
+          textStyle: { color: "#365977", fontSize: 12 }
+        },
+        xAxis: buildCategoryXAxis(chart, xData, true),
+        yAxis: {
+          type: "value",
+          axisLabel: { color: "#4f6781" },
+          splitLine: { lineStyle: { color: "#e4ecf4" } }
+        },
+        series
+      });
+    }
+
+    function renderC1(chart) {
+      const list = getSeries("slaughter_volume_monthly");
+      const showYoY = true;
+
+      const series = [
+        {
+          name: "月度屠宰量",
+          type: "bar",
+          data: list.map((d) => d.value),
+          itemStyle: { color: "#2f7bc5" }
+        }
+      ];
+
+      const yAxis = [
+        {
+          type: "value",
+          name: "万头",
+          axisLabel: { color: "#4f6781" },
+          splitLine: { lineStyle: { color: "#e4ecf4" } }
+        }
+      ];
+
+      if (showYoY) {
+        series.push({
+          name: "同比",
+          type: "line",
+          yAxisIndex: 1,
+          data: list.map((d) => d.yoy == null ? null : Number((d.yoy * 100).toFixed(2))),
+          lineStyle: { color: "#c97928", width: 2 },
+          itemStyle: { color: "#c97928" },
+          symbolSize: 4
+        });
+        yAxis.push({
+          type: "value",
+          name: "同比(%)",
+          axisLabel: { formatter: "{value}%", color: "#5a738f" },
+          splitLine: { show: false }
+        });
+      }
+
+      chart.setOption({
+        grid: getResponsiveGrid(chart, { left: 56, right: 54, top: 54, bottom: 40 }),
+        tooltip: { trigger: "axis", position: rightTooltipPosition, confine: true },
+        legend: { top: 10, textStyle: { color: "#355677" } },
+        xAxis: buildCategoryXAxis(chart, list.map((d) => compactDate(d.date)), false),
+        yAxis,
+        series
+      });
+    }
+
+    function renderC2(chart) {
+      const cumList = getSeries("slaughter_volume_cum");
+      const years = Array.from(new Set(cumList.map((d) => Number(d.date.slice(0, 4))))).sort((a, b) => b - a);
+      if (!state.c2Year && years.length) state.c2Year = years[0];
+
+      const selector = document.getElementById("c2YearSelect");
+      selector.innerHTML = years.map((year) => `<option value="${year}">${year}年</option>`).join("");
+      selector.value = String(state.c2Year);
+
+      const current = cumList.filter((d) => Number(d.date.slice(0, 4)) === Number(state.c2Year));
+      const previous = cumList.filter((d) => Number(d.date.slice(0, 4)) === Number(state.c2Year) - 1);
+      const prevMap = new Map(previous.map((d) => [Number(d.date.slice(5, 7)), d.value]));
+
+      const months = current.map((d) => Number(d.date.slice(5, 7)));
+      const xData = months.map((m) => `${m}月`);
+      const currentData = current.map((d) => d.value);
+      const prevData = months.map((m) => (prevMap.has(m) ? prevMap.get(m) : null));
+
+      chart.setOption({
+        grid: getResponsiveGrid(chart, { left: 56, right: 34, top: 56, bottom: 40 }),
+        tooltip: { trigger: "axis", position: rightTooltipPosition, confine: true },
+        legend: {
+          top: 10,
+          data: [`${state.c2Year}年累计`, `${state.c2Year - 1}年同期累计`],
+          textStyle: { color: "#355677" }
+        },
+        xAxis: buildCategoryXAxis(chart, xData, false),
+        yAxis: {
+          type: "value",
+          axisLabel: { color: "#4f6781" },
+          splitLine: { lineStyle: { color: "#e4ecf4" } }
+        },
+        series: [
+          {
+            name: `${state.c2Year}年累计`,
+            type: "line",
+            data: currentData,
+            smooth: 0.2,
+            lineStyle: { width: 2.2, color: "#1f699f" },
+            itemStyle: { color: "#1f699f" }
+          },
+          {
+            name: `${state.c2Year - 1}年同期累计`,
+            type: "line",
+            data: prevData,
+            smooth: 0.2,
+            lineStyle: { width: 2, type: "dashed", color: "#c27c2a" },
+            itemStyle: { color: "#c27c2a" }
+          }
+        ]
+      });
+    }
+
+    function computeProfitStats() {
+      const buildStats = (label, series) => {
+        if (!series.length) return [];
+        const latest = series[series.length - 1].value;
+        const take = (n) => series.slice(Math.max(0, series.length - n));
+        const avg = (arr) => arr.length ? arr.reduce((sum, d) => sum + d.value, 0) / arr.length : null;
+        const w4 = take(4);
+        const w12 = take(12);
+        return [
+          { label: `${label}最新利润`, value: latest, digits: 2, suffix: "元/头" },
+          { label: `${label}近4周均值`, value: avg(w4), digits: 2, suffix: "元/头" },
+          { label: `${label}近12周均值`, value: avg(w12), digits: 2, suffix: "元/头" }
+        ];
+      };
+
+      return [
+        ...buildStats(PROFIT_SERIES_META.external.label, getProfitSeries(PROFIT_SERIES_META.external.key)),
+        ...buildStats(PROFIT_SERIES_META.self.label, getProfitSeries(PROFIT_SERIES_META.self.key))
+      ];
+    }
+
+    function renderProfitStats() {
+      const stats = computeProfitStats();
+      const container = document.getElementById("profitStats");
+      container.innerHTML = stats
+        .map((item) => {
+          const val = item.suffix === "%"
+            ? (item.value == null ? "--" : `${item.value.toFixed(item.digits)}${item.suffix}`)
+            : `${formatNumber(item.value, item.digits)} ${item.suffix}`;
+          return `
+            <div class="stat-box">
+              <div class="stat-label">${item.label}</div>
+              <div class="stat-value">${val}</div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function renderD1(chart) {
+      const list = clipSeries(getProfitComparisonSeries(), state.d1Range);
+      const latestExternal = getProfitLatestPoint(PROFIT_SERIES_META.external.key);
+      const latestSelf = getProfitLatestPoint(PROFIT_SERIES_META.self.key);
+
+      chart.setOption({
+        grid: { left: 56, right: 34, top: 48, bottom: 40, containLabel: true },
+        legend: {
+          top: 10,
+          data: [PROFIT_SERIES_META.external.label, PROFIT_SERIES_META.self.label],
+          textStyle: { color: "#355677" }
+        },
+        tooltip: {
+          trigger: "axis",
+          position: rightTooltipPosition,
+          confine: true,
+          formatter(params) {
+            const row = list[params[0].dataIndex];
+            const external = row.external;
+            const self = row.self;
+            return `${row.date}<br/>${PROFIT_SERIES_META.external.label}：${external ? `${formatNumber(external.value, 2)} 元/头` : "--"}<br/>周环比：${formatPct(external ? external.wow : null, 1)}<br/>${PROFIT_SERIES_META.self.label}：${self ? `${formatNumber(self.value, 2)} 元/头` : "--"}<br/>周环比：${formatPct(self ? self.wow : null, 1)}`;
+          }
+        },
+        xAxis: {
+          type: "category",
+          data: list.map((d) => d.date),
+          axisLabel: { color: "#4f6781" }
+        },
+        yAxis: {
+          type: "value",
+          axisLabel: { color: "#4f6781" },
+          splitLine: { lineStyle: { color: "#e4ecf4" } }
+        },
+        series: [
+          {
+            name: PROFIT_SERIES_META.external.label,
+            type: "line",
+            smooth: 0.2,
+            data: list.map((d) => d.external ? d.external.value : null),
+            lineStyle: { color: "#1f6ea6", width: 2.2 },
+            itemStyle: { color: "#1f6ea6" },
+            showSymbol: false,
+            markPoint: latestExternal
+              ? {
+                  symbol: "pin",
+                  symbolSize: 38,
+                  label: { color: "#1f6ea6", formatter: "最新" },
+                  itemStyle: { color: "#1f6ea6" },
+                  data: [{ name: "最新", coord: [latestExternal.date, latestExternal.value], value: latestExternal.value }]
+                }
+              : undefined,
+            markLine: {
+              symbol: "none",
+              lineStyle: { type: "dashed", color: "#b85454", width: 1.5 },
+              label: { formatter: "0元/头盈亏平衡线", color: "#b85454", position: "insideEndTop" },
+              data: [{ yAxis: 0 }]
+            }
+          },
+          {
+            name: PROFIT_SERIES_META.self.label,
+            type: "line",
+            smooth: 0.2,
+            data: list.map((d) => d.self ? d.self.value : null),
+            lineStyle: { color: "#cf6d2e", width: 2.2 },
+            itemStyle: { color: "#cf6d2e" },
+            showSymbol: false,
+            markPoint: latestSelf
+              ? {
+                  symbol: "pin",
+                  symbolSize: 38,
+                  label: { color: "#cf6d2e", formatter: "最新" },
+                  itemStyle: { color: "#cf6d2e" },
+                  data: [{ name: "最新", coord: [latestSelf.date, latestSelf.value], value: latestSelf.value }]
+                }
+              : undefined
+          }
+        ]
+      });
+    }
+
+    function renderE1(chart) {
+      const list = getSeries("per_capita_pork_consumption");
+      const xData = list.map((d) => d.date.slice(0, 4));
+      const valData = list.map((d) => d.value);
+      const yoyData = list.map((d) => d.yoy == null ? null : Number((d.yoy * 100).toFixed(2)));
+
+      chart.setOption({
+        grid: getResponsiveGrid(chart, { left: 56, right: 50, top: 52, bottom: 40 }),
+        tooltip: { trigger: "axis", position: rightTooltipPosition, confine: true },
+        legend: { top: 8, textStyle: { color: "#355677" } },
+        xAxis: buildCategoryXAxis(chart, xData, false),
+        yAxis: [
+          {
+            type: "value",
+            name: "公斤/年·人",
+            axisLabel: { color: "#4f6781" },
+            splitLine: { lineStyle: { color: "#e4ecf4" } }
+          },
+          {
+            type: "value",
+            name: "同比(%)",
+            axisLabel: { formatter: "{value}%", color: "#5a738f" },
+            splitLine: { show: false }
+          }
+        ],
+        series: [
+          {
+            name: "人均猪肉消费量",
+            type: "bar",
+            data: valData,
+            itemStyle: { color: "#2d79bf" }
+          },
+          {
+            name: "同比",
+            type: "line",
+            yAxisIndex: 1,
+            data: yoyData,
+            lineStyle: { color: "#c07d2e", width: 2 },
+            itemStyle: { color: "#c07d2e" },
+            symbolSize: 6
+          }
+        ]
+      });
+    }
+
+    function renderE2(chart) {
+      const list = clipSeries(getSeries(state.e2Metric), state.e2Range);
+      const meta = seriesMeta[state.e2Metric];
+      const isCum = state.e2Metric.includes("_cum");
+
+      chart.setOption({
+        grid: getResponsiveGrid(chart, { left: 56, right: 34, top: 50, bottom: 40 }),
+        tooltip: {
+          trigger: "axis",
+          position: rightTooltipPosition,
+          confine: true,
+          formatter(params) {
+            const p = list[params[0].dataIndex];
+            return `${compactDate(p.date)}<br/>${meta.name}：${formatNumber(p.value, meta.digits)} ${meta.unit}` +
+              `<br/>环比：${formatPct(p.mom, 1)}` +
+              `<br/>同比：${formatPct(p.yoy, 1)}`;
+          }
+        },
+        xAxis: buildCategoryXAxis(chart, list.map((d) => compactDate(d.date)), false),
+        yAxis: {
+          type: "value",
+          axisLabel: { color: "#4f6781" },
+          splitLine: { lineStyle: { color: "#e4ecf4" } }
+        },
+        series: [
+          {
+            name: meta.name,
+            type: isCum ? "line" : "bar",
+            data: list.map((d) => d.value),
+            smooth: isCum ? 0.2 : 0,
+            itemStyle: { color: isCum ? "#1f6da3" : "#2f7bc5" },
+            lineStyle: isCum ? { width: 2.2, color: "#1f6da3" } : undefined,
+            areaStyle: isCum ? { color: "rgba(47,123,197,0.12)" } : undefined
+          }
+        ]
+      });
+    }
+
+    function bindControlsAndRender(charts) {
+      const a2MetricOptions = [
+        { key: "hog_inventory", label: "生猪存栏" },
+        { key: "hog_slaughter", label: "生猪出栏" },
+        { key: "pork_output", label: "猪肉产量" }
+      ];
+      const onA2Metric = (key) => {
+        state.a2Metric = key;
+        makeButtons("a2MetricBtns", a2MetricOptions, state.a2Metric, onA2Metric);
+        renderA2(charts.a2);
+      };
+      makeButtons("a2MetricBtns", a2MetricOptions, state.a2Metric, onA2Metric);
+
+      const a2RangeSelect = document.getElementById("a2RangeSelect");
+      if (a2RangeSelect) {
+        a2RangeSelect.innerHTML = rangeOptions.map((opt) => `<option value="${opt.key}">${opt.label}</option>`).join("");
+        a2RangeSelect.value = state.a2Range;
+        a2RangeSelect.addEventListener("change", (event) => {
+          state.a2Range = event.target.value;
+          renderA2(charts.a2);
+        });
+      }
+
+      const onB1Range = (key) => {
+        state.b1Range = key;
+        makeButtons("b1RangeBtns", rangeOptions, state.b1Range, onB1Range);
+        renderMultiLine(charts.b1, ["sow_sale_price", "piglet_price", "hog_exit_price"], state.b1Range);
+      };
+      makeButtons("b1RangeBtns", rangeOptions, state.b1Range, onB1Range);
+
+      const onB2Range = (key) => {
+        state.b2Range = key;
+        makeButtons("b2RangeBtns", rangeOptions, state.b2Range, onB2Range);
+        renderMultiLine(
+          charts.b2,
+          [
+            "hog_exit_price",
+            "wholesale_carcass_price",
+            "city_wholesale_carcass_price",
+            "lean_meat_retail_price",
+            "hind_leg_retail_price",
+            "county_market_retail_price"
+          ],
+          state.b2Range
+        );
+      };
+      makeButtons("b2RangeBtns", rangeOptions, state.b2Range, onB2Range);
+
+      const onD1Range = (key) => {
+        state.d1Range = key;
+        makeButtons("d1RangeBtns", profitRangeOptions, state.d1Range, onD1Range);
+        renderD1(charts.d1);
+      };
+      makeButtons("d1RangeBtns", profitRangeOptions, state.d1Range, onD1Range);
+
+      const e2Options = [
+        "import_pork_monthly",
+        "import_offal_monthly",
+        "export_pork_monthly",
+        "export_offal_monthly",
+        "import_pork_cum",
+        "import_offal_cum",
+        "export_pork_cum",
+        "export_offal_cum"
+      ];
+      const e2Select = document.getElementById("e2MetricSelect");
+      e2Select.innerHTML = e2Options.map((key) => `<option value="${key}">${seriesMeta[key].name}</option>`).join("");
+      e2Select.value = state.e2Metric;
+      e2Select.addEventListener("change", (event) => {
+        state.e2Metric = event.target.value;
+        renderE2(charts.e2);
+      });
+
+      const onE2Range = (key) => {
+        state.e2Range = key;
+        makeButtons("e2RangeBtns", rangeOptions, state.e2Range, onE2Range);
+        renderE2(charts.e2);
+      };
+      makeButtons("e2RangeBtns", rangeOptions, state.e2Range, onE2Range);
+
+      document.getElementById("c2YearSelect").addEventListener("change", (event) => {
+        state.c2Year = Number(event.target.value);
+        renderC2(charts.c2);
+      });
+    }
+
+    function bootstrap() {
+      setHeader();
+      renderPigStockPerformance();
+      renderHotNews();
+      buildCoreMetrics();
+      decoratePanelHelpButtons();
+      bindHelpInteractions();
+      renderObjectiveInsight();
+
+      const charts = {};
+      APP_CHARTS = charts;
+
+      const hotNewsToggle = document.getElementById("hotNewsToggle");
+      if (hotNewsToggle) {
+        hotNewsToggle.addEventListener("click", toggleHotPanelMode);
+      }
+      initMarketTabs();
+      bindControlsAndRender(charts);
+      initModuleTabs(charts);
+      initVideoErrorHandling();
+      initWeixinVideoAutoplay();
+      initVideoLazyPlay();
+
+      rerenderAllCharts(charts);
+      setupChartAutoResize(charts);
+    }
+
+    bootstrap();
+  </script>
 </body>
 </html>
