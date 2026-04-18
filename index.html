@@ -5,6 +5,169 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>生猪产业链数据监测</title>
+  <link href="//cdn.jin10.com/assets/img/commons/favicon.ico" type="image/x-icon" rel="icon" />
+  <script src="https://cdn.jin10.com/plugins/jsBridge/index.js"></script>
+  <link href="./css/test-env-tag.css" rel="stylesheet" />
+  <script>
+    function stat(sites) {
+      const parsedSites = stat._parseSites(sites);
+      if (parsedSites.indexOf("1000171913") > -1) {
+        parsedSites.push("1253039837");
+      }
+      parsedSites.forEach((site) => {
+        const script = stat._createScript(site);
+        document.head.appendChild(script);
+      });
+    }
+
+    stat._parseSites = function (sites = []) {
+      sites = [].concat(sites);
+      if (stat.commonIncluded) {
+        sites.unshift("common");
+      }
+      const parse = (site) => stat.sites[site] || site;
+      const unique = (arr) => {
+        const newArr = [];
+        for (let i = 0; i < arr.length; i++) {
+          const item = arr[i];
+          if (newArr.indexOf(item) === -1) {
+            newArr.push(item);
+          }
+        }
+        return newArr;
+      };
+      return unique(sites.map(parse));
+    };
+
+    stat._createScript = function (id) {
+      const script = document.createElement("script");
+      const protocol = location.protocol;
+      const args = [];
+      args.push("id=" + id);
+      args.push("web_id=" + id);
+      args.push("async=1");
+      script.charset = "utf-8";
+      script.type = "text/javascript";
+      script.async = true;
+      script.src = protocol + "//s96.cnzz.com/z_stat.php?" + args.join("&");
+      return script;
+    };
+
+    stat.commonIncluded = true;
+    stat.sites = {
+      common: "1000171913",
+      vip: "1255889801",
+      diary: "1262999091",
+      hero: "1262999091",
+      news: "1254618299",
+      video: "1253231394",
+      calendar: "1253656910",
+      datacenter: "1261933372"
+    };
+
+    let cnzzStatInitialized = false;
+
+    function initCnzzStat() {
+      if (cnzzStatInitialized) return;
+      cnzzStatInitialized = true;
+      try {
+        stat();
+      } catch (error) {
+        console.warn("cnzzStat 初始化失败", error);
+      }
+    }
+
+    function initTestEnvTag() {
+      const hostname = window.location.hostname;
+      if (!hostname.startsWith("frontend-test.jin10.com") && !["localhost", "127.0.0.1", "local.jin10.com"].includes(hostname)) {
+        return;
+      }
+
+      if (document.getElementById("test-env-tag")) return;
+
+      const tag = document.createElement("div");
+      tag.id = "test-env-tag";
+      tag.innerHTML = [
+        '        <span class="mobile-text flex items-center justify-center">',
+        '          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></svg>',
+        '        </span>',
+        '        <span class="pc-text">测试环境</span>'
+      ].join("\n");
+      document.body.appendChild(tag);
+      tag.style.top = "70px";
+      tag.style.left = "10px";
+
+      let isDragging = false;
+      let isMoved = false;
+      let startX = 0;
+      let startY = 0;
+      let initialLeft = 0;
+      let initialTop = 0;
+      let clientWidth = document.documentElement.clientWidth;
+      let clientHeight = document.documentElement.clientHeight;
+
+      const snapToEdge = () => {
+        const rect = tag.getBoundingClientRect();
+        const tagX = rect.left + rect.width / 2;
+        tag.style.left = tagX < clientWidth / 2 ? "10px" : clientWidth - rect.width - 10 + "px";
+        if (rect.top < 0) tag.style.top = "10px";
+        if (rect.bottom > clientHeight) tag.style.top = clientHeight - rect.height - 10 + "px";
+      };
+
+      const onDragStart = (event) => {
+        isDragging = true;
+        isMoved = false;
+        tag.classList.add("dragging");
+        const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+        const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+        const rect = tag.getBoundingClientRect();
+        startX = clientX;
+        startY = clientY;
+        initialLeft = rect.left;
+        initialTop = rect.top;
+      };
+
+      const onDragMove = (event) => {
+        if (!isDragging) return;
+        event.preventDefault();
+        const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+        const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+        if (Math.abs(clientX - startX) > 5 || Math.abs(clientY - startY) > 5) {
+          isMoved = true;
+        }
+        const deltaX = clientX - startX;
+        const deltaY = clientY - startY;
+        tag.style.left = initialLeft + deltaX + "px";
+        tag.style.top = initialTop + deltaY + "px";
+      };
+
+      const onDragEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        tag.classList.remove("dragging");
+        snapToEdge();
+      };
+
+      tag.addEventListener("mousedown", onDragStart);
+      tag.addEventListener("touchstart", onDragStart, { passive: false });
+      document.addEventListener("mousemove", onDragMove);
+      document.addEventListener("touchmove", onDragMove, { passive: false });
+      document.addEventListener("mouseup", onDragEnd);
+      document.addEventListener("touchend", onDragEnd);
+      tag.addEventListener("click", (event) => {
+        if (isMoved) {
+          event.preventDefault();
+          event.stopPropagation();
+          isMoved = false;
+        }
+      });
+      window.addEventListener("resize", () => {
+        clientWidth = document.documentElement.clientWidth;
+        clientHeight = document.documentElement.clientHeight;
+        snapToEdge();
+      });
+    }
+  </script>
   <style>
     :root {
       --bg: #f8fafc;
@@ -39,7 +202,7 @@
         radial-gradient(circle at top, rgba(197, 153, 85, 0.08), transparent 28%),
         linear-gradient(180deg, #f8fafc 0%, #f8fafc 100%);
       color: var(--ink);
-      font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      font-family: 'Source Han Sans', 'Noto Sans CJK SC', sans-serif;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
@@ -125,6 +288,27 @@
       max-width: 980px;
       margin-left: auto;
       margin-right: auto;
+    }
+
+    .page-watermark {
+      position: fixed;
+      inset: 0;
+      z-index: 5200;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page-watermark img {
+      display: block;
+      width: min(43.2vw, 216px);
+      max-width: 216px;
+      height: auto;
+      opacity: 0.38;
+      filter: saturate(0.95);
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     .section-title {
@@ -283,6 +467,15 @@
       line-height: 1.6;
     }
 
+    .insight-list li + li {
+      margin-top: 12px;
+    }
+
+    .insight-list strong {
+      color: #111827;
+      font-weight: 800;
+    }
+
     .showcase {
       margin-top: 14px;
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.98));
@@ -355,34 +548,68 @@
 
     .market-shell {
       margin-top: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(250, 251, 253, 0.99));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      padding: 12px;
+    }
+
+    .market-shell-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .market-shell-head .section-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .market-subtitle {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.25;
+      font-weight: 800;
+      color: #12314d;
+    }
+
+    .market-shell-body {
+      margin-top: 12px;
+    }
+
+    .market-shell-body .showcase,
+    .market-shell-body .stock-panel {
+      margin-top: 0;
     }
 
     .market-tabs {
       display: flex;
-      gap: 8px;
-      margin-top: 8px;
-      margin-bottom: 10px;
-      padding: 0;
-      border: 0;
-      border-radius: 0;
-      background: transparent;
+      gap: 6px;
+      flex: 0 0 auto;
     }
 
     .market-tab-btn {
-      flex: 1 1 0;
-      min-height: 36px;
-      border: 0;
-      border-radius: 12px;
-      background: transparent;
+      flex: 0 0 auto;
+      min-width: 58px;
+      min-height: 28px;
+      padding: 0 12px;
+      border: 1px solid #d7e0ea;
+      border-radius: 999px;
+      background: #ffffff;
       color: #475467;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
-      transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+      transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     }
 
     .market-tab-btn.active {
-      background: linear-gradient(135deg, #d7b170, var(--gold));
+      background: linear-gradient(135deg, #f4e8d2, #dab97a);
+      border-color: #c59955;
       color: #fffaf0;
       box-shadow: 0 8px 18px rgba(197, 153, 85, 0.14);
     }
@@ -502,7 +729,7 @@
     }
 
     .stock-row-fill.neg {
-      background: linear-gradient(90deg, rgba(224, 94, 101, 0.14), rgba(224, 94, 101, 0.22));
+      background: linear-gradient(90deg, rgba(31, 158, 85, 0.10), rgba(31, 158, 85, 0.22));
     }
 
     .stock-row-main {
@@ -597,6 +824,10 @@
       color: #5f6b7a;
     }
 
+    .stock-return.neg {
+      color: #1f9e55;
+    }
+
     .hot-news-panel {
       margin-top: 14px;
       background: rgba(255, 255, 255, 0.98);
@@ -664,7 +895,7 @@
     .hot-news-topline {
       display: flex;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: flex-start;
       gap: 10px;
     }
 
@@ -763,6 +994,28 @@
       letter-spacing: -0.15px;
     }
 
+    .chart-legend {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #f8fafc;
+      border: 1px solid #e4e7ec;
+      color: #667085;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .chart-legend-swatch {
+      width: 18px;
+      height: 0;
+      border-top: 2px dashed #2f7bc5;
+      flex: 0 0 auto;
+    }
+
     .controls {
       display: flex;
       align-items: center;
@@ -831,6 +1084,28 @@
       padding: 0;
       border-radius: 0;
       line-height: 1.55;
+    }
+
+    .profit-legend {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #fff7f3;
+      border: 1px solid rgba(184, 84, 84, 0.18);
+      color: #b85454;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .profit-legend-swatch {
+      width: 18px;
+      height: 0;
+      border-top: 2px dashed #b85454;
+      flex: 0 0 auto;
     }
 
     .warning-box {
@@ -1015,6 +1290,10 @@
       margin-top: 18px;
     }
 
+    .market-dependent-sections {
+      display: block;
+    }
+
     .module-shell .section-title {
       margin-bottom: 8px;
     }
@@ -1170,6 +1449,184 @@
       }
     }
 
+    /* ── 跑马灯 ── */
+    .price-ticker {
+      margin: 10px 0 0;
+      background: linear-gradient(90deg, #f0f7ff 0%, #fefefe 50%, #f0f7ff 100%);
+      border: 1px solid #d0e4f5;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      height: 34px;
+      box-shadow: 0 2px 8px rgba(47,123,197,0.07);
+    }
+
+    .price-ticker-label {
+      flex: 0 0 auto;
+      background: linear-gradient(135deg, #144a79, #2f7bc5);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 0 10px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      border-radius: 12px 0 0 12px;
+      gap: 5px;
+    }
+
+    .price-ticker-label .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4eff9a;
+      flex: 0 0 auto;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    .price-ticker-track {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .price-ticker-inner {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      white-space: nowrap;
+      animation: marquee 32s linear infinite;
+      will-change: transform;
+    }
+
+    .price-ticker-inner:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: #1e3a5f;
+      padding: 0 14px;
+      border-right: 1px solid rgba(47,123,197,0.12);
+      height: 20px;
+      line-height: 1;
+    }
+
+    .ticker-item .ticker-region {
+      font-weight: 700;
+      color: #2f5e8e;
+    }
+
+    .ticker-item .ticker-price {
+      font-weight: 800;
+      color: #101828;
+    }
+
+    .ticker-item .ticker-change {
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .ticker-item .ticker-change.up   { color: #d83535; }
+    .ticker-item .ticker-change.down { color: #1f9e55; }
+    .ticker-item .ticker-change.flat { color: #667085; }
+
+    .ticker-sep {
+      display: inline-flex;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #2f7bc5;
+      letter-spacing: 0.06em;
+      border-right: 1px solid rgba(47,123,197,0.12);
+      height: 20px;
+    }
+
+    /* ── LIVE 监测徽章 ── */
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 8px 2px 6px;
+      border-radius: 999px;
+      background: rgba(215, 53, 53, 0.08);
+      border: 1px solid rgba(215, 53, 53, 0.22);
+      color: #c63535;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      vertical-align: middle;
+    }
+
+    .live-badge .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #d83535;
+      flex: 0 0 auto;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.25; }
+    }
+
+    /* ── 快讯 NEW 标签 ── */
+    .news-new-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, #e84040, #c52020);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      flex: 0 0 auto;
+      vertical-align: middle;
+    }
+
+    .news-new-tag .live-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #fff;
+      flex: 0 0 auto;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    /* ── 热点资讯头部右侧状态 ── */
+    .hot-news-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hot-news-head-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     @media (max-width: 760px) {
       .page {
         width: min(440px, calc(100vw - 16px));
@@ -1248,79 +1705,104 @@
   </style>
 </head>
 <body>
+  <div class="page-watermark" aria-hidden="true">
+    <img src="./img/hog-chain-topic/watermark.png" alt="" draggable="false" />
+  </div>
   <div class="page">
     <header class="hero">
       <div class="hero-brand">
         <div class="hero-brand-badge">
-          <img src="./jin10-logo.svg" alt="金十期货" />
+          <img src="./img/hog-chain-topic/jin10-logo.svg" alt="金十期货" />
         </div>
       </div>
-      <h1>生猪产业链数据监测</h1>
+      <h1>生猪产业链数据看板</h1>
       <p class="subtitle">从能繁母猪到养殖利润，追踪生猪产业链核心指标的历史变化。</p>
       <div class="hero-meta">
         <div id="updateTime">更新时间：--</div>
       </div>
     </header>
 
+    <!-- 跑马灯：当日现货报价 -->
+    <div class="price-ticker" aria-label="4月18日生猪现货报价">
+      <div class="price-ticker-label">
+        <span class="live-dot"></span>
+        现货报价
+      </div>
+      <div class="price-ticker-track">
+        <div class="price-ticker-inner" id="priceTicker">
+          <!-- 内容由 JS 填充，双份实现无缝循环 -->
+        </div>
+      </div>
+    </div>
+
     <section class="market-shell" aria-label="行情表现">
-      <h2 class="section-title">行情表现</h2>
-      <div class="market-tabs" id="marketTabs" role="tablist" aria-label="行情表现切换">
-        <button type="button" class="market-tab-btn active" data-tab="futures" role="tab" aria-selected="true">期货</button>
-        <button type="button" class="market-tab-btn" data-tab="stocks" role="tab" aria-selected="false">股价</button>
+      <div class="market-shell-head">
+        <h2 class="section-title">行情表现</h2>
+        <div class="market-tabs" id="marketTabs" role="tablist" aria-label="行情表现切换">
+          <button type="button" class="market-tab-btn active" data-tab="futures" role="tab" aria-selected="true">期货</button>
+          <button type="button" class="market-tab-btn" data-tab="stocks" role="tab" aria-selected="false">股价</button>
+        </div>
       </div>
 
-      <section class="market-tab-panel" data-tab="futures" role="tabpanel">
-        <div class="showcase" aria-label="生猪期货近期表现">
-          <div class="showcase-head">
-            <h3 class="section-title" style="margin: 0;">生猪期货近期表现</h3>
+      <div class="market-shell-body">
+        <section class="market-tab-panel" data-tab="futures" role="tabpanel">
+          <div class="showcase" aria-label="生猪期货近期表现">
+            <div class="showcase-head">
+              <h3 class="market-subtitle" style="margin: 0;">生猪期货近期表现</h3>
+            </div>
+            <div class="showcase-video">
+              <video
+                id="showcaseVideo"
+                muted
+                autoplay
+                loop
+                playsinline
+                preload="auto"
+                webkit-playsinline="true"
+                x5-video-player-type="h5"
+                x5-playsinline="true"
+                x5-video-orientation="portraint"
+                poster="https://cdn.jin10.com/assets/img/commons/jin10.png"
+              >
+                <source src="https://media.jin10.com/video/6c84c566821743b19a438d5992878b1b/lgvideoclipv120260417.mp4" type="video/mp4" />
+                您的浏览器不支持视频标签。
+              </video>
+            </div>
+            <div class="showcase-footer" style="margin-top: 10px;">
+              <button
+                type="button"
+                class="showcase-cta"
+                onclick="window.openUrlWithBridge('https://qihuo.jin10.com/vip/watch/index.html?group_id=qh_lh_monitor&from=qihuoWeb#/desktop')"
+              >
+                点击生猪盯盘神器
+              </button>
+            </div>
           </div>
-          <div class="showcase-video">
-            <video
-              id="showcaseVideo"
-              muted
-              autoplay
-              loop
-              playsinline
-              preload="auto"
-              webkit-playsinline="true"
-              x5-video-player-type="h5"
-              x5-playsinline="true"
-              x5-video-orientation="portraint"
-              poster="https://cdn.jin10.com/assets/img/commons/jin10.png"
-            >
-              <source src="https://media.jin10.com/video/6c84c566821743b19a438d5992878b1b/lgvideoclipv120260417.mp4" type="video/mp4" />
-              您的浏览器不支持视频标签。
-            </video>
-          </div>
-          <div class="showcase-footer" style="margin-top: 10px;">
-            <button
-              type="button"
-              class="showcase-cta"
-              onclick="window.open('https://qihuo.jin10.com/vip/watch/index.html?group_id=qh_lh_monitor&from=qihuoWeb#/desktop', '_blank', 'noreferrer')"
-            >
-              点击生猪盯盘神器
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section class="market-tab-panel" data-tab="stocks" role="tabpanel" hidden>
-        <section class="stock-panel" aria-label="猪企股价4月以来表现">
-          <div class="stock-panel-inner" id="pigStockPanel"></div>
         </section>
-      </section>
+
+        <section class="market-tab-panel" data-tab="stocks" role="tabpanel" hidden>
+          <section class="stock-panel" aria-label="猪企股价4月以来表现">
+            <div class="stock-panel-inner" id="pigStockPanel"></div>
+          </section>
+        </section>
+      </div>
     </section>
 
+    <div id="marketDependentSections" class="market-dependent-sections">
     <section class="hot-news-panel" aria-label="热点资讯">
       <div class="hot-news-head">
-        <div>
+        <div class="hot-news-head-left">
           <h2 class="section-title" style="margin: 0;">生猪热点资讯</h2>
+          <span class="live-badge"><span class="live-dot"></span>持续监测中</span>
         </div>
-        <button type="button" class="hot-news-toggle" id="hotNewsToggle">机构观点</button>
+        <button type="button" class="hot-news-toggle" id="hotNewsToggle">查看机构观点</button>
       </div>
       <div id="hotNewsList" class="hot-news-list" aria-live="polite"></div>
       <div class="hot-news-footer">
-        <a class="hot-news-footer-cta" href="https://qihuo.jin10.com/tag.html?tag=%E7%94%9F%E7%8C%AA" target="_blank" rel="noreferrer">查看更多生猪资讯</a>
+        <a class="hot-news-footer-cta" href="https://qihuo.jin10.com/tag.html?tag=%E7%94%9F%E7%8C%AA" target="_blank" rel="noreferrer" onclick="
+          event.preventDefault();
+          window.openUrlWithBridge(this.href);
+        ">查看更多生猪资讯</a>
       </div>
     </section>
 
@@ -1344,6 +1826,10 @@
             <div class="panel">
               <div class="panel-head">
                 <h3 class="panel-title">A1. 能繁母猪存栏 vs 政策区间图</h3>
+                <div class="chart-legend" aria-label="A1 图例">
+                  <span class="chart-legend-swatch" aria-hidden="true"></span>
+                  <span>正常保有量 3900 万头</span>
+                </div>
               </div>
               <div id="chartA1" class="chart"></div>
               <p class="panel-note">指标说明：能繁母猪存栏是农业农村部生猪产能调控的核心观察指标，可用于跟踪产能是否处于正常波动区间。</p>
@@ -1424,6 +1910,10 @@
                 <div class="controls"><div class="btn-group" id="d1RangeBtns"></div></div>
               </div>
               <div id="chartD1" class="chart"></div>
+              <div class="profit-legend" aria-label="D1 图例">
+                <span class="profit-legend-swatch" aria-hidden="true"></span>
+                <span>0元/头盈亏平衡线</span>
+              </div>
               <p class="panel-note">自繁自养与外购仔猪两条利润线分别反映不同养殖模式在销售价格、仔猪成本和饲料成本变化下的经营表现。两者都受生猪价格、补栏节奏、饲料成本和季节性波动影响，不直接对应市场价格判断。</p>
             </div>
           </div>
@@ -1456,7 +1946,8 @@
     </section>
 
     <div class="footer-risk">免责声明：本页面内容基于国家统计局、农业农村部等公开信息整理，页面布局由AI辅助生成，仅用于资讯展示与行业信息参考，不构成对任何市场、品种、合约或价格走势的判断，也不构成任何投资建议、交易依据或收益承诺。相关数据可能因统计口径、发布时间、样本范围或后续修订而发生变化，用户据此使用所产生的风险需自行承担。</div>
-  </div>
+    </div>
+    </div>
 
   <div class="bottom-actions">
     <div class="bottom-actions-inner">
@@ -1476,8 +1967,8 @@
     </div>
   </div>
 
-  <script src="./echarts.min.js"></script>
-  <script src="./hog-chain-topic-data.js"></script>
+  <script src="./js/echarts-5.4.3.min.js"></script>
+  <script src="./js/hog-chain-topic-data.js"></script>
   <script>
     const DATA = window.HOG_CHAIN_TOPIC_DATA || { meta: {}, series: {}, profit_weekly: [], profit_external_weekly: [] };
 
@@ -1537,7 +2028,7 @@
           source_xlsx: "",
           source: "国家统计局",
           source_label: NBS_QUARTERLY_SOURCE,
-          period_label: `${quarterLabelFromDate(item.date)}${key === "hog_slaughter" ? "（生猪出栏）" : "（猪肉产量）"}`
+          period_label: quarterLabelFromDate(item.date)
         };
       });
     }
@@ -1584,10 +2075,24 @@
 
     const HOT_NEWS_ITEMS = [
       {
+        date: "2026-04-18 09:57:55",
+        title: "【猪价有望逐步企稳回升 全年或将呈现"前低后高、窄幅波动"特征】",
+        summary: "从农业农村部了解到，去年7月以来，全国能繁母猪存栏量已连续9个月下降，今年3月份新生仔猪数量17个月后首次同比下降，有利于改善生猪供需，推动后市猪价合理回升。有关专家表示，受产能偏高、市场供给惯性增加影响，当前生猪价格低位运行。随着产能去化效果逐步显现，猪价有望逐步企稳回升，全年有望呈现"前低后高、窄幅波动"特征。（央视新闻）",
+        url: "#",
+        isNew: true
+      },
+      {
+        date: "2026-04-18 00:23:14",
+        title: "【农业农村部召开生猪产业发展座谈会】",
+        summary: "4月17日，农业农村部党组书记、部长韩俊主持召开生猪产业发展座谈会。会议强调，要切实抓好生猪产能综合调控，稳定生猪市场预期，推动价格合理回升，促进生猪产业高质量发展。要进一步完善生猪产能综合调控政策，采取有力有效举措推动猪价合理回升。要加快淘汰低产高龄能繁母猪和体弱仔猪，严控新增产能。要加密生猪生产监测预警，增强监测分析的前瞻性、调控目标的精准性、调控手段的有效性。（农业农村部）",
+        url: "#",
+        isNew: true
+      },
+      {
         date: "2026-04-17 16:51:41",
         title: "【今日盘面线索·4月17日复盘】",
         summary: "今日值得回溯的四个行情：①碳酸锂：矿端多维收缩预期与终端双轨需求上移的定价博弈；②生猪：短期情绪修复与长周期产能压制的期限博弈；③集运欧线：地缘余波与旺季提涨预期的期现结构重塑；④铂钯：地缘缓和预期与贸易关税约束的反复定价。",
-        url: "https://qihuo.jin10.com/flashDetail.html?id=20260417165141933800"
+        url: "https://qihuo.jin10.com/articleDetail.html?id=216884&comments=all"
       },
       {
         date: "2026-04-17 16:35:08",
@@ -1656,8 +2161,8 @@
       { rank: 1, name: "天邦食品", open: 2.36, close: 3.08, gain: 30.51 },
       { rank: 2, name: "华统股份", open: 11.10, close: 13.56, gain: 22.16 },
       { rank: 3, name: "巨星农牧", open: 15.48, close: 18.59, gain: 20.09 },
-      { rank: 4, name: "牧原股份", open: 42.20, close: 45.53, gain: 7.89 },
-      { rank: 5, name: "神农集团", open: 27.25, close: 30.06, gain: 10.31 },
+      { rank: 4, name: "神农集团", open: 27.25, close: 30.06, gain: 10.31 },
+      { rank: 5, name: "牧原股份", open: 42.20, close: 45.53, gain: 7.89 },
       { rank: 6, name: "新希望", open: 8.23, close: 8.80, gain: 6.93 },
       { rank: 7, name: "唐人神", open: 4.05, close: 4.23, gain: 4.44 },
       { rank: 8, name: "温氏股份", open: 16.43, close: 16.83, gain: 2.43 },
@@ -2157,10 +2662,36 @@
       }
     }
 
+    function openExternalUrl(url) {
+      if (window.innerWidth > 768) {
+        window.open(url, "_blank", "noopener,noreferrer");
+      } else {
+        window.location.href = url;
+      }
+    }
+
+    function openUrlWithBridge(url) {
+      if (typeof window.Jin10JSBridge !== "undefined") {
+        try {
+          const bridge = new window.Jin10JSBridge();
+          if (bridge.isApp) {
+            bridge.dispatch("openAppWebViewWithNav", { url: url });
+            return;
+          }
+        } catch (e) {
+          console.warn("bridge 打开链接失败，降级为外链打开", e);
+        }
+      }
+      openExternalUrl(url);
+    }
+
     document.addEventListener("DOMContentLoaded", initAppEnvironment);
     if (document.readyState !== "loading") {
       initAppEnvironment();
     }
+
+    initCnzzStat();
+    initTestEnvTag();
 
     function isWeixin() {
       return /micromessenger/i.test(navigator.userAgent || "");
@@ -2477,7 +3008,9 @@
         `利润端：外购仔猪养殖利润最新为${externalProfitText}，自繁自养生猪养殖利润最新为${selfProfitText}，两条利润线同步反映行业亏损压力。`
       );
       const box = document.getElementById("objectiveInsight");
-      box.innerHTML = `<h3 class="insight-title">客观解读（基于当前数据）</h3><p class="insight-conclusion">${conclusion}</p><ul class="insight-list">${lines.map((line) => `<li>${line}</li>`).join("")}</ul>`;
+      const formatInsightLine = (line) =>
+        line.replace(/^([^：]+：)/, '<strong>$1</strong>');
+      box.innerHTML = `<h3 class="insight-title">客观解读（基于当前数据）</h3><p class="insight-conclusion">${conclusion}</p><ul class="insight-list">${lines.map((line) => `<li>${formatInsightLine(line)}</li>`).join("")}</ul>`;
     }
 
     function renderNBSQuarterlySummary() {
@@ -2573,7 +3106,7 @@
           toggle.textContent = "生猪热点资讯";
           toggle.classList.add("active");
         } else {
-          toggle.textContent = "机构观点";
+          toggle.textContent = "查看机构观点";
           toggle.classList.remove("active");
         }
       }
@@ -2588,9 +3121,13 @@
       const isResearch = state.hotPanelMode === "research";
       const items = isResearch ? HOT_RESEARCH_ITEMS : HOT_NEWS_ITEMS;
       const renderItem = (item) => `
-        <a class="hot-news-item" href="${item.url}" target="_blank" rel="noreferrer">
+        <a class="hot-news-item" href="${item.url}" target="_blank" rel="noreferrer" onclick="
+          event.preventDefault();
+          if(this.href && this.href !== window.location.href && this.href !== '#') window.openUrlWithBridge(this.href);
+        ">
           <div class="hot-news-topline">
             ${isResearch ? `<span class="hot-news-meta">${item.source}</span>` : ""}
+            ${(!isResearch && item.isNew) ? `<span class="news-new-tag"><span class="live-dot"></span>最新</span>` : ""}
             <span class="hot-news-time">${item.date}</span>
           </div>
           <div class="hot-news-title">${item.title}</div>
@@ -2617,9 +3154,16 @@
       });
     }
 
+    function syncMarketDependentSections() {
+      const sections = document.getElementById("marketDependentSections");
+      if (!sections) return;
+      sections.hidden = state.marketTab === "stocks";
+    }
+
     function activateMarketTab(tabKey) {
       state.marketTab = tabKey;
       syncMarketTabUI(tabKey);
+      syncMarketDependentSections();
       requestAnimationFrame(() => {
         window.dispatchEvent(new Event("resize"));
       });
@@ -2651,7 +3195,7 @@
 
       const rowHtml = (item) => {
         const fillWidth = Math.max(6, Math.round(Math.max(item.gain, 0) / maxGain * 100));
-        const returnClass = item.gain >= 15 ? "strong" : item.gain >= 8 ? "mid" : item.gain >= 0 ? "soft" : "neutral";
+        const returnClass = item.gain >= 15 ? "strong" : item.gain >= 8 ? "mid" : item.gain >= 0 ? "soft" : "neg";
         const rankClass = item.rank === 1 ? "top1" : item.rank === 2 ? "top2" : item.rank === 3 ? "top3" : "";
         const fillClass = item.gain < 0 ? "neg" : "";
         const sign = item.gain > 0 ? "+" : "";
@@ -2678,7 +3222,7 @@
       container.innerHTML = `
         <div class="stock-panel-head">
           <div>
-            <h2 class="section-title" style="margin: 0;">猪企股价4月以来表现</h2>
+            <h2 class="market-subtitle" style="margin: 0;">猪企股价4月以来表现</h2>
             <p class="stock-panel-desc">4月以来，猪企股票出现集体反弹，但涨幅分化明显。天邦食品、华统股份、巨星农牧等猪企弹性更强，头部猪企中牧原股份表现相对靠前，温氏股份、新希望涨幅较温和。</p>
           </div>
         </div>
@@ -2782,30 +3326,30 @@
         {
           key: "nbs_sow_inventory",
           momLabel: "较2025年末",
-          desc: "国家统计局季度口径：一季度末能繁母猪存栏。"
+          desc: "能繁母猪存栏：指具备繁殖能力、可用于生产仔猪的母猪数量，是观察未来生猪供应变化的重要前置指标。"
         },
         {
           key: "nbs_hog_inventory",
           momLabel: "较2025年末",
-          desc: "国家统计局季度口径：一季度末生猪存栏。"
+          desc: "生猪存栏：指一定时期内养殖场或农户实际存养的生猪总数量，反映当前生猪供给基础。"
         },
         {
           key: "nbs_hog_slaughter",
           momLabel: "较2025年末",
-          desc: "国家统计局季度口径：2024Q1-2026Q1生猪出栏累计序列。"
+          desc: "生猪出栏：指达到上市或屠宰条件并从养殖环节售出的生猪数量，反映当期市场供应释放情况。"
         },
         {
           key: "nbs_pork_output",
           momLabel: "较2025年末",
-          desc: "国家统计局季度口径：2024Q1-2026Q1猪肉产量累计序列。"
+          desc: "猪肉产量：指一定时期内生猪屠宰后形成的猪肉产出总量，反映终端猪肉供应规模。"
         },
         {
           key: "hog_exit_price",
-          desc: "用于展示养殖端生猪出场价格变化。"
+          desc: "生猪出场价格：指生猪从养殖端出售给屠宰、流通等环节时的价格，通常用于反映养殖端销售价格水平。"
         },
         {
           key: "profit",
-          desc: "用于反映自繁自养模式阶段经营表现。"
+          desc: "养殖利润：指生猪销售收入扣除饲料、仔猪、人工、防疫等养殖成本后的收益水平，反映养殖企业或养殖户的盈利状况。"
         }
       ];
 
@@ -2843,7 +3387,10 @@
             momLabel = card.momLabel || "环比";
             momHtml = prev ? formatChangeHTML((latest.value - prev.value) / (Math.abs(prev.value) || 1), 1) : `<span class="change-flat">--</span>`;
             yoyHtml = latest.yoy != null ? formatChangeHTML(latest.yoy, 1) : `<span class="change-flat">--</span>`;
-            helpLines = [card.desc];
+            helpLines = [
+              card.desc,
+              "口径：国家统计局季度口径"
+            ];
           }
         } else if (card.key === "nbs_hog_inventory") {
           title = "生猪存栏";
@@ -2858,7 +3405,10 @@
             momLabel = card.momLabel || "环比";
             momHtml = prev ? formatChangeHTML((latest.value - prev.value) / (Math.abs(prev.value) || 1), 1) : `<span class="change-flat">--</span>`;
             yoyHtml = latest.yoy != null ? formatChangeHTML(latest.yoy, 1) : `<span class="change-flat">--</span>`;
-            helpLines = [card.desc];
+            helpLines = [
+              card.desc,
+              "口径：国家统计局季度口径"
+            ];
           }
         } else if (card.key === "nbs_hog_slaughter") {
           title = "生猪出栏";
@@ -2875,7 +3425,10 @@
               ? `<span class="${latest.value >= prev.value ? "change-up" : "change-down"}">${latest.value >= prev.value ? "↑" : "↓"} ${formatNumber(Math.abs(latest.value - prev.value), 0)} ${unit}</span>`
               : `<span class="change-flat">--</span>`;
             yoyHtml = latest.yoy != null ? formatChangeHTML(latest.yoy, 1) : `<span class="change-flat">--</span>`;
-            helpLines = [card.desc];
+            helpLines = [
+              card.desc,
+              "口径：国家统计局季度口径"
+            ];
           }
         } else if (card.key === "nbs_pork_output") {
           title = "猪肉产量";
@@ -2892,7 +3445,10 @@
               ? `<span class="${latest.value >= prev.value ? "change-up" : "change-down"}">${latest.value >= prev.value ? "↑" : "↓"} ${formatNumber(Math.abs(latest.value - prev.value), 0)} ${unit}</span>`
               : `<span class="change-flat">--</span>`;
             yoyHtml = latest.yoy != null ? formatChangeHTML(latest.yoy, 1) : `<span class="change-flat">--</span>`;
-            helpLines = [card.desc];
+            helpLines = [
+              card.desc,
+              "口径：国家统计局季度口径"
+            ];
           }
         } else if (card.key === "profit") {
           title = "养殖利润";
@@ -3033,13 +3589,13 @@
               symbol: "circle",
               symbolSize: 10,
               itemStyle: { color: "#e85b4e" },
-              label: { show: true, formatter: "最新", color: "#d94435" },
+              label: { show: false },
               data: [{ coord: [xData[xData.length - 1], yData[yData.length - 1]] }]
             },
             markLine: {
               symbol: "none",
               lineStyle: { color: "#2f7bc5", type: "dashed", width: 1.5 },
-              label: { formatter: "正常保有量3900万头", color: "#2f7bc5", position: "insideEndTop" },
+              label: { show: false },
               data: [{ yAxis: NORMAL_BREEDING_SOW }]
             },
             markArea: {
@@ -3095,7 +3651,7 @@
               symbol: "circle",
               symbolSize: 10,
               itemStyle: { color: "#e85b4e" },
-              label: { show: true, formatter: "最新", color: "#d94435" },
+              label: { show: false },
               data: source.length ? [{ coord: [xData[xData.length - 1], source[source.length - 1].value] }] : []
             },
             areaStyle: { color: "rgba(47,123,197,0.1)" }
@@ -3345,7 +3901,7 @@
             markLine: {
               symbol: "none",
               lineStyle: { type: "dashed", color: "#b85454", width: 1.5 },
-              label: { formatter: "0元/头盈亏平衡线", color: "#b85454", position: "insideEndTop" },
+              label: { show: false },
               data: [{ yAxis: 0 }]
             }
           },
@@ -3567,6 +4123,49 @@
       setupChartAutoResize(charts);
     }
 
+    // ── 跑马灯数据与初始化 ──
+    const TICKER_DATA = {
+      date: "4月18日",
+      inner: [
+        { type: "sep", label: "▪ 内三元现货" },
+        { region: "河南", price: "9.29", change: "+4.03%", dir: "up" },
+        { region: "山东", price: "9.92", change: "-1.20%", dir: "down" },
+        { region: "河北", price: "9.43", change: "-1.57%", dir: "down" },
+        { region: "辽宁", price: "9.53", change: "+0.32%", dir: "up" },
+        { region: "广东", price: "10.00", change: "0.00%", dir: "flat" },
+      ],
+      external: [
+        { type: "sep", label: "▪ 外三元现货" },
+        { region: "河南", price: "9.65", change: "+3.88%", dir: "up" },
+        { region: "山东", price: "10.19", change: "+4.94%", dir: "up" },
+        { region: "河北", price: "9.94", change: "+2.47%", dir: "up" },
+        { region: "辽宁", price: "9.47", change: "+1.28%", dir: "up" },
+        { region: "广东", price: "9.21", change: "+2.56%", dir: "up" },
+      ]
+    };
+
+    function buildTickerHTML(items) {
+      return items.map((item) => {
+        if (item.type === "sep") {
+          return `<span class="ticker-sep">${item.label}</span>`;
+        }
+        return `<span class="ticker-item">
+          <span class="ticker-region">${item.region}</span>
+          <span class="ticker-price">${item.price}元/kg</span>
+          <span class="ticker-change ${item.dir}">${item.change}</span>
+        </span>`;
+      }).join("");
+    }
+
+    function initPriceTicker() {
+      const el = document.getElementById("priceTicker");
+      if (!el) return;
+      const content = buildTickerHTML([...TICKER_DATA.inner, ...TICKER_DATA.external]);
+      // 双份内容实现无缝循环
+      el.innerHTML = content + content;
+    }
+
+    initPriceTicker();
     bootstrap();
   </script>
 </body>
