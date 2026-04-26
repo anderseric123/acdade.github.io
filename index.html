@@ -338,6 +338,26 @@
             backdrop-filter: blur(16px);
         }
 
+        .heat-zone-panel {
+            width: fit-content;
+            transition: width 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        .heat-zone-panel.is-collapsed .heat-zone-body {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            pointer-events: none;
+            transform: translateY(-4px);
+        }
+
+        .heat-zone-panel .heat-zone-body {
+            max-height: 220px;
+            opacity: 1;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.2s ease, transform 0.2s ease;
+        }
+
         .live-chip {
             display: inline-flex;
             align-items: center;
@@ -957,15 +977,17 @@
                     
                     <div id="globe-overlay" class="absolute inset-0 z-40 flex items-start justify-center pt-4 sm:pt-5 transition-opacity duration-300">
                         <div class="overlay-btn px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-black/55 text-[var(--text-gold)] text-xs sm:text-sm backdrop-blur-md border border-[var(--text-gold)] shadow-[0_0_15px_rgba(212,175,55,0.3)] pointer-events-none flex items-center gap-2">
-                            <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i> <span>点击激活地球交互</span>
+                            <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i> <span>点击激活</span>
                         </div>
                     </div>
 
-                    <div class="absolute top-4 right-4 z-30 w-[min(250px,calc(100%-2rem))] pointer-events-none">
-                        <div class="panel-card rounded-2xl border border-[rgba(212,175,55,0.22)] bg-black/45 backdrop-blur-md p-2.5 sm:p-3 shadow-lg">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="module-tag">全球影响热区</span>
-                            </div>
+                    <div id="globe-heat-zone" class="absolute top-4 right-4 z-30 heat-zone-panel is-collapsed pointer-events-auto flex flex-col items-end">
+                        <button type="button" onclick="toggleHeatZonePanel(event)" class="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-black/45 backdrop-blur-md border-0 text-left outline-none shadow-none">
+                            <span class="module-tag shrink-0">全球影响热区</span>
+                            <span class="text-[11px] text-gray-400 font-bold hidden sm:inline">点击展开</span>
+                            <i id="heat-zone-chevron" data-lucide="chevron-down" class="w-4 h-4 text-[var(--text-gold)] shrink-0"></i>
+                        </button>
+                        <div class="heat-zone-body mt-2 w-[250px] max-w-[calc(100vw-2rem)] rounded-2xl bg-black/45 backdrop-blur-md p-2.5 sm:p-3 shadow-lg">
                             <div class="flex flex-col gap-1.5 text-[11px] sm:text-[12px] leading-relaxed">
                                 <div class="flex items-start justify-between gap-2">
                                     <span class="text-gray-300 font-semibold shrink-0">东南亚</span>
@@ -988,13 +1010,6 @@
                     </div>
 
                     <div id="earth-mount" class="absolute inset-0 z-20 transition-all duration-300" style="pointer-events: none;"></div>
-
-                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-[760px] pointer-events-none">
-                        <div class="panel-card rounded-2xl border border-[rgba(212,175,55,0.18)] bg-black/35 backdrop-blur-md px-3 py-2.5 sm:px-4 sm:py-3 text-center">
-                            <div class="text-[11px] sm:text-[12px] text-gray-200 font-bold leading-relaxed">点击地区，查看对应品种影响</div>
-                            <div class="mt-1 text-[10px] sm:text-[11px] text-[var(--text-gold)] font-bold leading-relaxed">当前重点：东南亚棕榈油｜印度白糖｜美洲大豆</div>
-                        </div>
-                    </div>
 
                     <button id="back-btn" class="absolute top-4 left-4 z-40 hidden items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl backdrop-blur-md border font-bold text-xs sm:text-sm transition hover:bg-white/10 active:scale-95 cursor-pointer"
                             style="background: rgba(15,23,42,0.82); border-color: var(--text-gold); color: var(--text-gold);"
@@ -1425,6 +1440,18 @@
                     window.earthGlobe.controls().autoRotate = true;
                 }
             }
+        };
+
+        window.toggleHeatZonePanel = function(e) {
+            if (e) e.stopPropagation();
+            const panel = document.getElementById('globe-heat-zone');
+            const icon = document.getElementById('heat-zone-chevron');
+            if (!panel || !icon) return;
+
+            panel.classList.toggle('is-collapsed');
+            const expanded = !panel.classList.contains('is-collapsed');
+            icon.setAttribute('data-lucide', expanded ? 'chevron-up' : 'chevron-down');
+            lucide.createIcons();
         };
 
         document.addEventListener('click', function(e) {
