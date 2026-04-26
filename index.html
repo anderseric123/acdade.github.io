@@ -431,7 +431,40 @@
         }
 
         .globe-country-marker {
-            min-width: 220px;
+            min-width: 0;
+            padding: 7px 9px;
+            border-radius: 999px;
+            background: rgba(10, 14, 22, 0.78);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            max-width: 132px;
+        }
+
+        .globe-country-marker .country-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: var(--text-gold);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.75);
+            flex-shrink: 0;
+        }
+
+        .globe-country-marker .country-name {
+            color: #f7e7ce;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .globe-country-marker .country-count {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 10px;
+            font-weight: 800;
+            flex-shrink: 0;
         }
 
         .globe-marker-card:hover {
@@ -760,16 +793,295 @@
             background: rgba(212, 175, 55, 0.7);
         }
 
+        .monitor-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        #part1-globe {
+            height: auto !important;
+            min-height: 100dvh;
+        }
+
+        .globe-stage {
+            min-height: 560px;
+            max-height: 680px;
+        }
+
+        #globe-interactive-box {
+            height: clamp(420px, 54dvh, 620px) !important;
+            min-height: 0 !important;
+        }
+
+        .monitor-cell {
+            min-height: 82px;
+            border-radius: 16px;
+            padding: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025));
+            border: 1px solid rgba(255, 255, 255, 0.075);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .monitor-cell::after {
+            content: "";
+            position: absolute;
+            inset: auto -20% -55% 35%;
+            height: 70px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.18), transparent 68%);
+            pointer-events: none;
+        }
+
+        .monitor-label {
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            color: rgba(255, 255, 255, 0.46);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .monitor-value {
+            margin-top: 8px;
+            font-size: 18px;
+            line-height: 1.12;
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: 0.01em;
+        }
+
+        .monitor-note {
+            margin-top: 7px;
+            font-size: 11px;
+            line-height: 1.45;
+            color: rgba(255, 255, 255, 0.58);
+        }
+
+        .data-ribbon {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 999px;
+            padding: 7px 11px;
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.24);
+            color: #f4dfa1;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+        }
+
+        .status-light {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border-radius: 999px;
+            padding: 6px 9px;
+            font-size: 10px;
+            line-height: 1;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.045);
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .status-light::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: currentColor;
+            box-shadow: 0 0 12px currentColor;
+        }
+
+        .status-normal { color: #8eea75; }
+        .status-watch { color: #f4dfa1; }
+        .status-strong { color: #ffb35b; }
+        .status-alert { color: #ff7678; }
+
+        .source-row {
+            display: grid;
+            grid-template-columns: 0.9fr 1fr 1.45fr;
+            gap: 12px;
+            align-items: stretch;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            padding: 14px 0;
+        }
+
+        .source-row:first-child {
+            border-top: 0;
+            padding-top: 0;
+        }
+
+        .metric-rail {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .metric-tile {
+            min-height: 138px;
+            border-radius: 18px;
+            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            background: rgba(0, 0, 0, 0.24);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .weather-region {
+            display: grid;
+            grid-template-columns: minmax(120px, 0.8fr) minmax(0, 1fr) minmax(0, 1.25fr);
+            gap: 12px;
+            align-items: start;
+            padding: 14px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .weather-region:first-child {
+            border-top: 0;
+            padding-top: 0;
+        }
+
+        .commodity-board {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .commodity-card {
+            border-radius: 18px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.26);
+            border: 1px solid rgba(255, 255, 255, 0.065);
+            transition: transform 0.22s ease, border-color 0.22s ease, background-color 0.22s ease;
+        }
+
+        .commodity-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(212, 175, 55, 0.34);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .rank-item {
+            display: grid;
+            grid-template-columns: 36px minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: center;
+            padding: 13px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .rank-item:first-child {
+            border-top: 0;
+            padding-top: 0;
+        }
+
+        .rule-item {
+            display: grid;
+            grid-template-columns: minmax(120px, 0.8fr) minmax(0, 1fr);
+            gap: 12px;
+            padding: 13px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .rule-item:first-child {
+            border-top: 0;
+            padding-top: 0;
+        }
+
+        .similar-year {
+            border-radius: 16px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .section-divider-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.96);
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+        }
+
+        .section-divider-title i {
+            color: var(--text-gold);
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.7s ease both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body.light-mode .monitor-cell,
+        body.light-mode .metric-tile,
+        body.light-mode .commodity-card,
+        body.light-mode .similar-year {
+            background: rgba(255, 255, 255, 0.86) !important;
+            border-color: rgba(15, 23, 42, 0.08) !important;
+        }
+
+        body.light-mode .monitor-value,
+        body.light-mode .section-divider-title {
+            color: #0f172a !important;
+        }
+
+        body.light-mode .monitor-label,
+        body.light-mode .monitor-note {
+            color: #64748b !important;
+        }
+
+        body.light-mode .source-row,
+        body.light-mode .weather-region,
+        body.light-mode .rank-item,
+        body.light-mode .rule-item {
+            border-top-color: rgba(15, 23, 42, 0.1) !important;
+        }
+
+        @media (max-width: 820px) {
+            .monitor-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .metric-rail,
+            .commodity-board {
+                grid-template-columns: 1fr;
+            }
+
+            .source-row,
+            .weather-region,
+            .rule-item {
+                grid-template-columns: 1fr;
+            }
+
+            .globe-stage {
+                min-height: 470px;
+                max-height: none;
+            }
+
+            #globe-interactive-box {
+                height: 430px !important;
+            }
+        }
+
         @media (max-width: 640px) {
             .globe-country-marker {
-                min-width: 130px;
-                max-width: 160px;
+                max-width: 118px;
             }
         }
 
         @media (max-width: 430px) {
             #part1-globe {
-                min-height: 100dvh;
+                min-height: auto;
                 padding-bottom: 3.5rem;
             }
 
@@ -879,7 +1191,25 @@
             }
 
             .globe-country-marker {
-                min-width: 176px;
+                min-width: 0;
+                max-width: 108px;
+                padding: 6px 8px;
+            }
+
+            .globe-country-marker .country-name {
+                font-size: 11px;
+            }
+
+            .globe-country-marker .country-count {
+                font-size: 9px;
+            }
+
+            .globe-stage {
+                min-height: 405px;
+            }
+
+            #globe-interactive-box {
+                height: 370px !important;
             }
         }
     </style>
@@ -890,37 +1220,54 @@
         <i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i>
     </button>
 
-    <section id="part1-globe" class="flex flex-col relative w-full h-[100dvh] min-h-[680px] pb-20 sm:pb-10">
+    <section id="part1-globe" class="flex flex-col relative w-full min-h-[100dvh] pb-14 sm:pb-8">
         <header class="shrink-0 flex flex-col items-center justify-center pt-4 sm:pt-5 pb-2 sm:pb-4 px-4 z-10 relative" style="background: linear-gradient(to bottom, rgba(15,23,42,0.96) 0%, rgba(10,12,16,0) 100%);">
             
             <img src="%E5%AE%B9%E5%99%A8__1_(1).svg" id="user-provided-logo" class="h-4 sm:h-5 mb-3 sm:mb-5 mx-auto transition-all" style="filter: brightness(0) invert(1);" alt="金十期货 Logo">
 
             <h1 class="text-[28px] sm:text-4xl font-heavy-serif text-center leading-tight gold-gradient-text drop-shadow-lg tracking-wider">
-                厄尔尼诺追踪器
+                金十期货 ENSO 监测台
             </h1>
             <p class="mt-3 sm:mt-5 text-[12px] sm:text-sm text-center text-gray-300 max-w-[720px] px-2 leading-relaxed">
-                跟踪 ENSO 状态变化，观察全球产区、天气扰动与商品历史传导路径。
+                跟踪 ENSO 状态、全球产区天气异常与商品产业链变量之间的历史传导关系。
             </p>
 
-            <div class="mt-4 sm:mt-6 w-[92%] max-w-[780px] panel-card rounded-2xl border border-[rgba(212,175,55,0.24)] bg-black/35 backdrop-blur-md p-3.5 sm:p-4 shadow-lg">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="module-tag">核心状态</span>
+            <div class="mt-4 sm:mt-6 w-[94%] max-w-[920px] panel-card rounded-2xl border border-[rgba(212,175,55,0.24)] bg-black/35 backdrop-blur-md p-3.5 sm:p-4 shadow-lg fade-in-up">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="module-tag">今日 ENSO 监测总览</span>
+                        <span class="status-light status-watch">观察窗口</span>
+                    </div>
+                    <div class="data-ribbon">
+                        <i data-lucide="clock-3" class="w-3.5 h-3.5"></i>
+                        资料更新：2026-04-26 22:27
+                    </div>
                 </div>
-                <div class="flex flex-col gap-2.5">
-                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <div class="text-[10px] sm:text-[11px] text-gray-400 font-bold tracking-[0.22em] uppercase">当前状态</div>
-                        <div class="text-[15px] sm:text-[16px] font-black text-white leading-tight">ENSO中性</div>
-                        <span class="text-gray-500">|</span>
-                        <div class="text-[10px] sm:text-[11px] text-gray-400 font-bold tracking-[0.22em] uppercase">关注窗口</div>
-                        <div class="text-[15px] sm:text-[16px] font-black text-white leading-tight">2026年5—7月</div>
+                <div class="monitor-grid">
+                    <div class="monitor-cell col-span-2 sm:col-span-2">
+                        <div class="monitor-label">当前状态</div>
+                        <div class="monitor-value">ENSO 中性 / El Niño Watch</div>
+                        <div class="monitor-note">NOAA CPC 4月9日：La Niña 结束，5-7月进入观察窗口。</div>
                     </div>
-                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <div class="text-[10px] sm:text-[11px] text-gray-400 font-bold tracking-[0.22em] uppercase">主要风险</div>
-                        <div class="text-[13px] sm:text-[15px] font-bold text-white leading-relaxed">东南亚干旱、印度高温、巴西降雨扰动</div>
+                    <div class="monitor-cell">
+                        <div class="monitor-label">Niño 3.4</div>
+                        <div class="monitor-value">-0.27°C</div>
+                        <div class="monitor-note">BOM 4月12日相对 Niño3.4，处于中性区间。</div>
                     </div>
-                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <div class="text-[10px] sm:text-[11px] text-gray-400 font-bold tracking-[0.22em] uppercase">重点品种</div>
-                        <div class="text-[13px] sm:text-[15px] font-bold text-[var(--text-gold)] leading-relaxed">棕榈油、白糖、大豆、天然气</div>
+                    <div class="monitor-cell">
+                        <div class="monitor-label">3个月概率</div>
+                        <div class="monitor-value">61%</div>
+                        <div class="monitor-note">CPC：MJJ 厄尔尼诺概率。</div>
+                    </div>
+                    <div class="monitor-cell">
+                        <div class="monitor-label">今日热区</div>
+                        <div class="monitor-value">印度 / 东南亚</div>
+                        <div class="monitor-note">高温与降雨偏离同步跟踪。</div>
+                    </div>
+                    <div class="monitor-cell">
+                        <div class="monitor-label">重点品种</div>
+                        <div class="monitor-value">棕榈油 白糖 大豆</div>
+                        <div class="monitor-note">进入观察窗口，等待产业数据验证。</div>
                     </div>
                 </div>
             </div>
@@ -932,7 +1279,7 @@
                             <span class="live-dot"></span>
                             实时监控
                         </div>
-                        <div class="text-[16px] sm:text-[18px] font-black text-white tracking-widest drop-shadow-sm">最新产业快讯</div>
+                        <div class="text-[16px] sm:text-[18px] font-black text-white tracking-widest drop-shadow-sm">今日天气影响榜</div>
                     </div>
                     <div class="text-[12px] sm:text-[13px] text-gray-200 font-bold cursor-pointer flex items-center gap-1 hover:text-[var(--text-gold)] transition-colors" onclick="openNewsModal()">
                         查看全部 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
@@ -942,23 +1289,23 @@
                 <div class="relative h-[76px] overflow-hidden rounded-2xl bg-black/40 backdrop-blur-md px-3 w-full border border-[rgba(212,175,55,0.25)] shadow-lg">
                     <div id="vertical-ticker" class="absolute w-full left-0 px-3 transition-transform duration-500 ease-in-out">
                         <div class="h-[76px] flex flex-col justify-center text-[13px] sm:text-[14px] text-gray-200 leading-[1.6]">
-                            <div class="line-clamp-3 w-full"><strong class="text-[var(--text-gold)] mr-2 font-black">气象监测</strong>NOAA 最新月报：ENSO 中性仍为基线，5-7月回归厄尔尼诺概率抬升</div>
+                            <div class="line-clamp-3 w-full"><strong class="text-[var(--text-gold)] mr-2 font-black">棕榈油</strong>东南亚降雨偏离仍需跟踪，产量兑现存在滞后，进入观察窗口</div>
                         </div>
                         <div class="h-[76px] flex flex-col justify-center text-[13px] sm:text-[14px] text-gray-200 leading-[1.6]">
-                            <div class="line-clamp-3 w-full"><strong class="text-[var(--text-gold)] mr-2 font-black">产地跟踪</strong>印度部分主产区出现异常高温，甘蔗与棉花生长窗口面临重新评估</div>
+                            <div class="line-clamp-3 w-full"><strong class="text-[var(--text-gold)] mr-2 font-black">白糖</strong>印度高温与季风前水分条件需要交叉验证，历史敏感度高</div>
                         </div>
                         <div class="h-[76px] flex flex-col justify-center text-[13px] sm:text-[14px] text-gray-200 leading-[1.6]">
-                            <div class="line-clamp-3 w-full"><strong class="text-[var(--text-gold)] mr-2 font-black">市场异动</strong>巴西中南部降雨偏强，大豆收获与物流发运节奏继续承压</div>
+                            <div class="line-clamp-3 w-full"><strong class="text-[var(--text-gold)] mr-2 font-black">大豆</strong>巴西、阿根廷和美国中西部降雨节奏变化，关注收获与播种窗口</div>
                         </div>
                         <div class="h-[76px] flex flex-col justify-center text-[13px] sm:text-[14px] text-gray-200 leading-[1.6]">
-                            <div class="line-clamp-3 w-full"><strong class="text-[var(--text-gold)] mr-2 font-black">产量快报</strong>马来西亚气象局更新干旱预警，棕榈油主产区水分条件仍需继续跟踪</div>
+                            <div class="line-clamp-3 w-full"><strong class="text-[var(--text-gold)] mr-2 font-black">小麦</strong>澳洲降雨恢复节奏与土壤墒情是后续验证点</div>
                         </div>
                     </div>
                 </div>
             </div>
         </header>
 
-        <main class="flex-1 w-full relative flex flex-col z-10">
+        <main class="globe-stage w-full relative flex flex-col z-10">
             <div class="absolute inset-0 z-0 pointer-events-none" style="background: radial-gradient(circle at center, rgba(30, 41, 59, 0.9) 0%, #000 100%);"></div>
 
             <div id="globe-loading" class="absolute inset-0 z-10 flex flex-col items-center justify-center font-bold tracking-widest transition-opacity duration-500 pointer-events-none" style="color: var(--text-gold);">
@@ -968,12 +1315,12 @@
 
             <div class="relative z-20 text-center w-full px-4 pt-6 sm:pt-8 pb-3 sm:pb-4">
                 <h2 class="text-[17px] sm:text-2xl font-black tracking-[0.2em] relative globe-floating-title inline-block">
-                    厄尔尼诺现象对各地区的影响
+                    全球产区区域监测入口
                 </h2>
             </div>
 
-            <div class="relative flex-1 w-full px-3 sm:px-6 pb-4 sm:pb-6 flex justify-center items-center z-20">
-                <div id="globe-interactive-box" class="relative w-full h-full min-h-[520px] sm:min-h-[620px] max-w-[800px] rounded-2xl sm:rounded-3xl border-[2px] border-white/10 transition-all duration-300 bg-black/20 overflow-hidden" onclick="activateGlobe(event)">
+            <div class="relative w-full px-3 sm:px-6 pb-4 sm:pb-6 flex justify-center items-center z-20">
+                <div id="globe-interactive-box" class="relative w-full max-w-[800px] rounded-2xl sm:rounded-3xl border-[2px] border-white/10 transition-all duration-300 bg-black/20 overflow-hidden" onclick="activateGlobe(event)">
                     
                     <div id="globe-overlay" class="absolute inset-0 z-40 flex items-start justify-center pt-4 sm:pt-5 transition-opacity duration-300">
                         <div class="overlay-btn px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-black/55 text-[var(--text-gold)] text-xs sm:text-sm backdrop-blur-md border border-[var(--text-gold)] shadow-[0_0_15px_rgba(212,175,55,0.3)] pointer-events-none flex items-center gap-2">
@@ -983,7 +1330,7 @@
 
                     <div id="globe-heat-zone" class="absolute top-4 right-4 z-30 heat-zone-panel is-collapsed pointer-events-auto flex flex-col items-end">
                         <button type="button" onclick="toggleHeatZonePanel(event)" class="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-black/45 backdrop-blur-md border-0 text-left outline-none shadow-none">
-                            <span class="module-tag shrink-0">全球影响热区</span>
+                        <span class="module-tag shrink-0">全球重点热区</span>
                             <span class="text-[11px] text-gray-400 font-bold hidden sm:inline">点击展开</span>
                             <i id="heat-zone-chevron" data-lucide="chevron-down" class="w-4 h-4 text-[var(--text-gold)] shrink-0"></i>
                         </button>
@@ -991,19 +1338,19 @@
                             <div class="flex flex-col gap-1.5 text-[11px] sm:text-[12px] leading-relaxed">
                                 <div class="flex items-start justify-between gap-2">
                                     <span class="text-gray-300 font-semibold shrink-0">东南亚</span>
-                                    <span class="text-white font-bold text-right">干旱风险 ↑｜棕榈油</span>
+                                    <span class="text-white font-bold text-right">降雨偏离｜棕榈油、橡胶</span>
                                 </div>
                                 <div class="flex items-start justify-between gap-2">
                                     <span class="text-gray-300 font-semibold shrink-0">印度</span>
-                                    <span class="text-white font-bold text-right">高温风险 ↑｜白糖、棉花</span>
+                                    <span class="text-white font-bold text-right">高温观察｜白糖、棉花</span>
                                 </div>
                                 <div class="flex items-start justify-between gap-2">
                                     <span class="text-gray-300 font-semibold shrink-0">美洲</span>
-                                    <span class="text-white font-bold text-right">降雨偏多｜大豆、玉米</span>
+                                    <span class="text-white font-bold text-right">降雨扰动｜大豆、玉米</span>
                                 </div>
                                 <div class="flex items-start justify-between gap-2">
                                     <span class="text-gray-300 font-semibold shrink-0">澳洲</span>
-                                    <span class="text-white font-bold text-right">干旱扰动｜小麦</span>
+                                    <span class="text-white font-bold text-right">墒情验证｜小麦、菜籽</span>
                                 </div>
                             </div>
                         </div>
@@ -1021,198 +1368,317 @@
         </main>
     </section>
 
-    <div id="part2-details" class="max-w-[900px] mx-auto px-4 py-8 pb-36 flex flex-col gap-8">
-        <section class="w-full flex flex-col gap-4">
-            
-            <div class="flex flex-col gap-4 mb-2 px-1">
-                <div class="w-full">
-                    <div class="gold-gradient-text flex items-start sm:items-center gap-2">
-                        <i data-lucide="thermometer" class="w-5 h-5 shrink-0 mt-0.5 sm:mt-0 text-[var(--text-gold)]"></i>
-                        <span class="whitespace-normal leading-snug font-black text-[18px] sm:text-xl">厄尔尼诺现象对各地区的影响</span>
-                    </div>
+    <div id="part2-details" class="max-w-[980px] mx-auto px-4 py-8 pb-40 flex flex-col gap-8">
+        <section class="panel-card rounded-3xl border border-[rgba(212,175,55,0.18)] bg-black/35 p-4 sm:p-5 fade-in-up">
+            <div class="module-head">
+                <div class="module-head-left">
+                    <span class="module-tag">Official consensus</span>
+                    <h2 class="section-divider-title"><i data-lucide="scale" class="w-5 h-5"></i>官方判断对比</h2>
                 </div>
-                <div class="flex flex-wrap justify-start gap-2 w-full">
-                    <button type="button" data-core-tab="sensitivity" onclick="switchCoreImpactTab('sensitivity')" class="module-tag module-tab is-active">敏感度</button>
-                    <button type="button" data-core-tab="strength" onclick="switchCoreImpactTab('strength')" class="module-tag module-tab">历年强度</button>
-                    <button type="button" data-core-tab="impact" onclick="switchCoreImpactTab('impact')" class="module-tag module-tab">历史影响</button>
+                <span class="data-ribbon">公开资料整理</span>
+            </div>
+            <div class="source-row">
+                <div><div class="text-white font-black">NOAA CPC</div><div class="text-[11px] text-gray-500 mt-1">2026-04-09</div></div>
+                <div><span class="status-light status-watch">El Niño Watch</span></div>
+                <div class="text-[12px] leading-relaxed text-gray-300">La Niña Advisory 结束，ENSO 中性为当前状态；MJJ 厄尔尼诺概率约 61%，后续关注海温与大气耦合是否持续增强。</div>
+            </div>
+            <div class="source-row">
+                <div><div class="text-white font-black">IRI / CPC 模型</div><div class="text-[11px] text-gray-500 mt-1">2026-04-20</div></div>
+                <div><span class="status-light status-strong">概率抬升</span></div>
+                <div class="text-[12px] leading-relaxed text-gray-300">模型集合显示 AMJ 厄尔尼诺概率约 70%，季节内概率维持较高水平；需验证预报是否被后续观测确认。</div>
+            </div>
+            <div class="source-row">
+                <div><div class="text-white font-black">BOM</div><div class="text-[11px] text-gray-500 mt-1">近周监测</div></div>
+                <div><span class="status-light status-watch">中性跟踪</span></div>
+                <div class="text-[12px] leading-relaxed text-gray-300">热带太平洋处于中性附近，印度洋与季风前降雨仍是农产品影响路径中的关键变量。</div>
+            </div>
+            <div class="source-row">
+                <div><div class="text-white font-black">WMO</div><div class="text-[11px] text-gray-500 mt-1">2026-04-24</div></div>
+                <div><span class="status-light status-watch">可能性上升</span></div>
+                <div class="text-[12px] leading-relaxed text-gray-300">中期 ENSO 转向厄尔尼诺的可能性上升，但各区域天气响应仍需结合季风、MJO 与土壤墒情验证。</div>
+            </div>
+        </section>
+
+        <section class="panel-card rounded-3xl border border-[rgba(212,175,55,0.18)] bg-black/35 p-4 sm:p-5 fade-in-up">
+            <div class="module-head">
+                <div class="module-head-left">
+                    <span class="module-tag">ENSO radar</span>
+                    <h2 class="section-divider-title"><i data-lucide="radar" class="w-5 h-5"></i>ENSO 核心指标雷达</h2>
+                </div>
+                <span class="text-[11px] text-gray-400 leading-relaxed max-w-[320px]">状态灯含义：正常、观察、增强、预警。指标仅用于监测气候条件变化。</span>
+            </div>
+            <div class="metric-rail">
+                <div class="metric-tile">
+                    <div><div class="text-white font-black">Niño 3.4 海温距平</div><div class="text-2xl font-black text-[var(--text-gold)] mt-3">-0.27°C</div></div>
+                    <span class="status-light status-normal">正常</span>
+                </div>
+                <div class="metric-tile">
+                    <div><div class="text-white font-black">SOI 指数</div><div class="text-2xl font-black text-[var(--text-gold)] mt-3">-7.7</div></div>
+                    <span class="status-light status-watch">观察</span>
+                </div>
+                <div class="metric-tile">
+                    <div><div class="text-white font-black">西风异常</div><div class="text-2xl font-black text-[var(--text-gold)] mt-3">局地脉冲</div></div>
+                    <span class="status-light status-strong">增强</span>
+                </div>
+                <div class="metric-tile">
+                    <div><div class="text-white font-black">次表层热含量</div><div class="text-2xl font-black text-[var(--text-gold)] mt-3">暖信号</div></div>
+                    <span class="status-light status-watch">观察</span>
+                </div>
+                <div class="metric-tile">
+                    <div><div class="text-white font-black">MJO 扰动</div><div class="text-2xl font-black text-[var(--text-gold)] mt-3">需跟踪</div></div>
+                    <span class="status-light status-watch">观察</span>
                 </div>
             </div>
+        </section>
 
-            <div class="flex flex-col gap-4">
-                <div class="module-panel is-active rounded-2xl border border-[rgba(212,175,55,0.15)] bg-black/40 backdrop-blur-md p-4 sm:p-5 shadow-lg" data-panel="sensitivity">
-                    
-                    <div class="flex items-center gap-2 mb-4 px-1">
-                        <span class="text-[13px] sm:text-sm font-bold text-[var(--text-gold)] tracking-wide">⭐️ 各品种受影响程度</span>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="matrix-item">
-                            <div class="flex flex-col gap-1">
-                                <div class="matrix-title"><span class="text-base">🌴</span> 棕榈油</div>
-                                <div class="matrix-score text-[14px]">★★★★★</div>
-                                <div class="mt-1 text-[11px] text-red-300/90 font-semibold tracking-[0.18em]">高敏品种</div>
-                            </div>
-                            <div class="matrix-desc mt-1">东南亚干旱会明显压缩果串产量，单产影响通常具有滞后性，历史上常是厄尔尼诺传导最直接的品种之一。</div>
-                        </div>
-                        <div class="matrix-item">
-                            <div class="flex flex-col gap-1">
-                                <div class="matrix-title"><span class="text-base">🫘</span> 大豆</div>
-                                <div class="matrix-score text-[14px]">★★★★</div>
-                                <div class="mt-1 text-[11px] text-green-300/90 font-semibold tracking-[0.18em]">偏受益</div>
-                            </div>
-                            <div class="matrix-desc mt-1">美洲核心产区多在偏湿背景下改善单产，历史上更常表现为丰产预期增强，而非单边减产。</div>
-                        </div>
-                        <div class="matrix-item">
-                            <div class="flex flex-col gap-1">
-                                <div class="matrix-title"><span class="text-base">🌾</span> 小麦 / 稻谷</div>
-                                <div class="matrix-score text-[14px]">★★★★</div>
-                                <div class="mt-1 text-[11px] text-amber-200/90 font-semibold tracking-[0.18em]">结构性扰动</div>
-                            </div>
-                            <div class="matrix-desc mt-1">澳洲、南亚与东南亚对温度和降雨分布更敏感，往往通过播种、抽穗和灌浆阶段错位影响产量。</div>
-                        </div>
-                        <div class="matrix-item">
-                            <div class="flex flex-col gap-1">
-                                <div class="matrix-title"><span class="text-base">💨</span> 天然气</div>
-                                <div class="matrix-score text-[14px]">★★★</div>
-                                <div class="mt-1 text-[11px] text-green-300/90 font-semibold tracking-[0.18em]">暖冬影响</div>
-                            </div>
-                            <div class="matrix-desc mt-1">北半球若出现更偏暖的冬季，取暖负荷往往回落，消费端需求弹性更容易被压低。</div>
-                        </div>
-                        <div class="matrix-item">
-                            <div class="flex flex-col gap-1">
-                                <div class="matrix-title"><span class="text-base">⛰️</span> 煤炭 / 有色</div>
-                                <div class="matrix-score text-[14px]">★★★</div>
-                                <div class="mt-1 text-[11px] text-amber-200/90 font-semibold tracking-[0.18em]">区域传导</div>
-                            </div>
-                            <div class="matrix-desc mt-1">降雨变化影响水电、航运与电力替代节奏，更多体现为区域性能源和物流约束。</div>
-                        </div>
-                        <div class="matrix-item">
-                            <div class="flex flex-col gap-1">
-                                <div class="matrix-title"><span class="text-base">🌽</span> 玉米</div>
-                                <div class="matrix-score text-[14px]">★★</div>
-                                <div class="mt-1 text-[11px] text-gray-300/90 font-semibold tracking-[0.18em]">中性偏弱</div>
-                            </div>
-                            <div class="matrix-desc mt-1">夏季降雨偏多时，美玉米关键生长期更容易获得水分支持，单产多增少降。</div>
-                        </div>
-                        <div class="matrix-item col-span-2 sm:col-span-1">
-                            <div class="flex flex-col gap-1">
-                                <div class="matrix-title"><span class="text-base">🛢️</span> 原油</div>
-                                <div class="matrix-score text-[14px]">★★</div>
-                                <div class="mt-1 text-[11px] text-gray-300/90 font-semibold tracking-[0.18em]">间接传导</div>
-                            </div>
-                            <div class="matrix-desc mt-1">更常通过交通出行、工业活动和区域能源替代间接影响需求，历史上规律不如农产品直接。</div>
-                        </div>
-                    </div>
+        <section class="panel-card rounded-3xl border border-[rgba(212,175,55,0.18)] bg-black/35 p-4 sm:p-5 fade-in-up">
+            <div class="module-head">
+                <div class="module-head-left">
+                    <span class="module-tag">Weather map</span>
+                    <h2 class="section-divider-title"><i data-lucide="cloud-sun" class="w-5 h-5"></i>全球重点产区天气异常</h2>
                 </div>
+            </div>
+            <div class="weather-region">
+                <div class="text-white font-black">东南亚</div>
+                <div class="text-[var(--text-gold)] font-bold text-sm">棕榈油、橡胶</div>
+                <div class="text-xs text-gray-300 leading-relaxed">降雨偏离与水分恢复速度是核心变量；影响路径为开花、挂果、割胶天数，需验证产量、库存和出口节奏。</div>
+            </div>
+            <div class="weather-region">
+                <div class="text-white font-black">印度</div>
+                <div class="text-[var(--text-gold)] font-bold text-sm">白糖、棉花</div>
+                <div class="text-xs text-gray-300 leading-relaxed">高温与季风前土壤水分进入观察窗口；需验证降雨推进、播种节奏、甘蔗压榨和棉花种植面积。</div>
+            </div>
+            <div class="weather-region">
+                <div class="text-white font-black">巴西</div>
+                <div class="text-[var(--text-gold)] font-bold text-sm">大豆、玉米、白糖</div>
+                <div class="text-xs text-gray-300 leading-relaxed">中南部降雨扰动影响收获、物流和甘蔗压榨；需验证港口排队、田间作业天数和压榨进度。</div>
+            </div>
+            <div class="weather-region">
+                <div class="text-white font-black">阿根廷</div>
+                <div class="text-[var(--text-gold)] font-bold text-sm">大豆、玉米</div>
+                <div class="text-xs text-gray-300 leading-relaxed">偏湿背景可能改善墒情，但过量降雨会改变收获窗口；需验证作物优良率和收获进度。</div>
+            </div>
+            <div class="weather-region">
+                <div class="text-white font-black">澳洲</div>
+                <div class="text-[var(--text-gold)] font-bold text-sm">小麦、菜籽</div>
+                <div class="text-xs text-gray-300 leading-relaxed">秋播前墒情与后续降雨是主要验证项；历史上干旱年份对播种和灌浆阶段更敏感。</div>
+            </div>
+            <div class="weather-region">
+                <div class="text-white font-black">美国中西部</div>
+                <div class="text-[var(--text-gold)] font-bold text-sm">玉米、大豆</div>
+                <div class="text-xs text-gray-300 leading-relaxed">春播窗口、土壤湿度和强对流天气同步跟踪；需验证 USDA 作物进度与优良率。</div>
+            </div>
+        </section>
 
-                <div class="module-panel rounded-2xl border border-[rgba(212,175,55,0.15)] bg-black/40 backdrop-blur-md p-4 sm:p-5 shadow-lg" data-panel="strength">
-                    <div class="flex items-center justify-between gap-3 mb-3">
-                        <span class="text-[11px] text-gray-400">厄尔尼诺历年强度和影响有多大？</span>
-                    </div>
-                    <div class="rounded-2xl overflow-hidden border border-white/10 bg-black/50 p-2 flex justify-center">
-                        <img src="https://flash-scdn.jin10.com/06c279b6-ba64-425e-8965-dc9dd72ae298.png" alt="厄尔尼诺历年强度" class="max-w-full h-auto rounded-xl">
-                    </div>
+        <section class="panel-card rounded-3xl border border-[rgba(212,175,55,0.18)] bg-black/35 p-4 sm:p-5 fade-in-up">
+            <div class="module-head">
+                <div class="module-head-left">
+                    <span class="module-tag">ENSO primer</span>
+                    <h2 class="section-divider-title"><i data-lucide="book-open-check" class="w-5 h-5"></i>厄尔尼诺科普资料</h2>
                 </div>
-
-                <div class="module-panel rounded-2xl border border-[rgba(212,175,55,0.15)] bg-black/40 backdrop-blur-md p-4 sm:p-5 shadow-lg" data-panel="impact">
-                    <div class="flex items-center justify-between gap-3 mb-3">
-                        <span class="text-[11px] text-gray-400">历史上厄尔尼诺现象对农作物影响如何？</span>
-                    </div>
-
-                    <p class="history-note mb-5">
-                        历史经验里，最关键的不是单看“下雨多或少”，而是看降水是否错位到了播种、开花、灌浆这些敏感阶段。
-                    </p>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div class="card-surface p-4">
-                            <h4 class="text-[var(--text-gold)] text-sm font-bold mb-3 flex items-center gap-2">
-                                <i data-lucide="cloud-rain" class="w-4 h-4"></i> 降雨模式重构
-                            </h4>
-                            <ul class="text-xs text-gray-300 space-y-2.5">
-                                <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">▸</span><span><strong class="text-white">干旱少雨：</strong>东南亚、澳大利亚、印度、巴西北部、中国北方</span></li>
-                                <li class="flex items-start gap-2"><span class="text-blue-400 mt-0.5">▸</span><span><strong class="text-white">雨水偏多：</strong>美国、阿根廷、巴西中南部、中国南方</span></li>
-                            </ul>
-                        </div>
-                        <div class="card-surface p-4">
-                            <h4 class="text-[var(--text-gold)] text-sm font-bold mb-3 flex items-center gap-2">
-                                <i data-lucide="thermometer-sun" class="w-4 h-4"></i> 气温异常波动
-                            </h4>
-                            <ul class="text-xs text-gray-300 space-y-2.5">
-                                <li class="flex items-start gap-2"><span class="text-orange-400 mt-0.5">温</span><span><strong class="text-white">冬季偏暖：</strong>中国东南、美国南部、印度、东南亚等</span></li>
-                                <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">热</span><span><strong class="text-white">夏季酷旱：</strong>印度、东南亚、澳洲、中美干旱，巴西中南高温</span></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                        <div class="crop-card group">
-                            <div class="flex items-center justify-between mb-3">
-                                <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">🌴</span> 棕榈油</h4>
-                                <span class="text-[10px] font-bold text-red-300 border border-red-400/30 px-1.5 py-0.5 rounded bg-red-400/10">极易减产</span>
-                            </div>
-                            <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>东南亚干旱会明显压缩果串产量</span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>单产影响通常滞后 <strong>6-12 个月</strong></span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>历史上印马同步减产阶段较为典型</span></li>
-                            </ul>
-                        </div>
-                        <div class="crop-card group">
-                            <div class="flex items-center justify-between mb-3">
-                                <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">🍬</span> 白糖</h4>
-                                <span class="text-[10px] font-bold text-red-300 border border-red-400/30 px-1.5 py-0.5 rounded bg-red-400/10">多为减产</span>
-                            </div>
-                            <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>影响程度：印度 > 中国 > 巴西</span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>中等强度年通常出现 1 年左右扰动</span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>强厄尔尼诺阶段更容易压低全球增速</span></li>
-                            </ul>
-                        </div>
-                        <div class="crop-card group">
-                            <div class="flex items-center justify-between mb-3">
-                                <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">🫘</span> 大豆</h4>
-                                <span class="text-[10px] font-bold text-green-300 border border-green-400/30 px-1.5 py-0.5 rounded bg-green-400/10">多数利好</span>
-                            </div>
-                            <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>充沛雨水覆盖美洲核心产区</span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>大部分年份单产表现更偏向上修</span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>若后续洪涝反复，节奏会变得更复杂</span></li>
-                            </ul>
-                        </div>
-                        <div class="crop-card group">
-                            <div class="flex items-center justify-between mb-3">
-                                <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">🌽</span> 玉米</h4>
-                                <span class="text-[10px] font-bold text-green-300 border border-green-400/30 px-1.5 py-0.5 rounded bg-green-400/10">单产受益</span>
-                            </div>
-                            <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>夏雨往往支持美玉米关键生长期</span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>历史上发生当年美国单产多增少降</span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>次年气候效应规律不如农产品直接</span></li>
-                            </ul>
-                        </div>
-                        <div class="crop-card group">
-                            <div class="flex items-center justify-between mb-3">
-                                <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">🌾</span> 稻谷</h4>
-                                <span class="text-[10px] font-bold text-red-300 border border-red-400/30 px-1.5 py-0.5 rounded bg-red-400/10">质产双压</span>
-                            </div>
-                            <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>雨多和积温不足都可能拖累生长周期</span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>扬花、灌浆期若遇极端天气更敏感</span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>历史上减产往往会带来阶段性波动</span></li>
-                            </ul>
-                        </div>
-                        <div class="crop-card group">
-                            <div class="flex items-center justify-between mb-3">
-                                <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">☁️</span> 棉花</h4>
-                                <span class="text-[10px] font-bold text-gray-300 border border-gray-400/30 px-1.5 py-0.5 rounded bg-gray-400/10">影响有限</span>
-                            </div>
-                            <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>印度夏季干旱常擦肩产量敏感期</span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>华北高温干旱可能诱发病虫害压力</span></li>
-                                <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>美国德州与加州多雨会干扰出苗</span></li>
-                            </ul>
-                        </div>
-                    </div>
+                <span class="text-[11px] text-gray-400 leading-relaxed max-w-[320px]">给工具页保留解释层：用户可以先看监测结论，再理解背后的气候机制。</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="card-surface p-4">
+                    <h3 class="text-white font-black flex items-center gap-2"><i data-lucide="waves" class="w-4 h-4 text-[var(--text-gold)]"></i>什么是厄尔尼诺？</h3>
+                    <p class="history-note mt-3">厄尔尼诺是 ENSO 暖位相，通常表现为中东太平洋海表温度持续偏高，并与热带大气环流变化耦合。它不是单一“天气事件”，而是一组海洋和大气共同变化的气候背景。</p>
                 </div>
+                <div class="card-surface p-4">
+                    <h3 class="text-white font-black flex items-center gap-2"><i data-lucide="thermometer-sun" class="w-4 h-4 text-[var(--text-gold)]"></i>为什么看 Niño 3.4？</h3>
+                    <p class="history-note mt-3">Niño 3.4 区域位于赤道中太平洋，是判断 ENSO 状态最常用的核心海温区之一。通常需要海温、SOI、风场和次表层热含量共同验证，不能只看单周海温。</p>
+                </div>
+                <div class="card-surface p-4">
+                    <h3 class="text-white font-black flex items-center gap-2"><i data-lucide="wind" class="w-4 h-4 text-[var(--text-gold)]"></i>它如何影响天气？</h3>
+                    <p class="history-note mt-3">ENSO 会改变热带对流和沃克环流，使降雨带、季风节奏、风暴路径和区域温度分布发生再配置。对商品的影响通常要经过“天气异常—生产窗口—产业数据”这条链条验证。</p>
+                </div>
+                <div class="card-surface p-4">
+                    <h3 class="text-white font-black flex items-center gap-2"><i data-lucide="calendar-clock" class="w-4 h-4 text-[var(--text-gold)]"></i>为什么影响有滞后？</h3>
+                    <p class="history-note mt-3">不同作物敏感期不同。棕榈油可能通过开花和挂果滞后反映，小麦更看播种和灌浆，大豆、玉米则需要结合播种、开花、灌浆和收获窗口分阶段观察。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel-card rounded-3xl border border-[rgba(212,175,55,0.18)] bg-black/35 p-4 sm:p-5 fade-in-up">
+            <div class="module-head">
+                <div class="module-head-left">
+                    <span class="module-tag">Impact pathways</span>
+                    <h2 class="section-divider-title"><i data-lucide="route" class="w-5 h-5"></i>厄尔尼诺历史影响路径</h2>
+                </div>
+            </div>
+            <p class="history-note mb-5">
+                历史经验里，最关键的不是单看“下雨多或少”，而是看降水、温度和风场是否错位到了播种、开花、灌浆、收获、压榨、发运这些敏感窗口。
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                <div class="card-surface p-4">
+                    <h3 class="text-[var(--text-gold)] text-sm font-bold mb-3 flex items-center gap-2">
+                        <i data-lucide="cloud-rain" class="w-4 h-4"></i> 降雨模式重构
+                    </h3>
+                    <ul class="text-xs text-gray-300 space-y-2.5">
+                        <li class="flex items-start gap-2"><span class="text-amber-300 mt-0.5">▸</span><span><strong class="text-white">降雨偏少区域：</strong>东南亚、澳大利亚、印度、巴西北部等区域在部分厄尔尼诺年份更易出现水分压力。</span></li>
+                        <li class="flex items-start gap-2"><span class="text-sky-300 mt-0.5">▸</span><span><strong class="text-white">降雨偏多区域：</strong>美国、阿根廷、巴西中南部等区域可能出现墒情修复，也可能扰动作业和物流窗口。</span></li>
+                    </ul>
+                </div>
+                <div class="card-surface p-4">
+                    <h3 class="text-[var(--text-gold)] text-sm font-bold mb-3 flex items-center gap-2">
+                        <i data-lucide="sun-medium" class="w-4 h-4"></i> 气温异常波动
+                    </h3>
+                    <ul class="text-xs text-gray-300 space-y-2.5">
+                        <li class="flex items-start gap-2"><span class="text-orange-300 mt-0.5">温</span><span><strong class="text-white">暖冬背景：</strong>部分地区取暖需求、能源替代和作物越冬条件会出现阶段性变化。</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-300 mt-0.5">热</span><span><strong class="text-white">高温叠加水分压力：</strong>印度、东南亚、澳洲等区域的作物生长节奏和品质变量更值得跟踪。</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div class="crop-card group">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">🌴</span> 棕榈油</h4>
+                        <span class="text-[10px] font-bold text-amber-200 border border-amber-300/30 px-1.5 py-0.5 rounded bg-amber-300/10">历史敏感度高</span>
+                    </div>
+                    <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>东南亚水分压力会影响开花、挂果与单产。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>产量兑现通常存在 6-12 个月滞后。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>需要结合库存、出口和主产区降雨验证。</span></li>
+                    </ul>
+                </div>
+                <div class="crop-card group">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">🍬</span> 白糖</h4>
+                        <span class="text-[10px] font-bold text-amber-200 border border-amber-300/30 px-1.5 py-0.5 rounded bg-amber-300/10">进入观察窗口</span>
+                    </div>
+                    <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>印度、泰国、巴西不同产区响应并不一致。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>高温和季风错位可能改变甘蔗生长节奏。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>需要验证压榨进度、含糖率和降雨恢复。</span></li>
+                    </ul>
+                </div>
+                <div class="crop-card group">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">🫘</span> 大豆</h4>
+                        <span class="text-[10px] font-bold text-sky-200 border border-sky-300/30 px-1.5 py-0.5 rounded bg-sky-300/10">等待数据验证</span>
+                    </div>
+                    <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>美洲偏湿可能改善墒情，也可能扰动作业。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>收获窗口、港口物流和作物优良率需同看。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>不同半球生长季节错位，传导节奏不同。</span></li>
+                    </ul>
+                </div>
+                <div class="crop-card group">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">🌽</span> 玉米</h4>
+                        <span class="text-[10px] font-bold text-gray-300 border border-gray-400/30 px-1.5 py-0.5 rounded bg-gray-400/10">影响阶段化</span>
+                    </div>
+                    <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>播种、授粉、灌浆各阶段对水热匹配要求不同。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>美国中西部需要结合春播窗口和强对流天气。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>巴西二茬玉米还需跟踪旱季来临时间。</span></li>
+                    </ul>
+                </div>
+                <div class="crop-card group">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">🌾</span> 小麦 / 菜籽</h4>
+                        <span class="text-[10px] font-bold text-amber-200 border border-amber-300/30 px-1.5 py-0.5 rounded bg-amber-300/10">水热错配敏感</span>
+                    </div>
+                    <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>澳洲秋播前墒情和后续降雨恢复很关键。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>抽穗、灌浆阶段对高温和水分不足更敏感。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>需要验证播种面积、出苗和降雨距平。</span></li>
+                    </ul>
+                </div>
+                <div class="crop-card group">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-bold text-white flex items-center gap-1.5"><span class="text-base">☁️</span> 棉花</h4>
+                        <span class="text-[10px] font-bold text-gray-300 border border-gray-400/30 px-1.5 py-0.5 rounded bg-gray-400/10">产业链变量变化</span>
+                    </div>
+                    <ul class="text-xs text-gray-400 space-y-2 leading-relaxed">
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>高温、强降雨和病虫害压力都可能改变苗情。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>印度和美国棉区需区分播种期与吐絮期。</span></li>
+                        <li class="flex gap-1.5"><span class="text-[var(--text-gold)] shrink-0">•</span><span>面积、苗情、采摘窗口是核心验证数据。</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel-card rounded-3xl border border-[rgba(212,175,55,0.18)] bg-black/35 p-4 sm:p-5 fade-in-up">
+            <div class="module-head">
+                <div class="module-head-left">
+                    <span class="module-tag">Commodity board</span>
+                    <h2 class="section-divider-title"><i data-lucide="layout-dashboard" class="w-5 h-5"></i>品种影响看板</h2>
+                </div>
+            </div>
+            <div class="commodity-board">
+                <article class="commodity-card">
+                    <div class="flex items-center justify-between gap-3"><h3 class="text-white font-black">🌴 棕榈油</h3><span class="status-light status-strong">影响增强</span></div>
+                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★★。主要产区：印尼、马来西亚。路径：降雨偏离影响挂果与单产，通常存在滞后。</p>
+                    <div class="news-meta"><span class="news-badge">需验证：MPOB</span><span class="news-badge">库存</span><span class="news-badge">出口船期</span></div>
+                </article>
+                <article class="commodity-card">
+                    <div class="flex items-center justify-between gap-3"><h3 class="text-white font-black">🍬 白糖</h3><span class="status-light status-watch">进入观察窗口</span></div>
+                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：印度、泰国、巴西。路径：高温、季风节奏与压榨条件改变糖料作物变量。</p>
+                    <div class="news-meta"><span class="news-badge">需验证：季风推进</span><span class="news-badge">压榨进度</span></div>
+                </article>
+                <article class="commodity-card">
+                    <div class="flex items-center justify-between gap-3"><h3 class="text-white font-black">🫘 大豆</h3><span class="status-light status-watch">等待数据验证</span></div>
+                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：巴西、阿根廷、美国。路径：降雨改善墒情，也可能扰动收获和物流窗口。</p>
+                    <div class="news-meta"><span class="news-badge">需验证：作物优良率</span><span class="news-badge">港口排队</span></div>
+                </article>
+                <article class="commodity-card">
+                    <div class="flex items-center justify-between gap-3"><h3 class="text-white font-black">🌽 玉米</h3><span class="status-light status-normal">影响减弱</span></div>
+                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★。主要产区：美国中西部、巴西、阿根廷。路径：播种窗口与关键生长期降雨匹配度。</p>
+                    <div class="news-meta"><span class="news-badge">需验证：播种进度</span><span class="news-badge">墒情</span></div>
+                </article>
+                <article class="commodity-card">
+                    <div class="flex items-center justify-between gap-3"><h3 class="text-white font-black">🌾 小麦 / 菜籽</h3><span class="status-light status-watch">进入观察窗口</span></div>
+                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：澳洲、印度、加拿大。路径：播种、抽穗、灌浆阶段对水热错配敏感。</p>
+                    <div class="news-meta"><span class="news-badge">需验证：土壤墒情</span><span class="news-badge">降雨距平</span></div>
+                </article>
+                <article class="commodity-card">
+                    <div class="flex items-center justify-between gap-3"><h3 class="text-white font-black">☁️ 棉花</h3><span class="status-light status-watch">产业链变量变化</span></div>
+                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★。主要产区：印度、美国、中国。路径：高温、强降雨和病虫害压力影响种植和吐絮节奏。</p>
+                    <div class="news-meta"><span class="news-badge">需验证：面积</span><span class="news-badge">苗情</span></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel-card rounded-3xl border border-[rgba(212,175,55,0.18)] bg-black/35 p-4 sm:p-5 fade-in-up">
+            <div class="module-head">
+                <div class="module-head-left">
+                    <span class="module-tag">Daily ranking</span>
+                    <h2 class="section-divider-title"><i data-lucide="list-ordered" class="w-5 h-5"></i>今日天气影响榜</h2>
+                </div>
+            </div>
+            <div class="rank-item"><div class="text-2xl font-black text-[var(--text-gold)]">01</div><div><div class="text-white font-black">棕榈油</div><div class="text-xs text-gray-400 mt-1">东南亚降雨偏离与产量滞后链条继续跟踪。</div></div><span class="status-light status-strong">影响增强</span></div>
+            <div class="rank-item"><div class="text-2xl font-black text-[var(--text-gold)]">02</div><div><div class="text-white font-black">白糖</div><div class="text-xs text-gray-400 mt-1">印度高温和季风前水分条件进入验证期。</div></div><span class="status-light status-watch">观察</span></div>
+            <div class="rank-item"><div class="text-2xl font-black text-[var(--text-gold)]">03</div><div><div class="text-white font-black">大豆</div><div class="text-xs text-gray-400 mt-1">南美收获、美国播种窗口和物流节奏同步观察。</div></div><span class="status-light status-watch">验证</span></div>
+            <div class="rank-item"><div class="text-2xl font-black text-[var(--text-gold)]">04</div><div><div class="text-white font-black">小麦 / 菜籽</div><div class="text-xs text-gray-400 mt-1">澳洲秋播前墒情和降雨恢复速度为关键变量。</div></div><span class="status-light status-normal">跟踪</span></div>
+        </section>
+
+        <section class="panel-card rounded-3xl border border-[rgba(212,175,55,0.18)] bg-black/35 p-4 sm:p-5 fade-in-up">
+            <div class="module-head">
+                <div class="module-head-left">
+                    <span class="module-tag">Alert rules</span>
+                    <h2 class="section-divider-title"><i data-lucide="bell-ring" class="w-5 h-5"></i>气候—品种预警规则</h2>
+                </div>
+            </div>
+            <div class="rule-item"><div class="text-white font-black">ENSO 触发</div><div class="text-xs text-gray-300 leading-relaxed">Niño 3.4 连续升至 +0.5°C 附近且大气响应同步增强时，页面提示“影响增强”。</div></div>
+            <div class="rule-item"><div class="text-white font-black">东南亚降雨</div><div class="text-xs text-gray-300 leading-relaxed">连续 2-4 周降雨显著偏离，棕榈油与橡胶进入观察窗口，并提示验证产量、库存、出口。</div></div>
+            <div class="rule-item"><div class="text-white font-black">印度季风</div><div class="text-xs text-gray-300 leading-relaxed">季风推进偏慢、高温持续或土壤水分偏低时，白糖、棉花标记为“等待数据验证”。</div></div>
+            <div class="rule-item"><div class="text-white font-black">美洲播种收获</div><div class="text-xs text-gray-300 leading-relaxed">降雨过强或作业窗口缩短时，大豆、玉米提示“产业链变量变化”，同步追踪作物进度。</div></div>
+        </section>
+
+        <section class="panel-card rounded-3xl border border-[rgba(212,175,55,0.18)] bg-black/35 p-4 sm:p-5 fade-in-up">
+            <div class="module-head">
+                <div class="module-head-left">
+                    <span class="module-tag">Analog years</span>
+                    <h2 class="section-divider-title"><i data-lucide="history" class="w-5 h-5"></i>历史相似年份对照</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="similar-year"><div class="text-white font-black">1997-98</div><p class="text-xs text-gray-400 leading-relaxed mt-2">强厄尔尼诺阶段，东南亚与澳洲水分压力突出，农产品传导较典型。</p></div>
+                <div class="similar-year"><div class="text-white font-black">2009-10</div><p class="text-xs text-gray-400 leading-relaxed mt-2">中等偏强事件，亚洲季风与美洲降雨分布变化值得对照。</p></div>
+                <div class="similar-year"><div class="text-white font-black">2015-16</div><p class="text-xs text-gray-400 leading-relaxed mt-2">强事件后期对棕榈油、糖料作物和全球天气格局影响较明显。</p></div>
+            </div>
+            <div class="mt-4 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-3 text-[12px] leading-relaxed text-amber-100">
+                免责声明：历史相似不代表未来重复。相似年份仅用于理解气候—产业链变量的历史传导关系，不能替代实时天气、产量、库存、物流等数据验证。
             </div>
         </section>
     </div>
@@ -1236,10 +1702,10 @@
                     <div class="flex flex-col gap-2">
                         <div class="flex flex-wrap items-center gap-3">
                             <button id="tab-news" type="button" class="text-[var(--text-gold)] text-[15px] sm:text-lg font-bold border-b-2 border-[var(--text-gold)] pb-1.5 transition-all" onclick="switchTheme('news')">
-                                最新产业快讯
+                                官方监测
                             </button>
                             <button id="tab-reports" type="button" class="text-gray-400 hover:text-gray-200 text-[15px] sm:text-lg font-bold border-b-2 border-transparent pb-1.5 transition-all" onclick="switchTheme('reports')">
-                                机构研报
+                                产业验证
                             </button>
                         </div>
                     </div>
@@ -1253,56 +1719,56 @@
                     <article class="news-card">
                         <div class="news-topline">
                             <span class="news-badge text-red-300 border-red-400/20 bg-red-400/10">气象监测</span>
-                            <span class="text-[11px] text-gray-500">2026-04-21 22:30</span>
+                            <span class="text-[11px] text-gray-500">2026-04-09</span>
                         </div>
-                        <h4 class="news-title">NOAA 最新月报：ENSO 中性仍为基线，5-7月回归厄尔尼诺概率抬升</h4>
-                        <p class="news-summary">公开月报维持中性状态判断，但热带太平洋海温异常的跟踪窗口已经打开，市场需关注后续预报路径是否持续抬升。</p>
+                        <h4 class="news-title">NOAA CPC：La Niña Advisory 结束，发布 El Niño Watch</h4>
+                        <p class="news-summary">官方判断当前处于 ENSO 中性附近，并提示 2026 年 5-7 月厄尔尼诺概率升至约 61%，需要继续验证海温和大气响应。</p>
                         <div class="news-meta">
                             <span class="news-badge">来源：NOAA</span>
-                            <span class="news-badge">关注：海温 / 大气耦合</span>
+                            <span class="news-badge">关注：Niño 3.4 / 大气耦合</span>
                             <span class="news-badge">属性：公开资料</span>
                         </div>
                     </article>
 
                     <article class="news-card">
                         <div class="news-topline">
-                            <span class="news-badge text-orange-200 border-orange-400/20 bg-orange-400/10">产地跟踪</span>
-                            <span class="text-[11px] text-gray-500">2026-04-21 20:10</span>
+                            <span class="news-badge text-orange-200 border-orange-400/20 bg-orange-400/10">模型预报</span>
+                            <span class="text-[11px] text-gray-500">2026-04-20</span>
                         </div>
-                        <h4 class="news-title">印度部分主产区出现异常高温，甘蔗与棉花生长窗口面临重新评估</h4>
-                        <p class="news-summary">马哈拉施特拉邦与北部部分产区的热应力上升，若降水回补不及预期，生长节奏与单产稳定性都可能受到影响。</p>
+                        <h4 class="news-title">IRI/CPC 模型：AMJ 厄尔尼诺概率约 70%</h4>
+                        <p class="news-summary">模型集合给出更高的中期概率，但页面仍以“等待数据验证”表达，重点观察后续周度海温、SOI 和西风异常是否同步。</p>
                         <div class="news-meta">
-                            <span class="news-badge">来源：公开气象资料</span>
-                            <span class="news-badge">品种：甘蔗 / 棉花</span>
+                            <span class="news-badge">来源：IRI</span>
+                            <span class="news-badge">关注：模型集合</span>
+                            <span class="news-badge">属性：公开资料</span>
+                        </div>
+                    </article>
+
+                    <article class="news-card">
+                        <div class="news-topline">
+                            <span class="news-badge text-green-200 border-green-400/20 bg-green-400/10">国际组织</span>
+                            <span class="text-[11px] text-gray-500">2026-04-24</span>
+                        </div>
+                        <h4 class="news-title">WMO：中期 ENSO 转向厄尔尼诺的可能性上升</h4>
+                        <p class="news-summary">WMO 强调中长期信号仍需跟踪，区域影响不能直接外推，需要结合季风、海温、MJO 和本地天气条件阅读。</p>
+                        <div class="news-meta">
+                            <span class="news-badge">来源：WMO</span>
+                            <span class="news-badge">关注：中期概率</span>
+                            <span class="news-badge">属性：公开资料</span>
+                        </div>
+                    </article>
+
+                    <article class="news-card">
+                        <div class="news-topline">
+                            <span class="news-badge text-rose-300 border-rose-400/20 bg-rose-400/10">区域监测</span>
+                            <span class="text-[11px] text-gray-500">2026-04-26</span>
+                        </div>
+                        <h4 class="news-title">东南亚、印度、澳洲进入产区天气交叉验证窗口</h4>
+                        <p class="news-summary">页面将这些区域作为热区入口，重点跟踪降雨偏离、土壤水分、作业窗口和产业数据是否相互印证。</p>
+                        <div class="news-meta">
+                            <span class="news-badge">来源：公开气象与产业资料</span>
+                            <span class="news-badge">品种：棕榈油 / 白糖 / 小麦</span>
                             <span class="news-badge">属性：产区跟踪</span>
-                        </div>
-                    </article>
-
-                    <article class="news-card">
-                        <div class="news-topline">
-                            <span class="news-badge text-green-200 border-green-400/20 bg-green-400/10">市场异动</span>
-                            <span class="text-[11px] text-gray-500">2026-04-21 18:50</span>
-                        </div>
-                        <h4 class="news-title">巴西中南部降雨偏强，大豆收获与物流发运节奏继续承压</h4>
-                        <p class="news-summary">持续降雨增加了田间作业和运输的不确定性，港口排队与跨州公路效率成为短期观察重点。</p>
-                        <div class="news-meta">
-                            <span class="news-badge">来源：产业资料</span>
-                            <span class="news-badge">品种：大豆</span>
-                            <span class="news-badge">属性：物流扰动</span>
-                        </div>
-                    </article>
-
-                    <article class="news-card">
-                        <div class="news-topline">
-                            <span class="news-badge text-rose-300 border-rose-400/20 bg-rose-400/10">产量快报</span>
-                            <span class="text-[11px] text-gray-500">2026-04-20 21:00</span>
-                        </div>
-                        <h4 class="news-title">马来西亚气象局更新干旱预警，棕榈油主产区水分条件仍需继续跟踪</h4>
-                        <p class="news-summary">若降水恢复速度慢于季节性均值，树龄结构较老的区域更容易出现产量兑现滞后。</p>
-                        <div class="news-meta">
-                            <span class="news-badge">来源：公开气象资料</span>
-                            <span class="news-badge">品种：棕榈油</span>
-                            <span class="news-badge">属性：供给跟踪</span>
                         </div>
                     </article>
                 </div>
@@ -1310,27 +1776,27 @@
                 <div id="content-reports" class="hidden flex flex-col gap-3">
                     <article class="news-card">
                         <div class="news-topline">
-                            <span class="news-badge text-sky-200 border-sky-400/20 bg-sky-400/10">深度宏观</span>
-                            <span class="text-[11px] text-gray-500">2026-04-20</span>
+                            <span class="news-badge text-sky-200 border-sky-400/20 bg-sky-400/10">验证清单</span>
+                            <span class="text-[11px] text-gray-500">每日</span>
                         </div>
-                        <h4 class="news-title">高盛宏观：2026 年全球大宗商品展望中，厄尔尼诺是重要的定价扰动变量</h4>
-                        <p class="news-summary">报告从能源替代、农产品单产和区域降水重分布三条线索解释气候扰动对跨品种价格结构的影响。</p>
+                        <h4 class="news-title">棕榈油：降雨偏离需要与产量、库存、出口船期交叉确认</h4>
+                        <p class="news-summary">若天气信号增强但库存和出口未同步变化，页面维持“等待数据验证”，避免把气象变量直接等同为产业结论。</p>
                         <div class="news-meta">
-                            <span class="news-badge">来源：机构研报</span>
-                            <span class="news-badge">主题：跨品种传导</span>
-                            <span class="news-badge">属性：公开整理</span>
+                            <span class="news-badge">数据：MPOB / 船运</span>
+                            <span class="news-badge">主题：棕榈油</span>
+                            <span class="news-badge">属性：产业验证</span>
                         </div>
                     </article>
 
                     <article class="news-card">
                         <div class="news-topline">
-                            <span class="news-badge text-indigo-200 border-indigo-400/20 bg-indigo-400/10">农牧纪要</span>
-                            <span class="text-[11px] text-gray-500">2026-04-18</span>
+                            <span class="news-badge text-indigo-200 border-indigo-400/20 bg-indigo-400/10">验证清单</span>
+                            <span class="text-[11px] text-gray-500">每周</span>
                         </div>
-                        <h4 class="news-title">中信建投：糖业供需跟踪中，厄尔尼诺更容易通过降雨分布影响产区节奏</h4>
-                        <p class="news-summary">报告强调关注印度、泰国与巴西不同产区的季节性差异，而不是把气候扰动简单理解为单向涨跌。</p>
+                        <h4 class="news-title">白糖：印度季风推进、甘蔗生长和压榨进度同步读取</h4>
+                        <p class="news-summary">高温或降雨偏离只是第一层信号，仍需验证主产区水分恢复速度、糖料作物长势和产业链节奏。</p>
                         <div class="news-meta">
-                            <span class="news-badge">来源：机构研报</span>
+                            <span class="news-badge">数据：季风 / 压榨</span>
                             <span class="news-badge">主题：白糖 / 甘蔗</span>
                             <span class="news-badge">属性：产业跟踪</span>
                         </div>
@@ -1338,13 +1804,13 @@
 
                     <article class="news-card">
                         <div class="news-topline">
-                            <span class="news-badge text-gray-200 border-gray-400/20 bg-gray-400/10">官方智库</span>
-                            <span class="text-[11px] text-gray-500">2026-04-12</span>
+                            <span class="news-badge text-gray-200 border-gray-400/20 bg-gray-400/10">验证清单</span>
+                            <span class="text-[11px] text-gray-500">每周</span>
                         </div>
-                        <h4 class="news-title">USDA 供需预估草案开始引入本轮厄尔尼诺权重因子</h4>
-                        <p class="news-summary">在新作面积与天气升水的初步评估中，公开模型已开始反映气候扰动对单产节奏的影响。</p>
+                        <h4 class="news-title">大豆 / 玉米：美国作物进度、南美收获与物流窗口并行验证</h4>
+                        <p class="news-summary">美洲降雨改善墒情和扰动作业窗口可能同时存在，页面重点呈现产业链变量变化，不做方向性表达。</p>
                         <div class="news-meta">
-                            <span class="news-badge">来源：官方资料</span>
+                            <span class="news-badge">数据：USDA / 港口</span>
                             <span class="news-badge">主题：美豆 / 美玉米</span>
                             <span class="news-badge">属性：供需预估</span>
                         </div>
@@ -1352,15 +1818,15 @@
 
                     <article class="news-card">
                         <div class="news-topline">
-                            <span class="news-badge text-amber-200 border-amber-400/20 bg-amber-400/10">专题整理</span>
-                            <span class="text-[11px] text-gray-500">2026-04-10</span>
+                            <span class="news-badge text-amber-200 border-amber-400/20 bg-amber-400/10">验证清单</span>
+                            <span class="text-[11px] text-gray-500">每旬</span>
                         </div>
-                        <h4 class="news-title">大宗内参：棕榈油周度整理更应关注降水偏离与出口节奏，而非单一价格表述</h4>
-                        <p class="news-summary">专题观察建议结合主产区天气、船期变化和库存节奏同步阅读，以降低对单条消息的误读。</p>
+                        <h4 class="news-title">澳洲小麦 / 菜籽：秋播前土壤墒情和降雨恢复速度优先</h4>
+                        <p class="news-summary">若墒情恢复不足，播种窗口和后续灌浆阶段需要持续观察；若降雨回补，则影响信号可能减弱。</p>
                         <div class="news-meta">
-                            <span class="news-badge">来源：公开整理</span>
-                            <span class="news-badge">主题：棕榈油</span>
-                            <span class="news-badge">属性：周度跟踪</span>
+                            <span class="news-badge">数据：降雨 / 墒情</span>
+                            <span class="news-badge">主题：小麦 / 菜籽</span>
+                            <span class="news-badge">属性：产业验证</span>
                         </div>
                     </article>
                 </div>
@@ -1396,7 +1862,7 @@
                 </a>
             </div>
             <div class="text-[11px] text-center text-gray-400 leading-relaxed px-2">
-                数据与结论仅用于资讯跟踪与历史经验整理，不构成任何投资建议。
+                本页面内容基于公开气象、产业及市场数据整理，仅用于展示 ENSO 状态、全球产区天气变化与相关商品产业链变量之间的历史传导关系，不涉及对任何期货、现货或场外合约未来价格走势的判断，不构成投资建议、交易建议或收益承诺。
             </div>
         </div>
     </div>
@@ -1494,6 +1960,7 @@
                 '铁矿石': '🪨',
                 '棉花': '☁️',
                 '甘蔗': '🎋',
+                '白糖': '🍬',
                 '镍': '🔩',
                 '棕榈油': '🌴',
                 '铜': '🪙',
@@ -1501,47 +1968,55 @@
                 '红枣': '🍒',
                 '苹果': '🍎',
                 '花生': '🥜',
-                '原油': '🛢️'
+                '原油': '🛢️',
+                '菜籽': '🌼'
             };
 
             const arrowMap = {
-                up: '<span class="font-black" style="color: #ff4d4f;">↑</span>',
-                down: '<span class="font-black" style="color: #52c41a;">↓</span>',
-                mixed: '<span class="font-black" style="color: #f59e0b;">↕</span>',
-                neutral: '<span class="font-black" style="color: #94a3b8;">-</span>'
+                up: '<span class="font-black" style="color: #ffb35b;">增强</span>',
+                down: '<span class="font-black" style="color: #8eea75;">减弱</span>',
+                mixed: '<span class="font-black" style="color: #f59e0b;">验证</span>',
+                neutral: '<span class="font-black" style="color: #94a3b8;">观察</span>'
             };
 
             const rawStringData = [
-                '阿根廷|-34|-64|south_america|大豆_up_产量增加,玉米_up_产量增加',
-                '澳大利亚|-25|133|oceania|小麦_down_产量下降,油菜籽_down_产量下降,铁矿石_up_有利于矿区生产',
-                '巴西|-10|-55|south_america|大豆_up_产量增加,玉米_up_产量增加,棉花_up_产量增加,铁矿石_up_有利于矿区生产,甘蔗 (东北部)_down_产量下降,甘蔗 (中南部)_up_产量增加',
-                '俄罗斯|60|90|europe|小麦_down_产量下降',
-                '菲律宾|13|122|asia|镍_down_产量下降、发运减少',
-                '加拿大|56|-106|north_america|油菜籽_down_产量下降',
-                '马来西亚|4|102|asia|棕榈油_down_产量下降',
-                '美国|38|-97|north_america|大豆_up_产量增加,玉米_up_产量增加,棉花_up_产量增加',
-                '秘鲁|-10|-75|south_america|铜_down_产量下降',
-                '欧洲|48|15|europe|小麦_down_产量下降',
-                '泰国|15|100|asia|甘蔗_down_产量下降,橡胶_down_产量下降',
-                '乌克兰|49|31|europe|小麦_down_产量下降',
-                '印度|21|78|asia|甘蔗_down_产量下降,小麦_neutral_产量影响较小,棉花_down_产量下降,铁矿石_down_发运减少',
-                '印尼|-2|114|asia|棕榈油_down_产量下降,橡胶_down_产量下降,镍_down_产量下降、发运减少',
-                '越南|14|108|asia|橡胶_down_产量下降',
-                '智利|-35|-71|south_america|铜_down_产量下降',
-                '中国|35|105|asia|甘蔗_down_产量下降,橡胶_down_产量下降,小麦_neutral_产量影响较小,玉米_down_产量下降,棉花_neutral_产量影响较小,红枣_neutral_产量较小,苹果_neutral_产量较小,花生_mixed_产量：4-5月发生，减产；7-8月发生，增产,铁矿石_neutral_影响较小'
+                '中国|35|105|asia|棉花_mixed_高温降雨错配等待验证,玉米_mixed_东北墒情与播种窗口跟踪,小麦_neutral_产区分化进入观察,花生_mixed_生长期水分条件分阶段验证,苹果_neutral_花期和坐果期天气跟踪',
+                '印尼|-2|114|asia|棕榈油_up_降雨偏离影响增强,橡胶_mixed_割胶天数等待验证,镍_mixed_降雨与发运节奏跟踪',
+                '马来西亚|4|102|asia|棕榈油_up_水分恢复和单产滞后跟踪,橡胶_mixed_割胶天数等待验证',
+                '泰国|15|100|asia|白糖_up_甘蔗生长和压榨节奏进入观察窗口,橡胶_mixed_割胶天数等待验证',
+                '越南|14|108|asia|橡胶_mixed_降雨日数和割胶节奏等待验证',
+                '菲律宾|13|122|asia|镍_mixed_矿区降雨和发运效率跟踪',
+                '印度|21|78|asia|白糖_up_高温与季风前水分进入观察窗口,棉花_mixed_播种面积和苗情等待验证',
+                '巴西|-10|-55|south_america|大豆_mixed_收获与物流节奏等待验证,玉米_mixed_二茬生长窗口跟踪,白糖_mixed_压榨进度和降雨节奏交叉验证',
+                '阿根廷|-34|-64|south_america|大豆_down_墒情修复影响减弱,玉米_down_作物优良率等待验证',
+                '秘鲁|-10|-75|south_america|铜_mixed_降雨和矿区运输条件跟踪',
+                '智利|-35|-71|south_america|铜_mixed_水资源和矿区作业窗口跟踪',
+                '澳洲|-25|133|oceania|小麦_up_秋播墒情进入观察窗口,菜籽_up_降雨恢复速度等待验证',
+                '美国中西部|41|-93|north_america|玉米_mixed_春播窗口等待验证,大豆_mixed_土壤湿度与强对流跟踪,棉花_mixed_南部棉区降雨和苗情跟踪',
+                '加拿大|56|-106|north_america|菜籽_up_草原省墒情和播种窗口进入观察,小麦_mixed_春麦播种进度等待验证',
+                '欧洲|48|15|europe|小麦_mixed_冬麦墒情和热浪风险跟踪,菜籽_mixed_开花结荚期天气验证',
+                '乌克兰|49|31|europe|小麦_mixed_黑海产区墒情和作业窗口跟踪,玉米_mixed_播种进度等待验证',
+                '俄罗斯|60|90|europe|小麦_mixed_南部产区墒情和春季温度跟踪'
             ];
 
             const disturbanceMap = {
-                '中国': '南北降水分化',
+                '中国': '南北降水分化 / 生长期错配',
+                '印尼': '降雨偏离 / 棕榈油单产滞后',
+                '马来西亚': '降雨偏离 / 库存出口验证',
+                '泰国': '季风降雨 / 甘蔗与橡胶窗口',
+                '越南': '降雨日数 / 割胶窗口',
+                '菲律宾': '矿区降雨 / 发运窗口',
                 '印度': '季风强弱变化',
-                '澳大利亚': '干旱 / 高温',
-                '阿根廷': '南美：西岸洪水 / 内陆干旱',
-                '巴西': '南美：西岸洪水 / 内陆干旱',
-                '印尼': '东南亚：降水偏少 / 偏多',
-                '马来西亚': '东南亚：降水偏少 / 偏多',
-                '泰国': '东南亚：降水偏少 / 偏多',
-                '菲律宾': '东南亚：降水偏少 / 偏多',
-                '越南': '东南亚：降水偏少 / 偏多'
+                '巴西': '降雨扰动 / 物流窗口',
+                '阿根廷': '墒情修复 / 收获窗口',
+                '秘鲁': '降雨扰动 / 矿区运输',
+                '智利': '水资源 / 矿区作业',
+                '澳洲': '秋播墒情 / 降雨恢复',
+                '美国中西部': '春播窗口 / 强对流',
+                '加拿大': '草原省墒情 / 播种窗口',
+                '欧洲': '冬麦墒情 / 热浪风险',
+                '乌克兰': '黑海作业窗口 / 墒情',
+                '俄罗斯': '南部小麦带 / 春季温度'
             };
 
             const countriesData = rawStringData.map(str => {
@@ -1591,30 +2066,16 @@
 
             function renderCountryMarker(d) {
                 const el = document.createElement('div');
-                el.className = 'globe-marker-card globe-country-marker flex flex-col gap-1.5';
-
-                const chips = d.impacts.slice(0, 3).map(imp => {
-                    const baseItemStr = imp.item.split(' ')[0];
-                    const emoji = iconMap[baseItemStr] || '📦';
-                    const safeItem = imp.item.replace(/\s*\(.*?\)/g, '');
-                    return `
-                        <span class="marker-tag ${imp.change === 'up' ? 'red' : imp.change === 'down' ? 'green' : imp.change === 'mixed' ? 'gold' : ''}">
-                            <span>${emoji}</span>
-                            <strong>${safeItem}</strong>
-                            ${arrowMap[imp.change]}
-                        </span>
-                    `;
-                }).join('');
-
-                const disturbanceLine = d.disturbance
-                    ? `<div class="text-[11px] font-bold text-red-400/90 tracking-wider">${d.disturbance}</div>`
-                    : ``;
+                el.className = 'globe-marker-card globe-country-marker';
+                const activeCount = d.impacts.filter(imp => imp.change !== 'neutral').length || d.impacts.length;
+                const topImpact = d.impacts[0]?.item || '监测';
 
                 el.innerHTML = `
-                    <div class="text-[14px] sm:text-[15px] font-black tracking-wide" style="color: var(--text-gold);">${d.country}</div>
-                    ${disturbanceLine}
-                    <div class="flex flex-wrap gap-1 mt-0.5">${chips}</div>
+                    <span class="country-dot"></span>
+                    <span class="country-name">${d.country}</span>
+                    <span class="country-count">${activeCount}项</span>
                 `;
+                el.title = `${d.country}｜${topImpact}等 ${d.impacts.length} 个监测项，点击查看详情`;
 
                 el.onclick = () => {
                     world.pointOfView({ lat: d.lat, lng: d.lng, altitude: 0.62 }, 800);
@@ -1697,40 +2158,101 @@
 
             window.renderAndOpenModal = function(data) {
                 document.getElementById('modal-title-text').textContent = data.country;
-                document.getElementById('modal-subtitle').textContent = data.disturbance ? `区域扰动 · ${data.disturbance}` : '商品影响详情';
+                document.getElementById('modal-subtitle').textContent = data.disturbance ? `区域监测入口 · ${data.disturbance}` : '区域监测入口';
 
-                const historicalNotes = {
-                    country: {
-                        '印度': '历史上印度对厄尔尼诺最敏感，高温和季风错位常先影响甘蔗、棉花与小麦。',
-                        '印尼': '历史上印尼在偏旱年份更容易出现棕榈油减产，水分条件变化会先反映到单产。',
-                        '马来西亚': '历史上马来西亚常与印尼同步受到干旱扰动，棕榈油产出更容易滞后回落。',
-                        '泰国': '历史上泰国更容易在干旱背景下出现甘蔗和橡胶节奏扰动。',
-                        '菲律宾': '历史上菲律宾更容易受到降雨错位和风暴路径变化影响，农产品与镍发运都会受扰。',
-                        '巴西': '历史上巴西中南部偏湿时，大豆和玉米收获会受扰；偏旱时，甘蔗和内陆物流更敏感。',
-                        '美国': '历史上美国核心产区偏湿时更容易支撑大豆和玉米单产，但也会放大物流节奏波动。',
-                        '澳大利亚': '历史上澳洲干旱对小麦最直接，播种和灌浆阶段更容易出现连续扰动。',
-                        '阿根廷': '历史上阿根廷在偏湿背景下更容易改善大豆和玉米单产。',
-                        '中国': '历史上中国南北降水分化明显时，棉花、玉米和部分旱作品种更容易出现结构性扰动。'
+                const regionBrief = {
+                    '中国': {
+                        anomaly: '南北降水分化和阶段性高温需要结合主产区物候期观察。',
+                        path: '影响路径：棉花苗情、玉米播种窗口、小麦灌浆、花生水分条件。',
+                        verify: ['农业气象旬报', '作物长势', '主产区降雨距平']
                     },
-                    item: {
-                        '棕榈油': '历史上印尼、马来西亚同步减产较典型，干旱往往先扰动开花和挂果，再滞后传导到产量。',
-                        '白糖': '历史上印度是最敏感地区之一，强厄尔尼诺更容易压低甘蔗单产，并带动全球糖价阶段性波动。',
-                        '甘蔗': '历史上甘蔗对干旱和高温很敏感，季风错位常先影响糖料作物的生长节奏。',
-                        '大豆': '历史上美洲核心产区若偏湿，单产往往更容易上修；若降雨反复，也会放大收获和物流扰动。',
-                        '玉米': '历史上美国玉米在关键生长期更依赖降水匹配，偏湿背景通常更容易支撑单产。',
-                        '棉花': '历史上高温叠加降雨错位时，棉花更容易出现开花和吐絮节奏受扰。',
-                        '小麦': '历史上澳洲和印度的小麦更容易受干旱和高温扰动，往往体现为播种和灌浆阶段的节奏变化。',
-                        '天然气': '历史上更常通过冬季偏暖影响取暖需求，需求弹性往往比农产品更间接。',
-                        '原油': '历史上多通过运输、工业活动和区域能源替代间接受到气候扰动影响。',
-                        '铁矿石': '历史上更多体现为矿区降雨、发运和港口节奏变化，价格传导常偏间接。'
+                    '印尼': {
+                        anomaly: '降雨偏离与水分恢复速度需要持续跟踪。',
+                        path: '影响路径：棕榈开花挂果、橡胶割胶天数、镍矿发运效率。',
+                        verify: ['印尼降雨距平', '棕榈油产量', '镍矿发运']
+                    },
+                    '马来西亚': {
+                        anomaly: '主产区降雨恢复速度和单产滞后链条需要验证。',
+                        path: '影响路径：棕榈油单产、库存、出口船期和劳工采收效率。',
+                        verify: ['MPOB 产量库存', '出口船期', '马来西亚降雨']
+                    },
+                    '泰国': {
+                        anomaly: '季风降雨节奏影响甘蔗水分条件和橡胶割胶窗口。',
+                        path: '影响路径：甘蔗生长、压榨节奏、割胶天数。',
+                        verify: ['甘蔗长势', '压榨进度', '橡胶产区降雨']
+                    },
+                    '越南': {
+                        anomaly: '降雨日数变化会影响橡胶割胶节奏。',
+                        path: '影响路径：割胶天数、原料收购、出口节奏。',
+                        verify: ['产区降雨日数', '橡胶原料价差', '出口数据']
+                    },
+                    '菲律宾': {
+                        anomaly: '矿区降雨和风暴路径可能改变镍矿发运效率。',
+                        path: '影响路径：矿区作业、港口装船、到港节奏。',
+                        verify: ['矿区降雨', '镍矿发运', '港口装船']
+                    },
+                    '印度': {
+                        anomaly: '高温、季风前水分和季风推进节奏进入观察窗口。',
+                        path: '影响路径：甘蔗含糖率、棉花播种、苗情和病虫害压力。',
+                        verify: ['季风推进', '甘蔗压榨', '棉花面积']
+                    },
+                    '巴西': {
+                        anomaly: '中南部降雨扰动可能改变收获、压榨和物流窗口。',
+                        path: '影响路径：田间作业天数、港口排队、甘蔗压榨效率。',
+                        verify: ['收获进度', '港口排队', '压榨数据']
+                    },
+                    '阿根廷': {
+                        anomaly: '墒情修复与过量降雨并存，需要看收获窗口。',
+                        path: '影响路径：作物优良率、收获进度、内陆物流。',
+                        verify: ['作物优良率', '收获进度', '降雨距平']
+                    },
+                    '秘鲁': {
+                        anomaly: '降雨扰动和山地交通条件可能影响铜矿运输。',
+                        path: '影响路径：矿区作业、道路运输、港口发运。',
+                        verify: ['矿区降雨', '道路通行', '铜矿发运']
+                    },
+                    '智利': {
+                        anomaly: '水资源和高温条件需要结合铜矿作业窗口跟踪。',
+                        path: '影响路径：矿区用水、作业效率、港口发运。',
+                        verify: ['水库水位', '矿区作业', '港口发运']
+                    },
+                    '澳洲': {
+                        anomaly: '秋播前土壤墒情与后续降雨恢复速度是核心变量。',
+                        path: '影响路径：播种窗口、出苗、抽穗和灌浆阶段。',
+                        verify: ['土壤墒情', '降雨恢复', '播种进度']
+                    },
+                    '美国中西部': {
+                        anomaly: '春播窗口、土壤湿度和强对流天气并行观察。',
+                        path: '影响路径：播种进度、出苗条件、作物优良率。',
+                        verify: ['USDA 作物进度', '土壤湿度', '强对流记录']
+                    },
+                    '加拿大': {
+                        anomaly: '草原省墒情和播种窗口对菜籽、春麦更敏感。',
+                        path: '影响路径：播种进度、出苗、开花和单产形成。',
+                        verify: ['草原省墒情', '播种进度', '菜籽长势']
+                    },
+                    '欧洲': {
+                        anomaly: '冬麦墒情、春季温度和阶段性热浪风险需要跟踪。',
+                        path: '影响路径：小麦灌浆、菜籽开花结荚、品质变量。',
+                        verify: ['冬麦长势', '热浪记录', '菜籽物候']
+                    },
+                    '乌克兰': {
+                        anomaly: '黑海产区作业窗口和墒情变化影响小麦、玉米生长节奏。',
+                        path: '影响路径：春播、冬麦返青、港口和内陆物流。',
+                        verify: ['黑海墒情', '播种进度', '物流数据']
+                    },
+                    '俄罗斯': {
+                        anomaly: '南部小麦带春季温度和墒情是观察重点。',
+                        path: '影响路径：冬麦返青、灌浆、品质和出口节奏。',
+                        verify: ['南部墒情', '小麦长势', '出口节奏']
                     }
                 };
 
-                const historicalContext = [
-                    historicalNotes.country[data.country],
-                    ...data.impacts.map(impact => historicalNotes.item[impact.item.split(' ')[0]]),
-                    data.disturbance ? `区域层面更要看 ${data.disturbance} 对播种、开花和收获窗口的错位影响。` : null
-                ].filter(Boolean);
+                const brief = regionBrief[data.country] || {
+                    anomaly: '该区域天气异常需要结合本地产业数据验证。',
+                    path: '影响路径：天气条件、生产窗口、物流和库存变量。',
+                    verify: ['天气距平', '生产进度', '库存物流']
+                };
 
                 let htmlStr = '';
                 data.impacts.forEach(impact => {
@@ -1741,11 +2263,11 @@
                     if (impact.change === 'down') {
                         bgClass = 'bg-down';
                         iconClass = 'color-down';
-                        iconIcon = 'trending-down';
+                        iconIcon = 'activity';
                     } else if (impact.change === 'up') {
                         bgClass = 'bg-up';
                         iconClass = 'color-up';
-                        iconIcon = 'trending-up';
+                        iconIcon = 'activity';
                     } else if (impact.change === 'mixed') {
                         bgClass = 'bg-mixed';
                         iconClass = 'color-mixed';
@@ -1775,11 +2297,21 @@
                 htmlStr += `
                     <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
                         <div class="flex items-center gap-2 mb-3">
-                            <span class="text-[11px] font-bold tracking-[0.18em] text-[var(--text-gold)] uppercase">历史影响</span>
+                            <span class="text-[11px] font-bold tracking-[0.18em] text-[var(--text-gold)] uppercase">当前天气异常</span>
                         </div>
-                        <div class="flex flex-col gap-2 text-[12px] leading-relaxed text-gray-300">
-                            ${historicalContext.length ? historicalContext.map(note => `<div class="flex gap-2"><span class="text-[var(--text-gold)] shrink-0">•</span><span>${note}</span></div>`).join('') : `<div class="text-gray-300">历史上该地区的影响主要通过降水和温度错位传导到产量与物流。</div>`}
+                        <div class="text-[12px] leading-relaxed text-gray-300">${brief.anomaly}</div>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-[11px] font-bold tracking-[0.18em] text-[var(--text-gold)] uppercase">影响路径</span>
                         </div>
+                        <div class="text-[12px] leading-relaxed text-gray-300">${brief.path}</div>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-[11px] font-bold tracking-[0.18em] text-[var(--text-gold)] uppercase">需要验证的产业数据</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">${brief.verify.map(item => `<span class="news-badge">${item}</span>`).join('')}</div>
                     </div>
                 `;
 
