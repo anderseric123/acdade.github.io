@@ -319,6 +319,13 @@ html.light-mode .text-\[var\(--text-gold\)\] {
   color: #6b4d00 !important;
 }
 html.light-mode .bg-\[\#d4af37\]\/20 { background: rgba(212, 175, 55, 0.12) !important; }
+html.light-mode #btn-close-news {
+  color: #0f172a !important;
+}
+html.light-mode #btn-close-news:hover {
+  color: #000 !important;
+  background: rgba(0, 0, 0, 0.06) !important;
+}
 html.light-mode .border-\[var\(--text-gold\)\]\/30,
 html.light-mode .border-\[var\(--text-gold\)\]\/40 { border-color: rgba(138, 101, 0, 0.35) !important; }
 html.light-mode .source-row, html.light-mode .weather-region, html.light-mode .rank-item, html.light-mode .rule-item {
@@ -357,8 +364,10 @@ html.light-mode .footer-immersive .text-gray-500 {
 }
 
 .heat-zone-panel { transition: width 0.25s ease, transform 0.25s ease, opacity 0.25s ease; }
-.heat-zone-panel.is-collapsed .heat-zone-body { max-height: 0; opacity: 0; overflow: hidden; pointer-events: none; transform: translateY(-4px); }
+.heat-zone-panel.is-collapsed .heat-zone-body { display: none; max-height: 0; margin-top: 0; opacity: 0; overflow: hidden; pointer-events: none; transform: translateY(-4px); }
 .heat-zone-panel .heat-zone-body { max-height: 60dvh; opacity: 1; overflow-y: auto; transition: max-height 0.3s ease, opacity 0.2s ease, transform 0.2s ease; }
+.globe-heat-zone-below .heat-zone-body { max-height: 360px; }
+.globe-heat-zone-below.is-collapsed .heat-zone-body { max-height: 0; }
 .heat-zone-tabs { display: inline-flex; gap: 6px; padding: 4px; border-radius: 9999px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 12px; flex-wrap: wrap; }
 .heat-zone-tab { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 9999px; padding: 7px 11px; background: transparent; color: rgba(255, 255, 255, 0.62); font-size: 11px; font-weight: 900; letter-spacing: 0.08em; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease; }
 .heat-zone-tab:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
@@ -475,9 +484,8 @@ html.light-mode .heat-zone-crop-card .crop-chip.red { color: #b91c1c; border-col
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.7); }
 
 .monitor-grid { display: block; }
-.globe-stage { min-height: 620px; max-height: 760px; }
+.globe-stage { min-height: 620px; max-height: none; }
 #globe-interactive-box { height: clamp(470px, 58dvh, 700px) !important; min-height: 0 !important; }
-#globe-interactive-box.is-country-view #globe-heat-zone { opacity: 0; pointer-events: none; transform: translateY(-6px); }
 .monitor-cell { min-height: 82px; border-radius: 16px; padding: 12px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025)); border: 1px solid rgba(255, 255, 255, 0.075); position: relative; overflow: hidden; }
 .monitor-cell::after { content: ""; position: absolute; inset: auto -20% -55% 35%; height: 70px; background: radial-gradient(circle, rgba(212, 175, 55, 0.18), transparent 68%); pointer-events: none; }
 .monitor-summary-card {
@@ -814,7 +822,7 @@ html.light-mode .enso-season.is-active .enso-bar::after { color: #0f172a !import
                 <div class="card-surface enso-formation-card">
                     <div class="enso-formation-head">
                         <span class="module-tag">形成及影响</span>
-                        <span class="enso-formation-chip">科普说明</span>
+                        <span class="enso-formation-chip">图片由AI生成</span>
                     </div>
                     <div class="enso-formation-media" id="formation-image-trigger" role="button" tabindex="0" aria-label="放大形成及影响示意图">
                         <img src="https://img.jin10.com/news/26/04/JvO8wuHdtjxlKifNU21KT.png" alt="厄尔尼诺形成及影响示意图" loading="lazy" />
@@ -861,77 +869,80 @@ html.light-mode .enso-season.is-active .enso-bar::after { color: #0f172a !import
                 <h2 class="text-[17px] sm:text-2xl font-black tracking-[0.2em] relative globe-floating-title inline-block">全球产区区域交互地图</h2>
             </div>
             <div class="relative w-full px-3 sm:px-6 pb-4 sm:pb-6 flex justify-center items-center z-20 h-full">
-                <div id="globe-interactive-box" class="relative w-full h-full max-w-[800px] rounded-2xl sm:rounded-3xl border-[2px] border-white/10 transition-all duration-300 bg-black/20 overflow-hidden" style="height: clamp(420px, 54dvh, 620px); min-height: 0;">
-                    <div id="globe-heat-zone" class="absolute top-4 right-4 z-30 heat-zone-panel pointer-events-auto flex flex-col items-end is-collapsed">
-                        <button type="button" id="btn-toggle-heat-zone" class="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-black/45 backdrop-blur-md border-0 text-left outline-none shadow-none cursor-pointer">
-                            <span class="module-tag shrink-0">全球重点热区</span>
-                            <span class="text-[11px] text-gray-400 font-bold hidden sm:inline">点击展开</span>
-                            <i data-lucide="chevron-down" id="heat-zone-icon" class="w-4 h-4 text-[var(--text-gold)] shrink-0"></i>
-                        </button>
-                        <div class="heat-zone-body mt-2 w-[320px] sm:w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl bg-black/45 backdrop-blur-md p-3 sm:p-4 shadow-lg overflow-y-auto" style="max-height: calc(clamp(420px, 54dvh, 620px) - 80px);">
-                            <div class="flex flex-col gap-3">
-                                <p class="text-[11px] sm:text-xs text-gray-300 leading-relaxed">
-                                    历史经验里，最关键的不是单看“下雨多或少”，而是看降水、温度和风场是否错位到了播种、开花、灌浆、收获、压榨、发运这些敏感窗口。
-                                </p>
-                                <div class="commodity-board">
-                                    <article class="commodity-card">
-                                        <div class="flex items-center justify-between gap-3">
-                                            <h3 class="text-white font-black">🌴 棕榈油</h3>
-                                            <span class="status-light status-strong">影响增强</span>
-                                        </div>
-                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★★。主要产区：印尼、马来西亚。路径：降雨偏离影响挂果与单产，通常存在滞后。</p>
-                                        <div class="news-meta"><span class="news-badge">需验证：MPOB</span><span class="news-badge">库存</span><span class="news-badge">出口船期</span></div>
-                                    </article>
-                                    <article class="commodity-card">
-                                        <div class="flex items-center justify-between gap-3">
-                                            <h3 class="text-white font-black">🍬 白糖</h3>
-                                            <span class="status-light status-watch">进入观察窗口</span>
-                                        </div>
-                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：印度、泰国、巴西。路径：高温、季风节奏与压榨条件改变糖料作物变量。</p>
-                                        <div class="news-meta"><span class="news-badge">需验证：季风推进</span><span class="news-badge">压榨进度</span></div>
-                                    </article>
-                                    <article class="commodity-card">
-                                        <div class="flex items-center justify-between gap-3">
-                                            <h3 class="text-white font-black">🫘 大豆</h3>
-                                            <span class="status-light status-watch">等待数据验证</span>
-                                        </div>
-                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：巴西、阿根廷、美国。路径：降雨改善墒情，也可能扰动收获和物流窗口。</p>
-                                        <div class="news-meta"><span class="news-badge">需验证：作物优良率</span><span class="news-badge">港口排队</span></div>
-                                    </article>
-                                    <article class="commodity-card">
-                                        <div class="flex items-center justify-between gap-3">
-                                            <h3 class="text-white font-black">🌽 玉米</h3>
-                                            <span class="status-light status-normal">影响减弱</span>
-                                        </div>
-                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★。主要产区：美国中西部、巴西、阿根廷。路径：播种窗口与关键生长期降雨匹配度。</p>
-                                        <div class="news-meta"><span class="news-badge">需验证：播种进度</span><span class="news-badge">墒情</span></div>
-                                    </article>
-                                    <article class="commodity-card">
-                                        <div class="flex items-center justify-between gap-3">
-                                            <h3 class="text-white font-black">🌾 小麦 / 菜籽</h3>
-                                            <span class="status-light status-watch">进入观察窗口</span>
-                                        </div>
-                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：澳洲、印度、加拿大。路径：播种、抽穗、灌浆阶段对水热错配敏感。</p>
-                                        <div class="news-meta"><span class="news-badge">需验证：土壤墒情</span><span class="news-badge">降雨距平</span></div>
-                                    </article>
-                                    <article class="commodity-card">
-                                        <div class="flex items-center justify-between gap-3">
-                                            <h3 class="text-white font-black">☁️ 棉花</h3>
-                                            <span class="status-light status-watch">产业链变量变化</span>
-                                        </div>
-                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★。主要产区：印度、美国、中国。路径：高温、强降雨和病虫害压力影响种植和吐絮节奏。</p>
-                                        <div class="news-meta"><span class="news-badge">需验证：面积</span><span class="news-badge">苗情</span></div>
-                                    </article>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                <div class="w-full max-w-[800px] flex flex-col gap-3 sm:gap-4">
+                <div id="globe-interactive-box" class="relative w-full h-full rounded-2xl sm:rounded-3xl border-[2px] border-white/10 transition-all duration-300 bg-black/20 overflow-hidden" style="height: clamp(420px, 54dvh, 620px); min-height: 0;">
                     <div id="earth-mount" class="absolute inset-0 z-20 transition-all duration-300" style="pointer-events: none;"></div>
                     
                     <button id="back-btn" class="absolute top-4 left-4 z-40 flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl backdrop-blur-md border font-bold text-xs sm:text-sm transition hover:bg-white/10 active:scale-95 cursor-pointer hidden" style="background: rgba(15,23,42,0.82); border-color: var(--text-gold); color: var(--text-gold);">
                         <i data-lucide="chevron-left" class="w-3 h-3 sm:w-4 sm:h-4"></i> 返回全景视角
                     </button>
+                </div>
+                <div id="globe-heat-zone" class="relative z-30 heat-zone-panel globe-heat-zone-below pointer-events-auto flex flex-col items-stretch is-collapsed">
+                    <div class="flex justify-end">
+                        <button type="button" id="btn-toggle-heat-zone" class="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-black/45 backdrop-blur-md border-0 text-left outline-none shadow-none cursor-pointer">
+                            <span class="module-tag shrink-0">影响品种</span>
+                            <span class="text-[11px] text-gray-400 font-bold hidden sm:inline">点击展开</span>
+                            <i data-lucide="chevron-down" id="heat-zone-icon" class="w-4 h-4 text-[var(--text-gold)] shrink-0"></i>
+                        </button>
+                    </div>
+                    <div class="heat-zone-body mt-2 w-full max-w-none rounded-2xl bg-black/45 backdrop-blur-md p-3 sm:p-4 shadow-lg overflow-y-auto">
+                        <div class="flex flex-col gap-3">
+                            <p class="text-[11px] sm:text-xs text-gray-300 leading-relaxed">
+                                历史经验里，最关键的不是单看“下雨多或少”，而是看降水、温度和风场是否错位到了播种、开花、灌浆、收获、压榨、发运这些敏感窗口。
+                            </p>
+                            <div class="commodity-board">
+                                <article class="commodity-card">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <h3 class="text-white font-black">🌴 棕榈油</h3>
+                                        <span class="status-light status-strong">影响增强</span>
+                                    </div>
+                                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★★。主要产区：印尼、马来西亚。路径：降雨偏离影响挂果与单产，通常存在滞后。</p>
+                                    <div class="news-meta"><span class="news-badge">需验证：MPOB</span><span class="news-badge">库存</span><span class="news-badge">出口船期</span></div>
+                                </article>
+                                <article class="commodity-card">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <h3 class="text-white font-black">🍬 白糖</h3>
+                                        <span class="status-light status-watch">进入观察窗口</span>
+                                    </div>
+                                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：印度、泰国、巴西。路径：高温、季风节奏与压榨条件改变糖料作物变量。</p>
+                                    <div class="news-meta"><span class="news-badge">需验证：季风推进</span><span class="news-badge">压榨进度</span></div>
+                                </article>
+                                <article class="commodity-card">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <h3 class="text-white font-black">🫘 大豆</h3>
+                                        <span class="status-light status-watch">等待数据验证</span>
+                                    </div>
+                                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：巴西、阿根廷、美国。路径：降雨改善墒情，也可能扰动收获和物流窗口。</p>
+                                    <div class="news-meta"><span class="news-badge">需验证：作物优良率</span><span class="news-badge">港口排队</span></div>
+                                </article>
+                                <article class="commodity-card">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <h3 class="text-white font-black">🌽 玉米</h3>
+                                        <span class="status-light status-normal">影响减弱</span>
+                                    </div>
+                                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★。主要产区：美国中西部、巴西、阿根廷。路径：播种窗口与关键生长期降雨匹配度。</p>
+                                    <div class="news-meta"><span class="news-badge">需验证：播种进度</span><span class="news-badge">墒情</span></div>
+                                </article>
+                                <article class="commodity-card">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <h3 class="text-white font-black">🌾 小麦 / 菜籽</h3>
+                                        <span class="status-light status-watch">进入观察窗口</span>
+                                    </div>
+                                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：澳洲、印度、加拿大。路径：播种、抽穗、灌浆阶段对水热错配敏感。</p>
+                                    <div class="news-meta"><span class="news-badge">需验证：土壤墒情</span><span class="news-badge">降雨距平</span></div>
+                                </article>
+                                <article class="commodity-card">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <h3 class="text-white font-black">☁️ 棉花</h3>
+                                        <span class="status-light status-watch">产业链变量变化</span>
+                                    </div>
+                                    <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★。主要产区：印度、美国、中国。路径：高温、强降雨和病虫害压力影响种植和吐絮节奏。</p>
+                                    <div class="news-meta"><span class="news-badge">需验证：面积</span><span class="news-badge">苗情</span></div>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </main>
@@ -1064,7 +1075,7 @@ html.light-mode .enso-season.is-active .enso-bar::after { color: #0f172a !import
             <div class="shrink-0 p-4 sm:p-5 border-b border-[rgba(212,175,55,0.2)] bg-black/40 flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="w-2.5 h-8 rounded-full bg-gradient-to-b from-[#d4af37] to-[#8a6e1a]"></div>
-                    <h3 class="text-xl sm:text-2xl font-black text-white tracking-widest drop-shadow-md flex items-center gap-2"><i data-lucide="book-open" class="w-5 h-5 text-[var(--text-gold)]"></i> 资讯与研报</h3>
+                    <h3 class="text-xl sm:text-2xl font-black text-white tracking-widest drop-shadow-md flex items-center gap-2"><i data-lucide="book-open" class="w-5 h-5 text-[var(--text-gold)]"></i> 气候动态</h3>
                 </div>
                 <button id="btn-close-news" class="p-2 -mr-2 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-colors">
                     <i data-lucide="x" class="w-6 h-6"></i>
@@ -1622,7 +1633,7 @@ var weatherException = {
       let isHeatZoneCollapsed = true;
       const heatZone = $('globe-heat-zone');
       const heatZoneIcon = $('heat-zone-icon');
-      $('btn-toggle-heat-zone').onclick = (e) => {
+      const toggleHeatZone = (e) => {
           e.stopPropagation();
           isHeatZoneCollapsed = !isHeatZoneCollapsed;
           if (isHeatZoneCollapsed) {
@@ -1634,6 +1645,10 @@ var weatherException = {
           }
           lucide.createIcons();
       };
+      document.addEventListener('click', (e) => {
+          const trigger = e.target instanceof Element ? e.target.closest('#btn-toggle-heat-zone') : null;
+          if (trigger) toggleHeatZone(e);
+      });
 
       // Globe.gl Init
       let viewLevel = 'CONTINENT';
