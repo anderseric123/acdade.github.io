@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>金十期货厄尔尼诺监测台</title>
+    <title>厄尔尼诺监测台</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/three"></script>
@@ -142,6 +142,16 @@ html.light-mode .history-disclaimer-note strong {
 }
 html.light-mode .history-disclaimer-strong {
   color: #0f172a !important;
+}
+html .help-tooltip .tooltip-panel {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+html .help-tooltip.tooltip-open .tooltip-panel {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 html.light-mode .impact-modal-header {
   background: #0f172a !important;
@@ -287,6 +297,10 @@ html.light-mode #globe-overlay { background: rgba(255,255,255,0.4) !important; }
 html.light-mode #globe-overlay .overlay-btn { background: rgba(255,255,255,0.95) !important; border-color: #b98b13 !important; color: #b98b13 !important; box-shadow: 0 0 15px rgba(185,139,19,0.2) !important; }
 html.light-mode .monitor-cell, html.light-mode .commodity-card, html.light-mode .similar-year {
   background: rgba(255, 255, 255, 0.86) !important; border-color: rgba(15, 23, 42, 0.08) !important; color: #0f172a !important;
+}
+html.light-mode .heat-zone-body .commodity-card {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
 }
 html.light-mode .monitor-value, html.light-mode .section-divider-title { color: #0f172a !important; }
 html.light-mode .monitor-label, html.light-mode .monitor-note { color: #64748b !important; }
@@ -536,8 +550,8 @@ html.light-mode .heat-zone-crop-card .crop-chip.red { color: #b91c1c; border-col
 .enso-bar-la-nina { background: linear-gradient(180deg, #5ac8fa 0%, #2563eb 100%); }
 .enso-bar-neutral { background: linear-gradient(180deg, #d7d7d7 0%, #9ca3af 100%); }
 .enso-bar-el-nino { background: linear-gradient(180deg, #ff8a65 0%, #ff4d2d 100%); }
-.enso-season-label { display: flex; flex-direction: column; align-items: center; gap: 2px; color: rgba(255, 255, 255, 0.78); font-size: 10px; font-weight: 800; line-height: 1.1; text-align: center; }
-.enso-season-label span:first-child { color: #ffffff; font-size: 11px; letter-spacing: 0.08em; }
+.enso-season-label { display: flex; flex-direction: column; align-items: center; gap: 2px; color: rgba(255, 255, 255, 0.78); font-size: 9px; font-weight: 800; line-height: 1.1; text-align: center; }
+.enso-season-label span:first-child { color: #ffffff; font-size: 10px; letter-spacing: 0.06em; }
 .enso-legend { display: flex; flex-wrap: wrap; gap: 8px 10px; margin-bottom: 10px; }
 .enso-legend-item { display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; padding: 6px 10px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.8); font-size: 11px; font-weight: 800; }
 .enso-legend-swatch { width: 9px; height: 9px; border-radius: 999px; flex-shrink: 0; }
@@ -596,6 +610,28 @@ html.light-mode .enso-formation-media {
   background: rgba(15, 23, 42, 0.04);
   border-color: rgba(15, 23, 42, 0.08);
 }
+.formation-image-stage {
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  border-radius: 14px;
+  touch-action: none;
+  background: rgba(255, 255, 255, 0.98);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+}
+.formation-image-stage:active { cursor: grabbing; }
+.formation-image-stage img {
+  transform-origin: center center;
+  will-change: transform;
+  touch-action: none;
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+}
 
 #formation-image-modal .immersive-modal-content {
   max-width: min(1100px, 94vw);
@@ -616,6 +652,8 @@ html.light-mode .enso-chart-subtitle, html.light-mode .enso-chart-source, html.l
 html.light-mode .enso-season-label span:first-child { color: #0f172a !important; }
 html.light-mode .enso-plot { background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.22)), linear-gradient(to top, rgba(15, 23, 42, 0.1) 1px, transparent 1px); }
 html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-color: rgba(15, 23, 42, 0.08); color: #334155; }
+html.light-mode .enso-bar::after { color: #0f172a !important; }
+html.light-mode .enso-season.is-active .enso-bar::after { color: #0f172a !important; }
 
 .data-ribbon { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 7px 11px; background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.24); color: #f4dfa1; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; }
 .status-light { display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; padding: 6px 9px; font-size: 10px; line-height: 1; font-weight: 900; letter-spacing: 0.1em; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.045); color: rgba(255, 255, 255, 0.72); }
@@ -632,6 +670,11 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
 .commodity-board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .commodity-card { border-radius: 18px; padding: 15px; background: rgba(0, 0, 0, 0.26); border: 1px solid rgba(255, 255, 255, 0.065); transition: transform 0.22s ease, border-color 0.22s ease, background-color 0.22s ease; }
 .commodity-card:hover { transform: translateY(-2px); border-color: rgba(212, 175, 55, 0.34); background: rgba(255, 255, 255, 0.04); }
+.heat-zone-body .commodity-board { display: flex; flex-direction: column; gap: 10px; }
+.heat-zone-body .commodity-card { width: 100%; padding: 14px 14px 12px; }
+.heat-zone-body .commodity-card h3 { font-size: 15px; }
+.heat-zone-body .commodity-card p { margin-top: 8px; }
+.heat-zone-body .commodity-card .news-meta { margin-top: 10px; }
 .rank-item { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 13px 0; border-top: 1px solid rgba(255, 255, 255, 0.07); }
 .rank-item:first-child { border-top: 0; padding-top: 0; }
 .rule-item { display: grid; grid-template-columns: minmax(120px, 0.8fr) minmax(0, 1fr); gap: 12px; padding: 13px 0; border-top: 1px solid rgba(255, 255, 255, 0.07); }
@@ -655,6 +698,8 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
   .globe-continent-marker { min-width: 90px; padding: 8px 12px; }
   .globe-country-marker { max-width: 118px; }
   .module-title { font-size: 17px; }
+  .enso-season-label { font-size: 8px; }
+  .enso-season-label span:first-child { font-size: 9px; }
 }
 
 @media (max-width: 430px) {
@@ -697,10 +742,10 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
         <header class="shrink-0 flex flex-col items-center justify-center pt-4 sm:pt-5 pb-2 sm:pb-4 px-4 z-10 relative" style="background: linear-gradient(to bottom, rgba(15,23,42,0.96) 0%, rgba(10,12,16,0) 100%)">
             <img src="%E5%AE%B9%E5%99%A8__1_(1).svg" id="user-provided-logo" class="h-4 sm:h-5 mb-3 sm:mb-5 mx-auto transition-all" style="filter: brightness(0) invert(1)" alt="金十期货 Logo" />
             <h1 class="text-[28px] sm:text-4xl font-heavy-serif text-center leading-tight gold-gradient-text drop-shadow-lg tracking-wider">
-                金十期货厄尔尼诺监测台
+                厄尔尼诺监测台
             </h1>
             <p class="mt-3 sm:mt-5 text-[12px] sm:text-sm text-center text-gray-300 max-w-[720px] px-2 leading-relaxed">
-                跟踪厄尔尼诺/拉尼娜状态、全球产区天气异常与商品产业链变量之间的历史传导关系。
+                追踪厄尔尼诺/拉尼娜状态，观察全球产区天气异常如何影响重点商品。
             </p>
             
             <div class="mt-4 sm:mt-6 w-[94%] max-w-[920px] panel-card rounded-2xl border border-[rgba(212,175,55,0.24)] bg-black/35 backdrop-blur-md p-3.5 sm:p-4 shadow-lg fade-in-up">
@@ -811,7 +856,7 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
         <main class="globe-stage w-full relative flex flex-col z-10 flex-1">
             <div class="absolute inset-0 z-0 pointer-events-none" style="background: radial-gradient(circle at center, rgba(30, 41, 59, 0.9) 0%, #000 100%)"></div>
             <div class="relative z-20 text-center w-full px-4 pt-6 sm:pt-8 pb-3 sm:pb-4">
-                <h2 class="text-[17px] sm:text-2xl font-black tracking-[0.2em] relative globe-floating-title inline-block">全球产区区域监测入口</h2>
+                <h2 class="text-[17px] sm:text-2xl font-black tracking-[0.2em] relative globe-floating-title inline-block">全球产区区域交互地图</h2>
             </div>
             <div class="relative w-full px-3 sm:px-6 pb-4 sm:pb-6 flex justify-center items-center z-20 h-full">
                 <div id="globe-interactive-box" class="relative w-full h-full max-w-[800px] rounded-2xl sm:rounded-3xl border-[2px] border-white/10 transition-all duration-300 bg-black/20 overflow-hidden" style="height: clamp(420px, 54dvh, 620px); min-height: 0;">
@@ -822,124 +867,59 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                             <i data-lucide="chevron-down" id="heat-zone-icon" class="w-4 h-4 text-[var(--text-gold)] shrink-0"></i>
                         </button>
                         <div class="heat-zone-body mt-2 w-[320px] sm:w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl bg-black/45 backdrop-blur-md p-3 sm:p-4 shadow-lg overflow-y-auto" style="max-height: calc(clamp(420px, 54dvh, 620px) - 80px);">
-                            <div class="heat-zone-tabs" role="tablist" aria-label="热区信息切换">
-                                <button type="button" class="heat-zone-tab is-active" data-heat-tab="path" aria-controls="heat-zone-panel-path" aria-selected="true">历史影响路径</button>
-                                <button type="button" class="heat-zone-tab" data-heat-tab="crops" aria-controls="heat-zone-panel-crops" aria-selected="false">影响的品种</button>
-                            </div>
-
-                            <div class="heat-zone-tab-panels">
-                                <div id="heat-zone-panel-path" class="heat-zone-tab-panel is-active" data-heat-panel="path">
-                                    <div class="flex flex-col gap-3">
-                                        <p class="text-[11px] sm:text-xs text-gray-300 leading-relaxed">
-                                            历史经验里，最关键的不是单看“下雨多或少”，而是看降水、温度和风场是否错位到了播种、开花、灌浆、收获、压榨、发运这些敏感窗口。
-                                        </p>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                            <article class="card-surface p-3 sm:p-4">
-                                                <h3 class="text-white font-black flex items-center gap-2 text-[13px] sm:text-sm"><i data-lucide="waves" class="w-4 h-4 text-[var(--text-gold)]"></i>什么是厄尔尼诺？</h3>
-                                                <p class="history-note mt-2.5">厄尔尼诺通常表现为中东太平洋海水持续偏暖，并带动热带大气环流变化。它不是单一“天气事件”，而是一组海洋和大气共同变化的气候背景。</p>
-                                            </article>
-                                            <article class="card-surface p-3 sm:p-4">
-                                                <h3 class="text-white font-black flex items-center gap-2 text-[13px] sm:text-sm"><i data-lucide="thermometer-sun" class="w-4 h-4 text-[var(--text-gold)]"></i>为什么看关键海温区？</h3>
-                                                <p class="history-note mt-2.5">关键海温区位于赤道中太平洋，是判断厄尔尼诺/拉尼娜状态最常用的核心区域之一。通常需要海温、气压差、风场和海洋内部热量共同验证，不能只看单周海温。</p>
-                                            </article>
-                                            <article class="card-surface p-3 sm:p-4">
-                                                <h3 class="text-white font-black flex items-center gap-2 text-[13px] sm:text-sm"><i data-lucide="wind" class="w-4 h-4 text-[var(--text-gold)]"></i>它如何影响天气？</h3>
-                                                <p class="history-note mt-2.5">厄尔尼诺/拉尼娜会改变热带对流和大气环流，使降雨带、季风节奏、风暴路径和区域温度分布发生再配置。对商品的影响通常要经过“天气异常—生产窗口—产业数据”这条链条验证。</p>
-                                            </article>
-                                            <article class="card-surface p-3 sm:p-4">
-                                                <h3 class="text-white font-black flex items-center gap-2 text-[13px] sm:text-sm"><i data-lucide="calendar-clock" class="w-4 h-4 text-[var(--text-gold)]"></i>为什么影响有滞后？</h3>
-                                                <p class="history-note mt-2.5">不同作物敏感期不同。棕榈油可能通过开花和挂果滞后反映，小麦更看播种和灌浆，大豆、玉米则需要结合播种、开花、灌浆和收获窗口分阶段观察。</p>
-                                            </article>
+                            <div class="flex flex-col gap-3">
+                                <p class="text-[11px] sm:text-xs text-gray-300 leading-relaxed">
+                                    历史经验里，最关键的不是单看“下雨多或少”，而是看降水、温度和风场是否错位到了播种、开花、灌浆、收获、压榨、发运这些敏感窗口。
+                                </p>
+                                <div class="commodity-board">
+                                    <article class="commodity-card">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <h3 class="text-white font-black">🌴 棕榈油</h3>
+                                            <span class="status-light status-strong">影响增强</span>
                                         </div>
-
-                                        <div class="grid grid-cols-1 gap-3">
-                                            <article class="card-surface p-3 sm:p-4">
-                                                <h3 class="text-[var(--text-gold)] text-sm font-bold mb-2.5 flex items-center gap-2">
-                                                    <i data-lucide="cloud-rain" class="w-4 h-4"></i> 降雨模式重构
-                                                </h3>
-                                                <ul class="heat-zone-mini-list">
-                                                    <li><span>▸</span><span><strong class="text-white">降雨偏少区域：</strong>东南亚、澳大利亚、印度、巴西北部等区域在部分厄尔尼诺年份更易出现水分压力。</span></li>
-                                                    <li><span>▸</span><span><strong class="text-white">降雨偏多区域：</strong>美国、阿根廷、巴西中南部等区域可能出现墒情修复，也可能扰动作业和物流窗口。</span></li>
-                                                </ul>
-                                            </article>
-                                            <article class="card-surface p-3 sm:p-4">
-                                                <h3 class="text-[var(--text-gold)] text-sm font-bold mb-2.5 flex items-center gap-2">
-                                                    <i data-lucide="sun-medium" class="w-4 h-4"></i> 气温异常波动
-                                                </h3>
-                                                <ul class="heat-zone-mini-list">
-                                                    <li><span>温</span><span><strong class="text-white">暖冬背景：</strong>部分地区取暖需求、能源替代和作物越冬条件会出现阶段性变化。</span></li>
-                                                    <li><span>热</span><span><strong class="text-white">高温叠加水分压力：</strong>印度、东南亚、澳洲等区域的作物生长节奏和品质变量更值得跟踪。</span></li>
-                                                </ul>
-                                            </article>
-                                            <article class="card-surface p-3 sm:p-4">
-                                                <h3 class="text-[var(--text-gold)] text-sm font-bold mb-2.5 flex items-center gap-2">
-                                                    <i data-lucide="shield-alert" class="w-4 h-4"></i> 价格为何分化
-                                                </h3>
-                                                <ul class="heat-zone-mini-list">
-                                                    <li><span>①</span><span>有没有打到关键生长窗口，例如开花、挂果、抽穗和灌浆。</span></li>
-                                                    <li><span>②</span><span>是否形成全球性供给缺口，而不是单一地区的局部扰动。</span></li>
-                                                    <li><span>③</span><span>产业链库存是否配合，高库存往往会钝化天气冲击。</span></li>
-                                                </ul>
-                                            </article>
+                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★★。主要产区：印尼、马来西亚。路径：降雨偏离影响挂果与单产，通常存在滞后。</p>
+                                        <div class="news-meta"><span class="news-badge">需验证：MPOB</span><span class="news-badge">库存</span><span class="news-badge">出口船期</span></div>
+                                    </article>
+                                    <article class="commodity-card">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <h3 class="text-white font-black">🍬 白糖</h3>
+                                            <span class="status-light status-watch">进入观察窗口</span>
                                         </div>
-
-                                        <div class="history-disclaimer-note rounded-2xl border border-amber-300/18 bg-amber-300/8 p-3 text-[11px] leading-relaxed text-amber-100">
-                                            历史相似不代表未来重复。这里的路径拆解只是帮助理解气候变量如何传导到产业链，最终仍要回到实时天气、产量、库存和物流数据验证。
+                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：印度、泰国、巴西。路径：高温、季风节奏与压榨条件改变糖料作物变量。</p>
+                                        <div class="news-meta"><span class="news-badge">需验证：季风推进</span><span class="news-badge">压榨进度</span></div>
+                                    </article>
+                                    <article class="commodity-card">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <h3 class="text-white font-black">🫘 大豆</h3>
+                                            <span class="status-light status-watch">等待数据验证</span>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div id="heat-zone-panel-crops" class="heat-zone-tab-panel" data-heat-panel="crops" hidden>
-                                    <div class="commodity-board">
-                                        <article class="commodity-card">
-                                            <div class="flex items-center justify-between gap-3">
-                                                <h3 class="text-white font-black">🌴 棕榈油</h3>
-                                                <span class="status-light status-strong">影响增强</span>
-                                            </div>
-                                            <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★★。主要产区：印尼、马来西亚。路径：降雨偏离影响挂果与单产，通常存在滞后。</p>
-                                            <div class="news-meta"><span class="news-badge">需验证：MPOB</span><span class="news-badge">库存</span><span class="news-badge">出口船期</span></div>
-                                        </article>
-                                        <article class="commodity-card">
-                                            <div class="flex items-center justify-between gap-3">
-                                                <h3 class="text-white font-black">🍬 白糖</h3>
-                                                <span class="status-light status-watch">进入观察窗口</span>
-                                            </div>
-                                            <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：印度、泰国、巴西。路径：高温、季风节奏与压榨条件改变糖料作物变量。</p>
-                                            <div class="news-meta"><span class="news-badge">需验证：季风推进</span><span class="news-badge">压榨进度</span></div>
-                                        </article>
-                                        <article class="commodity-card">
-                                            <div class="flex items-center justify-between gap-3">
-                                                <h3 class="text-white font-black">🫘 大豆</h3>
-                                                <span class="status-light status-watch">等待数据验证</span>
-                                            </div>
-                                            <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：巴西、阿根廷、美国。路径：降雨改善墒情，也可能扰动收获和物流窗口。</p>
-                                            <div class="news-meta"><span class="news-badge">需验证：作物优良率</span><span class="news-badge">港口排队</span></div>
-                                        </article>
-                                        <article class="commodity-card">
-                                            <div class="flex items-center justify-between gap-3">
-                                                <h3 class="text-white font-black">🌽 玉米</h3>
-                                                <span class="status-light status-normal">影响减弱</span>
-                                            </div>
-                                            <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★。主要产区：美国中西部、巴西、阿根廷。路径：播种窗口与关键生长期降雨匹配度。</p>
-                                            <div class="news-meta"><span class="news-badge">需验证：播种进度</span><span class="news-badge">墒情</span></div>
-                                        </article>
-                                        <article class="commodity-card">
-                                            <div class="flex items-center justify-between gap-3">
-                                                <h3 class="text-white font-black">🌾 小麦 / 菜籽</h3>
-                                                <span class="status-light status-watch">进入观察窗口</span>
-                                            </div>
-                                            <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：澳洲、印度、加拿大。路径：播种、抽穗、灌浆阶段对水热错配敏感。</p>
-                                            <div class="news-meta"><span class="news-badge">需验证：土壤墒情</span><span class="news-badge">降雨距平</span></div>
-                                        </article>
-                                        <article class="commodity-card">
-                                            <div class="flex items-center justify-between gap-3">
-                                                <h3 class="text-white font-black">☁️ 棉花</h3>
-                                                <span class="status-light status-watch">产业链变量变化</span>
-                                            </div>
-                                            <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★。主要产区：印度、美国、中国。路径：高温、强降雨和病虫害压力影响种植和吐絮节奏。</p>
-                                            <div class="news-meta"><span class="news-badge">需验证：面积</span><span class="news-badge">苗情</span></div>
-                                        </article>
-                                    </div>
+                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：巴西、阿根廷、美国。路径：降雨改善墒情，也可能扰动收获和物流窗口。</p>
+                                        <div class="news-meta"><span class="news-badge">需验证：作物优良率</span><span class="news-badge">港口排队</span></div>
+                                    </article>
+                                    <article class="commodity-card">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <h3 class="text-white font-black">🌽 玉米</h3>
+                                            <span class="status-light status-normal">影响减弱</span>
+                                        </div>
+                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★。主要产区：美国中西部、巴西、阿根廷。路径：播种窗口与关键生长期降雨匹配度。</p>
+                                        <div class="news-meta"><span class="news-badge">需验证：播种进度</span><span class="news-badge">墒情</span></div>
+                                    </article>
+                                    <article class="commodity-card">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <h3 class="text-white font-black">🌾 小麦 / 菜籽</h3>
+                                            <span class="status-light status-watch">进入观察窗口</span>
+                                        </div>
+                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★★。主要产区：澳洲、印度、加拿大。路径：播种、抽穗、灌浆阶段对水热错配敏感。</p>
+                                        <div class="news-meta"><span class="news-badge">需验证：土壤墒情</span><span class="news-badge">降雨距平</span></div>
+                                    </article>
+                                    <article class="commodity-card">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <h3 class="text-white font-black">☁️ 棉花</h3>
+                                            <span class="status-light status-watch">产业链变量变化</span>
+                                        </div>
+                                        <p class="text-xs text-gray-300 leading-relaxed mt-3">气候敏感度：★★★。主要产区：印度、美国、中国。路径：高温、强降雨和病虫害压力影响种植和吐絮节奏。</p>
+                                        <div class="news-meta"><span class="news-badge">需验证：面积</span><span class="news-badge">苗情</span></div>
+                                    </article>
                                 </div>
                             </div>
                         </div>
@@ -964,15 +944,15 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
             <h2 class="section-divider-title">历史上的厄尔尼诺</h2>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div class="similar-year flex flex-col justify-between relative group">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="help-tooltip similar-year flex flex-col justify-between relative group">
                 <div>
                     <div class="text-white font-black mb-2 text-base flex items-center justify-between">
                         <div>1997-98 <span class="text-[11px] font-normal text-[var(--text-gold)] border border-[var(--text-gold)] rounded px-1.5 py-0.5 ml-1 bg-[rgba(212,175,55,0.1)]">超级强厄尔尼诺</span></div>
-                        <div class="w-4 h-4 rounded-full border border-gray-400 text-gray-400 flex items-center justify-center text-[10px] cursor-help hover:text-[var(--text-gold)] hover:border-[var(--text-gold)] transition-colors">?</div>
+                        <div data-tooltip-trigger class="w-4 h-4 rounded-full border border-gray-400 text-gray-400 flex items-center justify-center text-[10px] cursor-pointer hover:text-[var(--text-gold)] hover:border-[var(--text-gold)] transition-colors">?</div>
                     </div>
                     <!-- tooltip -->
-                    <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-[320px] bg-[rgba(15,23,42,0.95)] border border-[rgba(212,175,55,0.4)] rounded-xl p-3 text-xs text-gray-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 backdrop-blur-xl">
+                    <div class="tooltip-panel absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-[320px] bg-[rgba(15,23,42,0.95)] border border-[rgba(212,175,55,0.4)] rounded-xl p-3 text-xs text-gray-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-all z-50 backdrop-blur-xl">
                         <div class="mb-1"><strong class="text-[#f7e7ce]">发生了什么？</strong><br/>东南亚严重干旱→棕榈油减产；澳洲干旱→小麦减产；印度部分地区降雨异常→糖、棉花波动；南美部分地区降雨反而增加。</div>
                         <div class="mb-1"><strong class="text-[#f7e7ce]">核心机制：</strong><br/><span class="text-[var(--text-gold)]">👉</span> 热带降雨带东移 → 亚洲水分被“抽走”</div>
                         <div class="mb-1"><strong class="text-[#f7e7ce]">对价格的实际影响：</strong><br/>
@@ -990,14 +970,14 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                 <p class="text-xs text-gray-400 leading-relaxed border-t border-white/10 pt-3">东南亚与澳洲水分压力突出，农产品传导较典型。</p>
             </div>
             
-            <div class="similar-year flex flex-col justify-between relative group">
+            <div class="help-tooltip similar-year flex flex-col justify-between relative group">
                 <div>
                     <div class="text-white font-black mb-2 text-base flex items-center justify-between">
                         <div>2009-10 <span class="text-[11px] font-normal text-amber-200 border border-amber-300/40 rounded px-1.5 py-0.5 ml-1 bg-amber-300/10">中等偏强事件</span></div>
-                        <div class="w-4 h-4 rounded-full border border-gray-400 text-gray-400 flex items-center justify-center text-[10px] cursor-help hover:text-[var(--text-gold)] hover:border-[var(--text-gold)] transition-colors">?</div>
+                        <div data-tooltip-trigger class="w-4 h-4 rounded-full border border-gray-400 text-gray-400 flex items-center justify-center text-[10px] cursor-pointer hover:text-[var(--text-gold)] hover:border-[var(--text-gold)] transition-colors">?</div>
                     </div>
                     <!-- tooltip -->
-                    <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-[320px] bg-[rgba(15,23,42,0.95)] border border-[rgba(212,175,55,0.4)] rounded-xl p-3 text-xs text-gray-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 backdrop-blur-xl">
+                    <div class="tooltip-panel absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-[320px] bg-[rgba(15,23,42,0.95)] border border-[rgba(212,175,55,0.4)] rounded-xl p-3 text-xs text-gray-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-all z-50 backdrop-blur-xl">
                         <div class="mb-1"><strong class="text-[#f7e7ce]">发生了什么？</strong><br/>亚洲季风扰动，但不极端；美国/南美降雨结构变化；全球农业未出现系统性减产。</div>
                         <div class="mb-1"><strong class="text-[#f7e7ce]">核心机制：</strong><br/><span class="text-[var(--text-gold)]">👉</span> 天气扰动存在，但没有完全踩中关键生长阶段。</div>
                         <div class="mb-1"><strong class="text-[#f7e7ce]">对价格的实际影响：</strong><br/>
@@ -1014,14 +994,14 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                 <p class="text-xs text-gray-400 leading-relaxed border-t border-white/10 pt-3">亚洲季风与美洲降雨分布变化值得对照。</p>
             </div>
             
-            <div class="similar-year flex flex-col justify-between relative group">
+            <div class="help-tooltip similar-year flex flex-col justify-between relative group">
                 <div>
                     <div class="text-white font-black mb-2 text-base flex items-center justify-between">
                         <div>2015-16 <span class="text-[11px] font-normal text-[var(--text-gold)] border border-[var(--text-gold)] rounded px-1.5 py-0.5 ml-1 bg-[rgba(212,175,55,0.1)]">强厄尔尼诺</span></div>
-                        <div class="w-4 h-4 rounded-full border border-gray-400 text-gray-400 flex items-center justify-center text-[10px] cursor-help hover:text-[var(--text-gold)] hover:border-[var(--text-gold)] transition-colors">?</div>
+                        <div data-tooltip-trigger class="w-4 h-4 rounded-full border border-gray-400 text-gray-400 flex items-center justify-center text-[10px] cursor-pointer hover:text-[var(--text-gold)] hover:border-[var(--text-gold)] transition-colors">?</div>
                     </div>
                     <!-- tooltip -->
-                    <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-[320px] bg-[rgba(15,23,42,0.95)] border border-[rgba(212,175,55,0.4)] rounded-xl p-3 text-xs text-gray-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 backdrop-blur-xl">
+                    <div class="tooltip-panel absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-[320px] bg-[rgba(15,23,42,0.95)] border border-[rgba(212,175,55,0.4)] rounded-xl p-3 text-xs text-gray-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-all z-50 backdrop-blur-xl">
                         <div class="mb-1"><strong class="text-[#f7e7ce]">发生了什么？</strong><br/>东南亚干旱严重（引发印尼减产）；印度季风偏弱带来糖类供给收紧预期；全球气温偏高等。</div>
                         <div class="mb-1"><strong class="text-[#f7e7ce]">核心机制：</strong><br/><span class="text-[var(--text-gold)]">👉</span> 干旱 + 高温叠加 → 导致强烈的“质量+产量双缩”预期。</div>
                         <div class="mb-1"><strong class="text-[#f7e7ce]">对价格的实际影响：</strong><br/>
@@ -1040,43 +1020,15 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
             </div>
         </div>
         
-        <div class="mt-4 rounded-2xl border border-amber-300/20 bg-amber-300/5 p-3 sm:p-4 text-xs sm:text-[13px] leading-relaxed text-gray-300 flex items-start gap-2 max-w-4xl relative group">
-            <i data-lucide="info" class="w-4 h-4 text-amber-300/60 shrink-0 mt-0.5"></i>
-            <div class="flex-1 pr-6">
-                <strong class="history-disclaimer-strong text-amber-100">免责声明：历史相似不代表未来重复。</strong>
-                <span>相似年份仅用于理解气候—产业链变量的历史传导关系，不能替代实时天气、产量、库存、物流等数据验证。</span>
-                <span class="block mt-1">历史上，强厄尔尼诺若叠加减产与低库存，农产品涨幅通常在 50%–150%；若仅有天气扰动而无供给缺口，涨幅往往不超过 30%。核心三要素：是否打到关键窗口、是否形成全球性供给缺口、库存是否配合。</span>
-            </div>
-            <div class="w-4 h-4 shrink-0 rounded-full border border-amber-300/60 text-amber-300/60 flex items-center justify-center text-[10px] cursor-help hover:bg-amber-300/20 transition-colors mt-0.5">!</div>
-            <!-- tooltip -->
-            <div class="absolute right-0 bottom-full mb-2 w-[340px] sm:w-[420px] bg-[rgba(15,23,42,0.95)] border border-[rgba(212,175,55,0.4)] rounded-xl p-3 text-xs text-gray-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 backdrop-blur-xl">
-                <div class="text-[#f7e7ce] font-bold text-[13px] mb-2 border-b border-white/10 pb-2">为什么有的年份涨，有的没行情？</div>
-                <div class="text-gray-400 mb-2">决定价格的往往不是单一的“气候现象”，而是最终的 3 个关键变量：</div>
-                <ul class="space-y-3">
-                    <li>
-                        <div class="font-bold text-white mb-0.5">① 有没有打到“关键生长窗口”？</div>
-                        <div class="text-[11px] text-gray-400">棕榈油（开花/挂果）、大豆（播种/开花/灌浆）、小麦（抽穗/灌浆）。如果关键期风调雨顺，即使其他阶段异常，也难成大行情。</div>
-                        <div class="text-[var(--text-gold)] text-[11px] mt-0.5">👉 错配 = 情绪过后无下文。</div>
-                    </li>
-                    <li>
-                        <div class="font-bold text-white mb-0.5">② 是否形成“全球性供给缺口”？</div>
-                        <div class="text-[11px] text-gray-400">如果只是单一国家减产，但其他主产国大丰收（如美洲丰产对冲亚洲减产），很难驱动全球性趋势行情。</div>
-                        <div class="text-[var(--text-gold)] text-[11px] mt-0.5">👉 需多地区共振减产。</div>
-                    </li>
-                    <li>
-                        <div class="font-bold text-white mb-0.5">③ 产业链库存是否配合？</div>
-                        <div class="text-[11px] text-gray-400">天气是放大器。高库存背景下，天气减产可能只够“去库”；但在低库存起点（如经历过连续拉尼娜），一次减产就足以引爆价格。</div>
-                        <div class="text-[var(--text-gold)] text-[11px] mt-0.5">👉 相同天气 + 不同库存起点 = 不同行情级别。</div>
-                    </li>
-                </ul>
-            </div>
-        </div>
       </section>
     </div>
 
     <!-- Footer -->
     <div class="fixed bottom-0 left-0 w-full z-[40] footer-immersive pt-3 pb-2 px-4 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
-        <div class="max-w-2xl mx-auto flex flex-col gap-2">
+        <div class="max-w-2xl mx-auto flex flex-col gap-3">
+            <div class="history-disclaimer-note text-[12px] sm:text-[13px] leading-relaxed text-gray-400 px-1 text-center">
+                本页面内容基于公开气象、产业及市场数据整理，仅用于展示厄尔尼诺/拉尼娜状态、全球产区天气变化与相关商品产业链变量之间的历史传导关系，不涉及对任何期货、现货或场外合约未来价格走势的判断，不构成投资建议、交易建议或收益承诺。
+            </div>
             <div class="flex gap-3 items-center">
                 <a 
                     id="download-btn" 
@@ -1086,9 +1038,6 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                 >
                     <span class="text-sm">下载金十期货APP</span>
                 </a>
-            </div>
-            <div class="text-[11px] text-center text-gray-400 leading-relaxed px-2">
-                本页面内容基于公开气象、产业及市场数据整理，仅用于展示厄尔尼诺/拉尼娜状态、全球产区天气变化与相关商品产业链变量之间的历史传导关系，不涉及对任何期货、现货或场外合约未来价格走势的判断，不构成投资建议、交易建议或收益承诺。
             </div>
         </div>
     </div>
@@ -1194,7 +1143,9 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                 </button>
             </div>
             <div class="p-3 sm:p-4 bg-black/60">
-                <img id="formation-image-modal-img" src="" alt="厄尔尼诺形成及影响示意图放大预览" />
+                <div id="formation-image-stage" class="formation-image-stage">
+                    <img id="formation-image-modal-img" src="" alt="厄尔尼诺形成及影响示意图放大预览" />
+                </div>
             </div>
         </div>
     </div>
@@ -1368,13 +1319,18 @@ var weatherException = {
           mount.innerHTML = '';
 
           ensoProbabilityData.forEach((row, index) => {
+              const series = [
+                  { key: 'laNina', className: 'enso-bar-la-nina', value: row.laNina },
+                  { key: 'neutral', className: 'enso-bar-neutral', value: row.neutral },
+                  { key: 'elNino', className: 'enso-bar-el-nino', value: row.elNino }
+              ].filter((item) => item.value > 0);
               const seasonEl = document.createElement('div');
               seasonEl.className = 'enso-season';
               seasonEl.innerHTML = `
-                  <div class="enso-bar-set" aria-label="${row.months}">
-                      <div class="enso-bar enso-bar-la-nina" data-value="${row.laNina}" style="height: 0%; transition-delay: ${index * 45}ms;"></div>
-                      <div class="enso-bar enso-bar-neutral" data-value="${row.neutral}" style="height: 0%; transition-delay: ${index * 45 + 70}ms;"></div>
-                      <div class="enso-bar enso-bar-el-nino" data-value="${row.elNino}" style="height: 0%; transition-delay: ${index * 45 + 140}ms;"></div>
+                  <div class="enso-bar-set" aria-label="${row.months}" style="grid-template-columns: repeat(${Math.max(series.length, 1)}, minmax(0, 1fr));">
+                      ${series.map((item, barIndex) => `
+                          <div class="enso-bar ${item.className}" data-value="${item.value}" style="height: 0%; transition-delay: ${index * 45 + barIndex * 70}ms;"></div>
+                      `).join('')}
                   </div>
                   <div class="enso-season-label">
                       <span>${row.months}</span>
@@ -1444,19 +1400,61 @@ var weatherException = {
 
       const formationImageModal = $('formation-image-modal');
       const formationImageTrigger = $('formation-image-trigger');
+      const formationImageStage = $('formation-image-stage');
       const formationImageModalImg = $('formation-image-modal-img');
+      const formationImageView = {
+          scale: 1,
+          x: 0,
+          y: 0,
+          pointers: new Map(),
+          pinchStartDistance: 0,
+          pinchStartScale: 1,
+          panBaseX: 0,
+          panBaseY: 0,
+          activePointerId: null,
+      };
+      const clampFormationScale = (value) => Math.min(4, Math.max(1, value));
+      const applyFormationTransform = () => {
+          if (!formationImageModalImg) return;
+          formationImageModalImg.style.transform = `translate(${formationImageView.x}px, ${formationImageView.y}px) scale(${formationImageView.scale})`;
+      };
+      const resetFormationTransform = () => {
+          formationImageView.scale = 1;
+          formationImageView.x = 0;
+          formationImageView.y = 0;
+          formationImageView.pointers.clear();
+          formationImageView.pinchStartDistance = 0;
+          formationImageView.pinchStartScale = 1;
+          formationImageView.panBaseX = 0;
+          formationImageView.panBaseY = 0;
+          formationImageView.activePointerId = null;
+          applyFormationTransform();
+      };
+      const pointerDistance = () => {
+          const [a, b] = Array.from(formationImageView.pointers.values());
+          if (!a || !b) return 0;
+          return Math.hypot(a.x - b.x, a.y - b.y);
+      };
+      const pointerMidpoint = () => {
+          const [a, b] = Array.from(formationImageView.pointers.values());
+          if (!a || !b) return { x: 0, y: 0 };
+          return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+      };
       const openFormationImage = () => {
           if (!formationImageModal || !formationImageModalImg) return;
           formationImageModalImg.src = 'https://img.jin10.com/news/26/04/JvO8wuHdtjxlKifNU21KT.png';
+          formationImageModalImg.style.transform = 'translate(0px, 0px) scale(1)';
           formationImageModal.classList.remove('modal-hidden');
           formationImageModal.classList.add('modal-visible');
           formationImageModal.setAttribute('aria-hidden', 'false');
+          resetFormationTransform();
       };
       const closeFormationImage = () => {
           if (!formationImageModal || !formationImageModalImg) return;
           formationImageModal.classList.remove('modal-visible');
           formationImageModal.classList.add('modal-hidden');
           formationImageModal.setAttribute('aria-hidden', 'true');
+          resetFormationTransform();
       };
       if (formationImageTrigger) {
           formationImageTrigger.onclick = openFormationImage;
@@ -1471,10 +1469,103 @@ var weatherException = {
       formationImageModal.addEventListener('click', (e) => {
           if (e.target === formationImageModal) closeFormationImage();
       });
+      if (formationImageStage) {
+          formationImageStage.addEventListener('pointerdown', (e) => {
+              if (!formationImageModal.classList.contains('modal-visible')) return;
+              e.preventDefault();
+              e.stopPropagation();
+              formationImageStage.setPointerCapture?.(e.pointerId);
+              formationImageView.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+              formationImageView.activePointerId = e.pointerId;
+              if (formationImageView.pointers.size === 1) {
+                  formationImageView.panBaseX = e.clientX - formationImageView.x;
+                  formationImageView.panBaseY = e.clientY - formationImageView.y;
+              } else if (formationImageView.pointers.size === 2) {
+                  formationImageView.pinchStartDistance = pointerDistance();
+                  formationImageView.pinchStartScale = formationImageView.scale;
+                  const mid = pointerMidpoint();
+                  formationImageView.panBaseX = mid.x - formationImageView.x;
+                  formationImageView.panBaseY = mid.y - formationImageView.y;
+              }
+          });
+          formationImageStage.addEventListener('pointermove', (e) => {
+              if (!formationImageView.pointers.has(e.pointerId)) return;
+              e.preventDefault();
+              e.stopPropagation();
+              formationImageView.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+              if (formationImageView.pointers.size >= 2) {
+                  const currentDistance = pointerDistance();
+                  if (formationImageView.pinchStartDistance > 0) {
+                      formationImageView.scale = clampFormationScale(
+                          formationImageView.pinchStartScale * (currentDistance / formationImageView.pinchStartDistance)
+                      );
+                  }
+              } else if (formationImageView.scale > 1) {
+                  formationImageView.x = e.clientX - formationImageView.panBaseX;
+                  formationImageView.y = e.clientY - formationImageView.panBaseY;
+              }
+              applyFormationTransform();
+          });
+          const endPointer = (e) => {
+              if (!formationImageView.pointers.has(e.pointerId)) return;
+              e.preventDefault();
+              e.stopPropagation();
+              formationImageView.pointers.delete(e.pointerId);
+              if (formationImageView.pointers.size === 1) {
+                  const remaining = Array.from(formationImageView.pointers.values())[0];
+                  if (remaining && formationImageView.scale > 1) {
+                      formationImageView.panBaseX = remaining.x - formationImageView.x;
+                      formationImageView.panBaseY = remaining.y - formationImageView.y;
+                  }
+                  formationImageView.pinchStartDistance = 0;
+              } else if (formationImageView.pointers.size === 0) {
+                  formationImageView.activePointerId = null;
+                  formationImageView.pinchStartDistance = 0;
+                  if (formationImageView.scale <= 1.02) {
+                      formationImageView.x = 0;
+                      formationImageView.y = 0;
+                      formationImageView.scale = 1;
+                      applyFormationTransform();
+                  }
+              }
+          };
+          formationImageStage.addEventListener('pointerup', endPointer);
+          formationImageStage.addEventListener('pointercancel', endPointer);
+          formationImageStage.addEventListener('wheel', (e) => {
+              if (!formationImageModal.classList.contains('modal-visible')) return;
+              e.preventDefault();
+              const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+              formationImageView.scale = clampFormationScale(formationImageView.scale * zoomFactor);
+              applyFormationTransform();
+          }, { passive: false });
+      }
       window.addEventListener('keydown', (e) => {
           if (e.key === 'Escape' && formationImageModal && formationImageModal.classList.contains('modal-visible')) {
               closeFormationImage();
           }
+      });
+
+      // Help tooltips
+      const helpTooltipWrappers = Array.from(document.querySelectorAll('.help-tooltip'));
+      const closeHelpTooltips = (exceptWrapper = null) => {
+          helpTooltipWrappers.forEach((wrapper) => {
+              if (wrapper !== exceptWrapper) wrapper.classList.remove('tooltip-open');
+          });
+      };
+      helpTooltipWrappers.forEach((wrapper) => {
+          const trigger = wrapper.querySelector('[data-tooltip-trigger]');
+          if (!trigger) return;
+          trigger.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const shouldOpen = !wrapper.classList.contains('tooltip-open');
+              closeHelpTooltips();
+              if (shouldOpen) wrapper.classList.add('tooltip-open');
+          });
+      });
+      document.addEventListener('click', () => closeHelpTooltips());
+      window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeHelpTooltips();
       });
 
       // News Tabs Logic
@@ -1510,27 +1601,6 @@ var weatherException = {
       tabBtnLive.onclick = () => setNewsTab('live');
       tabBtnNews.onclick = () => setNewsTab('news');
       setNewsTab('live');
-
-      // Heat Zone Tabs
-      const heatZoneTabButtons = Array.from(document.querySelectorAll('[data-heat-tab]'));
-      const heatZonePanels = Array.from(document.querySelectorAll('[data-heat-panel]'));
-      const setHeatZoneTab = (tabName) => {
-          heatZoneTabButtons.forEach((btn) => {
-              const active = btn.dataset.heatTab === tabName;
-              btn.classList.toggle('is-active', active);
-              btn.setAttribute('aria-selected', active ? 'true' : 'false');
-          });
-          heatZonePanels.forEach((panel) => {
-              const active = panel.dataset.heatPanel === tabName;
-              panel.classList.toggle('is-active', active);
-              panel.hidden = !active;
-          });
-          lucide.createIcons();
-      };
-      heatZoneTabButtons.forEach((btn) => {
-          btn.onclick = () => setHeatZoneTab(btn.dataset.heatTab);
-      });
-      setHeatZoneTab('path');
 
       // Heat Zone Toggle
       let isHeatZoneCollapsed = true;
@@ -1693,27 +1763,6 @@ var weatherException = {
           }
           const targetEl = e.target instanceof Element ? e.target : null;
           if (targetEl && targetEl.closest('.globe-marker-card')) return;
-          if (viewLevel === 'CONTINENT') {
-              const markers = Array.from(document.querySelectorAll('.globe-continent-marker'));
-              let nearest = null;
-              let nearestDistance = Infinity;
-              markers.forEach((marker) => {
-                  if (typeof marker.__markerActivate !== 'function') return;
-                  const rect = marker.getBoundingClientRect();
-                  if (rect.width === 0 || rect.height === 0) return;
-                  const centerX = rect.left + rect.width / 2;
-                  const centerY = rect.top + rect.height / 2;
-                  const distance = Math.hypot(centerX - e.clientX, centerY - e.clientY);
-                  if (distance < nearestDistance) {
-                      nearestDistance = distance;
-                      nearest = marker;
-                  }
-              });
-              if (nearest && nearestDistance < 200) {
-                  nearest.__markerActivate(e);
-                  return;
-              }
-          }
           const topMarker = document.elementsFromPoint(e.clientX, e.clientY).find(node => node instanceof Element && node.classList.contains('globe-marker-card') && typeof node.__markerActivate === 'function');
           if (topMarker) {
               topMarker.__markerActivate(e);
