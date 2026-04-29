@@ -577,6 +577,7 @@ html.light-mode .heat-zone-crop-card .crop-chip.red { color: #b91c1c; border-col
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(0, 0, 0, 0.25);
   min-height: 240px;
+  cursor: zoom-in;
 }
 .enso-formation-media img {
   display: block;
@@ -594,6 +595,19 @@ html.light-mode .enso-formation-chip {
 html.light-mode .enso-formation-media {
   background: rgba(15, 23, 42, 0.04);
   border-color: rgba(15, 23, 42, 0.08);
+}
+
+#formation-image-modal .immersive-modal-content {
+  max-width: min(1100px, 94vw);
+}
+#formation-image-modal img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 14px;
 }
 
 html.light-mode .enso-chart-card { background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.9)) !important; border-color: rgba(15, 23, 42, 0.08) !important; }
@@ -755,7 +769,7 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                         <span class="module-tag">形成及影响</span>
                         <span class="enso-formation-chip">科普说明</span>
                     </div>
-                    <div class="enso-formation-media">
+                    <div class="enso-formation-media" id="formation-image-trigger" role="button" tabindex="0" aria-label="放大形成及影响示意图">
                         <img src="https://img.jin10.com/news/26/04/JvO8wuHdtjxlKifNU21KT.png" alt="厄尔尼诺形成及影响示意图" loading="lazy" />
                     </div>
                 </div>
@@ -1168,6 +1182,23 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
         </div>
     </div>
 
+    <div id="formation-image-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6 transition-all duration-300 modal-hidden" aria-hidden="true">
+        <div class="immersive-modal-content w-full relative overflow-hidden">
+            <div class="shrink-0 p-4 sm:p-5 border-b border-[rgba(212,175,55,0.2)] bg-black/40 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-2.5 h-8 rounded-full bg-gradient-to-b from-[#d4af37] to-[#8a6e1a]"></div>
+                    <h3 class="text-lg sm:text-xl font-black text-white tracking-widest drop-shadow-md">形成及影响示意图</h3>
+                </div>
+                <button id="btn-close-formation-image" class="p-2 -mr-2 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-colors" type="button" aria-label="关闭放大图">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="p-3 sm:p-4 bg-black/60">
+                <img id="formation-image-modal-img" src="" alt="厄尔尼诺形成及影响示意图放大预览" />
+            </div>
+        </div>
+    </div>
+
     <!-- Impact Modal -->
     <div id="impact-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6 transition-all duration-300 modal-hidden">
         <div class="immersive-modal-content w-full max-w-[860px] max-h-[85vh] flex flex-col relative overflow-hidden">
@@ -1411,6 +1442,41 @@ var weatherException = {
           newsModal.classList.add('modal-hidden');
       };
 
+      const formationImageModal = $('formation-image-modal');
+      const formationImageTrigger = $('formation-image-trigger');
+      const formationImageModalImg = $('formation-image-modal-img');
+      const openFormationImage = () => {
+          if (!formationImageModal || !formationImageModalImg) return;
+          formationImageModalImg.src = 'https://img.jin10.com/news/26/04/JvO8wuHdtjxlKifNU21KT.png';
+          formationImageModal.classList.remove('modal-hidden');
+          formationImageModal.classList.add('modal-visible');
+          formationImageModal.setAttribute('aria-hidden', 'false');
+      };
+      const closeFormationImage = () => {
+          if (!formationImageModal || !formationImageModalImg) return;
+          formationImageModal.classList.remove('modal-visible');
+          formationImageModal.classList.add('modal-hidden');
+          formationImageModal.setAttribute('aria-hidden', 'true');
+      };
+      if (formationImageTrigger) {
+          formationImageTrigger.onclick = openFormationImage;
+          formationImageTrigger.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  openFormationImage();
+              }
+          });
+      }
+      $('btn-close-formation-image').onclick = closeFormationImage;
+      formationImageModal.addEventListener('click', (e) => {
+          if (e.target === formationImageModal) closeFormationImage();
+      });
+      window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && formationImageModal && formationImageModal.classList.contains('modal-visible')) {
+              closeFormationImage();
+          }
+      });
+
       // News Tabs Logic
       const tabBtnLive = $('tab-btn-live');
       const tabBtnNews = $('tab-btn-news');
@@ -1508,6 +1574,29 @@ var weatherException = {
       }
       let globePointerDown = null;
       let continentTransitionTimer = null;
+      const dispatchPointerToMount = (type, sourceEvent) => {
+          const pointerInit = {
+              bubbles: true,
+              cancelable: true,
+              composed: true,
+              pointerId: sourceEvent.pointerId ?? 1,
+              pointerType: sourceEvent.pointerType || 'mouse',
+              isPrimary: sourceEvent.isPrimary !== false,
+              clientX: sourceEvent.clientX,
+              clientY: sourceEvent.clientY,
+              screenX: sourceEvent.screenX,
+              screenY: sourceEvent.screenY,
+              buttons: type === 'pointerup' ? 0 : (sourceEvent.buttons ?? 1),
+              pressure: sourceEvent.pressure ?? (type === 'pointerup' ? 0 : 0.5),
+              tiltX: sourceEvent.tiltX ?? 0,
+              tiltY: sourceEvent.tiltY ?? 0,
+              ctrlKey: sourceEvent.ctrlKey || false,
+              altKey: sourceEvent.altKey || false,
+              shiftKey: sourceEvent.shiftKey || false,
+              metaKey: sourceEvent.metaKey || false
+          };
+          mountMap.dispatchEvent(new PointerEvent(type, pointerInit));
+      };
       const enterContinent = (continent) => {
           const target = continentsData.find(c => c.id === continent);
           if (!target) return;
@@ -1542,6 +1631,7 @@ var weatherException = {
               e.stopPropagation();
           };
           let downPos = null;
+          let downTime = 0;
           let activated = false;
           const activate = (e) => {
               if (activated) return;
@@ -1555,13 +1645,23 @@ var weatherException = {
           el.addEventListener('pointerdown', (e) => {
               stopMarkerEvent(e);
               downPos = { x: e.clientX, y: e.clientY };
+              downTime = performance.now();
+              mountMap.__suppressMarkerFallback = true;
+              dispatchPointerToMount('pointerdown', e);
           });
-          el.addEventListener('mousedown', stopMarkerEvent);
-          el.addEventListener('touchstart', stopMarkerEvent, { passive: false });
+          el.addEventListener('pointermove', (e) => {
+              if (!downPos) return;
+              stopMarkerEvent(e);
+              dispatchPointerToMount('pointermove', e);
+          });
           el.addEventListener('pointerup', (e) => {
               const moved = downPos ? Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y) : Infinity;
+              const elapsed = performance.now() - downTime;
               downPos = null;
-              if (moved <= 10) activate(e);
+              stopMarkerEvent(e);
+              mountMap.__suppressMarkerFallback = true;
+              dispatchPointerToMount('pointerup', e);
+              if (moved <= 12 && elapsed <= 400) activate(e);
           });
           el.addEventListener('click', (e) => {
               if (downPos) {
@@ -1581,6 +1681,10 @@ var weatherException = {
       }, true);
       mountMap.addEventListener('pointerup', (e) => {
           if (e.defaultPrevented) return;
+          if (mountMap.__suppressMarkerFallback) {
+              mountMap.__suppressMarkerFallback = false;
+              return;
+          }
           if (globePointerDown) {
               const moved = Math.hypot(e.clientX - globePointerDown.x, e.clientY - globePointerDown.y);
               const elapsed = performance.now() - globePointerDown.t;
