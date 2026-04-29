@@ -1667,6 +1667,101 @@ var weatherException = {
       setTimeout(syncGlobeTouchAction, 100);
       window.addEventListener('resize', syncGlobeTouchAction);
 
+      const clampGlobeLat = (value) => Math.max(-70, Math.min(75, value));
+      const shouldIgnoreGlobeDrag = (target) => {
+          const el = target instanceof Element ? target : null;
+          return !!(el && el.closest('#globe-heat-zone, #back-btn'));
+      };
+      let mobileGlobeDrag = null;
+      const startMobileGlobeDrag = (e) => {
+          if (e.pointerType && e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
+          if (e.isPrimary === false || shouldIgnoreGlobeDrag(e.target)) return;
+          const pov = globe.pointOfView();
+          mobileGlobeDrag = {
+              id: e.pointerId,
+              x: e.clientX,
+              y: e.clientY,
+              lat: Number.isFinite(pov.lat) ? pov.lat : 20,
+              lng: Number.isFinite(pov.lng) ? pov.lng : 100,
+              altitude: Number.isFinite(pov.altitude) ? pov.altitude : 2.2,
+              moved: false
+          };
+          e.preventDefault();
+          try { box.setPointerCapture?.(e.pointerId); } catch (_) {}
+          globe.controls().enabled = false;
+          box.classList.add('is-active');
+      };
+      const moveMobileGlobeDrag = (e) => {
+          if (!mobileGlobeDrag || e.pointerId !== mobileGlobeDrag.id) return;
+          e.preventDefault();
+          const dx = e.clientX - mobileGlobeDrag.x;
+          const dy = e.clientY - mobileGlobeDrag.y;
+          if (Math.hypot(dx, dy) > 3) {
+              mobileGlobeDrag.moved = true;
+              mountMap.__suppressMarkerFallback = true;
+              box.classList.add('is-drag-navigating');
+          }
+          globe.pointOfView({
+              lat: clampGlobeLat(mobileGlobeDrag.lat + dy * 0.18),
+              lng: mobileGlobeDrag.lng - dx * 0.22,
+              altitude: mobileGlobeDrag.altitude
+          }, 0);
+      };
+      const endMobileGlobeDrag = (e) => {
+          if (!mobileGlobeDrag || e.pointerId !== mobileGlobeDrag.id) return;
+          if (mobileGlobeDrag.moved) {
+              e.preventDefault();
+              mountMap.__suppressMarkerFallback = true;
+          }
+          try { box.releasePointerCapture?.(e.pointerId); } catch (_) {}
+          mobileGlobeDrag = null;
+          globe.controls().enabled = true;
+          window.setTimeout(() => box.classList.remove('is-drag-navigating'), 80);
+          syncGlobeTouchAction();
+      };
+      box.addEventListener('pointerdown', startMobileGlobeDrag, { capture: true, passive: false });
+      window.addEventListener('pointermove', moveMobileGlobeDrag, { capture: true, passive: false });
+      window.addEventListener('pointerup', endMobileGlobeDrag, { capture: true, passive: false });
+      window.addEventListener('pointercancel', endMobileGlobeDrag, { capture: true, passive: false });
+      if (!window.PointerEvent) {
+          const touchToPoint = (touch) => ({
+              pointerId: touch.identifier,
+              clientX: touch.clientX,
+              clientY: touch.clientY,
+              target: touch.target,
+              pointerType: 'touch',
+              isPrimary: true,
+              preventDefault: () => {},
+          });
+          box.addEventListener('touchstart', (e) => {
+              if (e.touches.length !== 1) return;
+              startMobileGlobeDrag(touchToPoint(e.touches[0]));
+              if (mobileGlobeDrag) e.preventDefault();
+          }, { capture: true, passive: false });
+          window.addEventListener('touchmove', (e) => {
+              if (!mobileGlobeDrag) return;
+              const touch = Array.from(e.touches).find(item => item.identifier === mobileGlobeDrag.id);
+              if (!touch) return;
+              moveMobileGlobeDrag(touchToPoint(touch));
+              e.preventDefault();
+          }, { capture: true, passive: false });
+          window.addEventListener('touchend', (e) => {
+              if (!mobileGlobeDrag) return;
+              const touchStillActive = Array.from(e.touches).some(item => item.identifier === mobileGlobeDrag.id);
+              if (touchStillActive) return;
+              endMobileGlobeDrag({
+                  pointerId: mobileGlobeDrag.id,
+                  preventDefault: () => e.preventDefault()
+              });
+          }, { capture: true, passive: false });
+          window.addEventListener('touchcancel', () => {
+              if (!mobileGlobeDrag) return;
+              globe.controls().enabled = true;
+              mobileGlobeDrag = null;
+              box.classList.remove('is-drag-navigating');
+          }, { capture: true, passive: false });
+      }
+
       function setGlobeActive(active) {
           box.classList.toggle('is-active', active);
           mountMap.style.pointerEvents = 'auto';
@@ -1748,12 +1843,12 @@ var weatherException = {
               downPos = { x: e.clientX, y: e.clientY };
               downTime = performance.now();
               mountMap.__suppressMarkerFallback = true;
-              dispatchPointerToMount('pointerdown', e);
+              if (e.pointerType !== 'touch') dispatchPointerToMount('pointerdown', e);
           });
           el.addEventListener('pointermove', (e) => {
               if (!downPos) return;
               stopMarkerEvent(e);
-              dispatchPointerToMount('pointermove', e);
+              if (e.pointerType !== 'touch') dispatchPointerToMount('pointermove', e);
           });
           el.addEventListener('pointerup', (e) => {
               const moved = downPos ? Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y) : Infinity;
@@ -1761,7 +1856,7 @@ var weatherException = {
               downPos = null;
               stopMarkerEvent(e);
               mountMap.__suppressMarkerFallback = true;
-              dispatchPointerToMount('pointerup', e);
+              if (e.pointerType !== 'touch') dispatchPointerToMount('pointerup', e);
               try { el.releasePointerCapture?.(e.pointerId); } catch (_) {}
               if (moved <= 12 && elapsed <= 400) activate(e);
           });
@@ -1769,7 +1864,7 @@ var weatherException = {
               downPos = null;
               stopMarkerEvent(e);
               mountMap.__suppressMarkerFallback = true;
-              dispatchPointerToMount('pointercancel', e);
+              if (e.pointerType !== 'touch') dispatchPointerToMount('pointercancel', e);
               try { el.releasePointerCapture?.(e.pointerId); } catch (_) {}
           });
           el.addEventListener('click', (e) => {
