@@ -134,6 +134,28 @@ html.light-mode .news-card {
   color: #0f172a !important;
 }
 html.light-mode .history-note { color: #475569 !important; }
+html.light-mode .history-disclaimer-note {
+  color: #0f172a !important;
+}
+html.light-mode .history-disclaimer-note strong {
+  color: #0f172a !important;
+}
+html.light-mode .history-disclaimer-strong {
+  color: #0f172a !important;
+}
+html.light-mode .impact-modal-header {
+  background: #0f172a !important;
+  border-bottom-color: rgba(212, 175, 55, 0.22) !important;
+}
+html.light-mode .impact-modal-header .text-white {
+  color: #ffffff !important;
+}
+html.light-mode .impact-modal-header .text-gray-300 {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+html.light-mode .impact-modal-header button {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
 
 html.light-mode .panel-card,
 html.light-mode .help-panel,
@@ -242,6 +264,21 @@ html.light-mode .absolute.inset-0.z-0[style*="radial-gradient"] {
 html.light-mode .border-white\/10, html.light-mode .border-white\/5 { border-color: rgba(0,0,0,0.08) !important; }
 html.light-mode .border-\[rgba\(212\,175\,55\,0\.15\)\] { border-color: rgba(212, 175, 55, 0.4) !important; }
 html.light-mode .bg-white\/5 { background-color: rgba(0,0,0,0.03) !important; }
+html.light-mode .bg-\[rgba\(15\,23\,42\,0\.95\)\],
+html.light-mode .bg-\[rgba\(15\,23\,42\,0\.6\)\] {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #0f172a !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08) !important;
+}
+html.light-mode .bg-\[rgba\(15\,23\,42\,0\.95\)\] .text-gray-300,
+html.light-mode .bg-\[rgba\(15\,23\,42\,0\.95\)\] .text-gray-400,
+html.light-mode .bg-\[rgba\(15\,23\,42\,0\.95\)\] .text-gray-500,
+html.light-mode .bg-\[rgba\(15\,23\,42\,0\.6\)\] .text-gray-300,
+html.light-mode .bg-\[rgba\(15\,23\,42\,0\.6\)\] .text-gray-400,
+html.light-mode .bg-\[rgba\(15\,23\,42\,0\.6\)\] .text-gray-500 {
+  color: #0f172a !important;
+}
 html.light-mode #theme-toggle { color: #0f172a !important; border-color: rgba(0,0,0,0.2) !important; background: rgba(0,0,0,0.05) !important; }
 html.light-mode .live-chip { color: #dc2626 !important; background: rgba(220, 38, 38, 0.1) !important; border-color: rgba(220, 38, 38, 0.3) !important; }
 html.light-mode #globe-interactive-box:not(.is-active) { border-color: rgba(0,0,0,0.15) !important; background: rgba(255,255,255,0.4) !important; }
@@ -253,6 +290,23 @@ html.light-mode .monitor-cell, html.light-mode .commodity-card, html.light-mode 
 }
 html.light-mode .monitor-value, html.light-mode .section-divider-title { color: #0f172a !important; }
 html.light-mode .monitor-label, html.light-mode .monitor-note { color: #64748b !important; }
+html.light-mode .monitor-probability {
+  border-top-color: rgba(15, 23, 42, 0.08) !important;
+}
+html.light-mode .monitor-probability-label,
+html.light-mode .monitor-probability-note {
+  color: #64748b !important;
+}
+html.light-mode .monitor-probability-value {
+  color: #0f172a !important;
+}
+html.light-mode .text-\[\#f7e7ce\],
+html.light-mode .text-\[var\(--text-gold\)\] {
+  color: #6b4d00 !important;
+}
+html.light-mode .bg-\[\#d4af37\]\/20 { background: rgba(212, 175, 55, 0.12) !important; }
+html.light-mode .border-\[var\(--text-gold\)\]\/30,
+html.light-mode .border-\[var\(--text-gold\)\]\/40 { border-color: rgba(138, 101, 0, 0.35) !important; }
 html.light-mode .source-row, html.light-mode .weather-region, html.light-mode .rank-item, html.light-mode .rule-item {
   border-top-color: rgba(15, 23, 42, 0.1) !important;
 }
@@ -261,6 +315,12 @@ html.light-mode .risk-badge,
 html.light-mode .crop-card span,
 html.light-mode .similar-year span {
   color: inherit;
+}
+html.light-mode #impact-status-label {
+  color: #fff !important;
+}
+html.light-mode #impact-status-label i {
+  color: currentColor !important;
 }
 html.light-mode .footer-immersive .text-gray-400,
 html.light-mode .footer-immersive .text-gray-500 {
@@ -353,7 +413,7 @@ html.light-mode .heat-zone-crop-card .crop-chip.red { color: #b91c1c; border-col
   padding: 10px 14px; color: #fff; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
   pointer-events: auto; transform: translate(50%, -50%) scale(1);
   transition: opacity 0.35s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer; opacity: 1; min-width: 140px; max-width: 280px;
+  cursor: pointer; opacity: 1; min-width: 140px; max-width: 280px; position: relative; z-index: 80;
 }
 .globe-continent-marker { min-width: 138px; padding: 12px 18px; text-align: center; }
 .globe-country-marker { min-width: 0; padding: 7px 9px; border-radius: 999px; background: rgba(10, 14, 22, 0.78); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; max-width: 132px; }
@@ -398,15 +458,63 @@ html.light-mode .heat-zone-crop-card .crop-chip.red { color: #b91c1c; border-col
 .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.35); border-radius: 4px; }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.7); }
 
-.monitor-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+.monitor-grid { display: block; }
 .globe-stage { min-height: 560px; max-height: 680px; }
 #globe-interactive-box { height: clamp(420px, 54dvh, 620px) !important; min-height: 0 !important; }
 #globe-interactive-box.is-country-view #globe-heat-zone { opacity: 0; pointer-events: none; transform: translateY(-6px); }
 .monitor-cell { min-height: 82px; border-radius: 16px; padding: 12px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025)); border: 1px solid rgba(255, 255, 255, 0.075); position: relative; overflow: hidden; }
 .monitor-cell::after { content: ""; position: absolute; inset: auto -20% -55% 35%; height: 70px; background: radial-gradient(circle, rgba(212, 175, 55, 0.18), transparent 68%); pointer-events: none; }
+.monitor-summary-card {
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
+  overflow: hidden;
+}
+.monitor-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.monitor-summary-item {
+  padding: 14px 16px 16px;
+  min-width: 0;
+}
+.monitor-summary-item + .monitor-summary-item {
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+.monitor-summary-item + .monitor-summary-item:not(:first-child) {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+.monitor-summary-item .monitor-label {
+  font-size: 11px;
+}
+.monitor-summary-item .monitor-value {
+  margin-top: 10px;
+  font-size: 18px;
+}
+.monitor-summary-item .monitor-note {
+  margin-top: 8px;
+}
+.monitor-subsection {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.monitor-subsection .monitor-label {
+  margin-top: 0;
+}
+.monitor-subsection .monitor-value {
+  margin-top: 8px;
+}
+.monitor-subsection .monitor-note {
+  margin-top: 8px;
+}
 .monitor-label { font-size: 10px; letter-spacing: 0.18em; color: rgba(255, 255, 255, 0.46); font-weight: 800; text-transform: uppercase; }
 .monitor-value { margin-top: 8px; font-size: 18px; line-height: 1.12; color: #fff; font-weight: 900; letter-spacing: 0.01em; }
 .monitor-note { margin-top: 7px; font-size: 11px; line-height: 1.45; color: rgba(255, 255, 255, 0.58); }
+.monitor-probability { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.monitor-probability-label { color: rgba(255, 255, 255, 0.68); font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+.monitor-probability-value { color: #fff; font-size: 20px; line-height: 1; font-weight: 900; }
+.monitor-probability-note { margin-top: 6px; font-size: 11px; line-height: 1.45; color: rgba(255, 255, 255, 0.58); }
 
 .enso-chart-card { border-radius: 22px; border: 1px solid rgba(255, 255, 255, 0.08); background: linear-gradient(180deg, rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0.24)); padding: 10px; overflow: hidden; }
 .enso-chart-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
@@ -437,6 +545,56 @@ html.light-mode .heat-zone-crop-card .crop-chip.red { color: #b91c1c; border-col
 .enso-legend-swatch.neutral { background: #9ca3af; }
 .enso-legend-swatch.el-nino { background: #ff4d2d; }
 .enso-footnote { margin-top: 10px; color: rgba(255, 255, 255, 0.54); font-size: 11px; line-height: 1.5; }
+.enso-formation-card {
+  margin-top: 14px;
+  padding: 14px;
+}
+.enso-formation-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.enso-formation-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 9999px;
+  padding: 6px 10px;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: rgba(212, 175, 55, 0.08);
+  color: #f4dfa1;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.enso-formation-media {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.25);
+  min-height: 240px;
+}
+.enso-formation-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.96);
+}
+html.light-mode .enso-formation-chip {
+  color: #926a09;
+  border-color: rgba(212, 175, 55, 0.25);
+  background: rgba(212, 175, 55, 0.08);
+}
+html.light-mode .enso-formation-media {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.08);
+}
 
 html.light-mode .enso-chart-card { background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.9)) !important; border-color: rgba(15, 23, 42, 0.08) !important; }
 html.light-mode .enso-chart-title { color: #0f172a !important; }
@@ -472,7 +630,7 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
 @media (max-width: 820px) {
-  .monitor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .monitor-summary-grid { grid-template-columns: 1fr; }
   .commodity-board { grid-template-columns: 1fr; }
   .source-row, .weather-region, .rule-item { grid-template-columns: 1fr; }
   .globe-stage { min-height: 470px; max-height: none; }
@@ -536,56 +694,37 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                         <div class="flex items-center gap-2">
                             <span class="module-tag">今日气候监测总览</span>
                             <span class="status-light status-watch">观察窗口</span>
-                        <!-- tooltip trigger -->
-                        <div class="relative group inline-block ml-1">
-                            <div class="w-4 h-4 rounded-full border border-gray-400 text-gray-400 flex items-center justify-center text-[10px] cursor-help hover:text-[var(--text-gold)] hover:border-[var(--text-gold)] transition-colors">?</div>
-                            <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[300px] sm:w-[360px] bg-[rgba(15,23,42,0.95)] border border-[rgba(212,175,55,0.4)] rounded-xl p-3 text-xs text-gray-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 backdrop-blur-xl">
-                                <div class="font-bold text-white mb-2 pb-1.5 border-b border-white/10 flex items-center gap-2">
-                                    <i data-lucide="bell-ring" class="w-3.5 h-3.5 text-[var(--text-gold)]"></i>气候—品种预警规则
-                                </div>
-                                <ul class="space-y-2.5 text-left">
-                                    <li><strong class="text-[#f7e7ce]">气候触发：</strong>关键海温区连续升至 +0.5°C 附近且大气响应同步增强时，页面提示“影响增强”。</li>
-                                    <li><strong class="text-[#f7e7ce]">东南亚降雨：</strong>连续 2-4 周降雨显著偏离，棕榈油与橡胶进入观察窗口，并提示验证产量、库存、出口。</li>
-                                    <li><strong class="text-[#f7e7ce]">印度季风：</strong>季风推进偏慢、高温持续或土壤水分偏低时，白糖、棉花标记为“等待数据验证”。</li>
-                                    <li><strong class="text-[#f7e7ce]">美洲播种收获：</strong>降雨过强或作业窗口缩短时，大豆、玉米提示“产业链变量变化”，追踪作物进度。</li>
-                                </ul>
+                        </div>
+                </div>
+                <div class="monitor-summary-card">
+                    <div class="monitor-summary-grid">
+                        <div class="monitor-summary-item">
+                            <div class="monitor-label">当前状态</div>
+                            <div class="monitor-value">中性状态 / 厄尔尼诺观察</div>
+                            <div class="monitor-note">美国气候预测中心4月9日：拉尼娜结束，5-7月进入厄尔尼诺观察窗口。</div>
+                            <div class="monitor-probability">
+                                <span class="monitor-probability-label">3个月概率</span>
+                                <span class="monitor-probability-value">61%</span>
+                            </div>
+                            <div class="monitor-probability-note">美国气候预测中心：5-7月厄尔尼诺概率。</div>
+                        </div>
+                        <div class="monitor-summary-item">
+                            <div class="monitor-label">关键海温区</div>
+                            <div class="monitor-value">-0.27°C</div>
+                            <div class="monitor-note">澳大利亚气象局4月12日监测：关键海温区处于中性范围。</div>
+                            <div class="monitor-subsection">
+                                <div class="monitor-label">重点品种</div>
+                                <div class="monitor-value">棕榈油 白糖 大豆</div>
+                                <div class="monitor-note">进入观察窗口，等待产业数据验证。</div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="monitor-grid">
-                    <div class="monitor-cell col-span-2 sm:col-span-2">
-                        <div class="monitor-label">当前状态</div>
-                        <div class="monitor-value">中性状态 / 厄尔尼诺观察</div>
-                        <div class="monitor-note">美国气候预测中心4月9日：拉尼娜结束，5-7月进入厄尔尼诺观察窗口。</div>
-                    </div>
-                    <div class="monitor-cell">
-                        <div class="monitor-label">关键海温区</div>
-                        <div class="monitor-value">-0.27°C</div>
-                        <div class="monitor-note">澳大利亚气象局4月12日监测：关键海温区处于中性范围。</div>
-                    </div>
-                    <div class="monitor-cell">
-                        <div class="monitor-label">3个月概率</div>
-                        <div class="monitor-value">61%</div>
-                        <div class="monitor-note">美国气候预测中心：5-7月厄尔尼诺概率。</div>
-                    </div>
-                    <div class="monitor-cell">
-                        <div class="monitor-label">今日热区</div>
-                        <div class="monitor-value">印度 / 东南亚</div>
-                        <div class="monitor-note">高温与降雨偏离同步跟踪。</div>
-                    </div>
-                    <div class="monitor-cell">
-                        <div class="monitor-label">重点品种</div>
-                        <div class="monitor-value">棕榈油 白糖 大豆</div>
-                        <div class="monitor-note">进入观察窗口，等待产业数据验证。</div>
                     </div>
                 </div>
 
                 <div class="enso-chart-card mt-4">
                     <div class="enso-chart-head">
                         <div class="min-w-0">
-                            <span class="enso-chart-kicker"><i data-lucide="bar-chart-3" class="w-4 h-4"></i> ENSO 概率柱状图</span>
-                            <div class="enso-chart-title">官方 NOAA CPC ENSO 概率图（2026年4月）</div>
+                            <div class="enso-chart-title">美国气候预测中心厄尔尼诺-南方涛动 概率图（2026年4月）</div>
                             <div class="enso-chart-subtitle">基于 ERSSTv5 相对 Niño-3.4 指数的 -0.5°C / +0.5°C 阈值。</div>
                         </div>
                         <div class="enso-chart-source">
@@ -608,6 +747,16 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                     </div>
                     <div class="enso-footnote">
                         横轴为连续季节窗口，纵轴为概率（%）。
+                    </div>
+                </div>
+
+                <div class="card-surface enso-formation-card">
+                    <div class="enso-formation-head">
+                        <span class="module-tag">形成及影响</span>
+                        <span class="enso-formation-chip">科普说明</span>
+                    </div>
+                    <div class="enso-formation-media">
+                        <img src="https://img.jin10.com/news/26/04/JvO8wuHdtjxlKifNU21KT.png" alt="厄尔尼诺形成及影响示意图" loading="lazy" />
                     </div>
                 </div>
 
@@ -652,12 +801,6 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
             </div>
             <div class="relative w-full px-3 sm:px-6 pb-4 sm:pb-6 flex justify-center items-center z-20 h-full">
                 <div id="globe-interactive-box" class="relative w-full h-full max-w-[800px] rounded-2xl sm:rounded-3xl border-[2px] border-white/10 transition-all duration-300 bg-black/20 overflow-hidden" style="height: clamp(420px, 54dvh, 620px); min-height: 0;">
-                    <div id="globe-overlay" class="absolute inset-0 z-40 flex items-start justify-center pt-4 sm:pt-5 transition-opacity duration-300 pointer-events-none">
-                        <div class="overlay-btn px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-black/55 text-[var(--text-gold)] text-xs sm:text-sm backdrop-blur-md border border-[var(--text-gold)] shadow-[0_0_15px_rgba(212,175,55,0.3)] pointer-events-none flex items-center gap-2">
-                            <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i> <span>点击激活</span>
-                        </div>
-                    </div>
-
                     <div id="globe-heat-zone" class="absolute top-4 right-4 z-30 heat-zone-panel pointer-events-auto flex flex-col items-end is-collapsed">
                         <button type="button" id="btn-toggle-heat-zone" class="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-black/45 backdrop-blur-md border-0 text-left outline-none shadow-none cursor-pointer">
                             <span class="module-tag shrink-0">全球重点热区</span>
@@ -726,7 +869,7 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                                             </article>
                                         </div>
 
-                                        <div class="rounded-2xl border border-amber-300/18 bg-amber-300/8 p-3 text-[11px] leading-relaxed text-amber-100">
+                                        <div class="history-disclaimer-note rounded-2xl border border-amber-300/18 bg-amber-300/8 p-3 text-[11px] leading-relaxed text-amber-100">
                                             历史相似不代表未来重复。这里的路径拆解只是帮助理解气候变量如何传导到产业链，最终仍要回到实时天气、产量、库存和物流数据验证。
                                         </div>
                                     </div>
@@ -804,7 +947,7 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
       <section class="panel-card rounded-3xl border border-[rgba(212,175,55,0.18)] bg-black/35 p-4 sm:p-5 fade-in-up">
         <div class="module-head">
           <div class="module-head-left">
-            <h2 class="section-divider-title">历史相似年份对照</h2>
+            <h2 class="section-divider-title">历史上的厄尔尼诺</h2>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -886,7 +1029,7 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
         <div class="mt-4 rounded-2xl border border-amber-300/20 bg-amber-300/5 p-3 sm:p-4 text-xs sm:text-[13px] leading-relaxed text-gray-300 flex items-start gap-2 max-w-4xl relative group">
             <i data-lucide="info" class="w-4 h-4 text-amber-300/60 shrink-0 mt-0.5"></i>
             <div class="flex-1 pr-6">
-                <strong class="text-amber-100">免责声明：历史相似不代表未来重复。</strong>
+                <strong class="history-disclaimer-strong text-amber-100">免责声明：历史相似不代表未来重复。</strong>
                 <span>相似年份仅用于理解气候—产业链变量的历史传导关系，不能替代实时天气、产量、库存、物流等数据验证。</span>
                 <span class="block mt-1">历史上，强厄尔尼诺若叠加减产与低库存，农产品涨幅通常在 50%–150%；若仅有天气扰动而无供给缺口，涨幅往往不超过 30%。核心三要素：是否打到关键窗口、是否形成全球性供给缺口、库存是否配合。</span>
             </div>
@@ -953,11 +1096,11 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                 <div class="flex flex-col gap-4">
                     <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-3">
                         <div class="flex items-center gap-3">
-                            <button id="tab-btn-news" type="button" class="pb-1.5 transition-all text-[15px] sm:text-lg font-bold border-b-2 text-[var(--text-gold)] border-[var(--text-gold)]">
-                                官方监测
+                            <button id="tab-btn-live" type="button" class="pb-1.5 transition-all text-[15px] sm:text-lg font-bold border-b-2 text-[var(--text-gold)] border-[var(--text-gold)]">
+                                实时资讯
                             </button>
-                            <button id="tab-btn-reports" type="button" class="pb-1.5 transition-all text-[15px] sm:text-lg font-bold border-b-2 text-gray-400 hover:text-gray-200 border-transparent">
-                                产业验证
+                            <button id="tab-btn-news" type="button" class="pb-1.5 transition-all text-[15px] sm:text-lg font-bold border-b-2 text-gray-400 hover:text-gray-200 border-transparent">
+                                官方监测
                             </button>
                         </div>
                         <div class="hidden sm:flex items-center gap-2 text-[11px] text-gray-300 border border-white/10 rounded-full px-3 py-2 bg-white/5">
@@ -966,7 +1109,28 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                         </div>
                     </div>
                     
-                    <div id="tab-content-news" class="flex flex-col gap-3">
+                    <div id="tab-content-live" class="flex flex-col gap-3">
+                        <article class="news-card">
+                            <div class="news-topline"><span class="news-badge text-rose-300 border-rose-400/20 bg-rose-400/10">实时快讯</span><span class="text-[11px] text-gray-500">刚刚</span></div>
+                            <h4 class="news-title">东南亚雨带再度波动，棕榈油关注区间继续跟踪</h4>
+                            <p class="news-summary">热带降雨带位置变化仍在影响主产区作业节奏，实时侧重点放在降雨偏离、土壤水分和产量兑现节奏。</p>
+                            <div class="news-meta"><span class="news-badge">主题：棕榈油</span><span class="news-badge">关注：降雨偏离</span><span class="news-badge">属性：实时资讯</span></div>
+                        </article>
+                        <article class="news-card">
+                            <div class="news-topline"><span class="news-badge text-orange-200 border-orange-400/20 bg-orange-400/10">实时快讯</span><span class="text-[11px] text-gray-500">刚刚</span></div>
+                            <h4 class="news-title">印度季风前高温偏强，白糖与棉花同步进入观察期</h4>
+                            <p class="news-summary">实时监测继续关注季风推进、土壤墒情和高温持续时间，避免把单日天气波动直接当成趋势。</p>
+                            <div class="news-meta"><span class="news-badge">主题：白糖 / 棉花</span><span class="news-badge">关注：季风前条件</span><span class="news-badge">属性：实时资讯</span></div>
+                        </article>
+                        <article class="news-card">
+                            <div class="news-topline"><span class="news-badge text-sky-200 border-sky-400/20 bg-sky-400/10">实时快讯</span><span class="text-[11px] text-gray-500">5分钟前</span></div>
+                            <h4 class="news-title">美国中西部进入播种观察窗口，大豆和玉米关注墒情变化</h4>
+                            <p class="news-summary">降雨过强会扰动作业窗口，降雨不足会影响出苗条件，实时资讯侧重把天气变化和作物节奏放在一起看。</p>
+                            <div class="news-meta"><span class="news-badge">主题：大豆 / 玉米</span><span class="news-badge">关注：播种窗口</span><span class="news-badge">属性：实时资讯</span></div>
+                        </article>
+                    </div>
+
+                    <div id="tab-content-news" class="hidden flex-col gap-3">
                         <article class="news-card">
                             <div class="news-topline"><span class="news-badge text-red-300 border-red-400/20 bg-red-400/10">气象监测</span><span class="text-[11px] text-gray-500">2026-04-09</span></div>
                             <h4 class="news-title">美国气候预测中心：拉尼娜提示结束，发布厄尔尼诺观察</h4>
@@ -997,40 +1161,8 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                             <p class="news-summary">世界气象组织强调中长期信号仍需跟踪，区域影响不能直接外推，需要结合季风、海温、热带云雨扰动和本地天气条件阅读。</p>
                             <div class="news-meta"><span class="news-badge">来源：世界气象组织</span><span class="news-badge">关注：中期概率</span><span class="news-badge">属性：公开资料</span></div>
                         </article>
-                        <article class="news-card">
-                            <div class="news-topline"><span class="news-badge text-rose-300 border-rose-400/20 bg-rose-400/10">区域监测</span><span class="text-[11px] text-gray-500">2026-04-26</span></div>
-                            <h4 class="news-title">东南亚、印度、澳洲进入产区天气交叉验证窗口</h4>
-                            <p class="news-summary">页面将这些区域作为热区入口，重点跟踪降雨偏离、土壤水分、作业窗口和产业数据是否相互印证。</p>
-                            <div class="news-meta"><span class="news-badge">来源：公开气象与产业资料</span><span class="news-badge">品种：棕榈油 / 白糖 / 小麦</span><span class="news-badge">属性：产区跟踪</span></div>
-                        </article>
                     </div>
 
-                    <div id="tab-content-reports" class="hidden flex-col gap-3">
-                        <article class="news-card">
-                            <div class="news-topline"><span class="news-badge text-sky-200 border-sky-400/20 bg-sky-400/10">验证清单</span><span class="text-[11px] text-gray-500">每日</span></div>
-                            <h4 class="news-title">棕榈油：降雨偏离需要与产量、库存、出口船期交叉确认</h4>
-                            <p class="news-summary">若天气信号增强但库存和出口未同步变化，页面维持“等待数据验证”，避免把气象变量直接等同为产业结论。</p>
-                            <div class="news-meta"><span class="news-badge">数据：MPOB / 船运</span><span class="news-badge">主题：棕榈油</span><span class="news-badge">属性：产业验证</span></div>
-                        </article>
-                        <article class="news-card">
-                            <div class="news-topline"><span class="news-badge text-indigo-200 border-indigo-400/20 bg-indigo-400/10">验证清单</span><span class="text-[11px] text-gray-500">每周</span></div>
-                            <h4 class="news-title">白糖：印度季风推进、甘蔗生长和压榨进度同步读取</h4>
-                            <p class="news-summary">高温或降雨偏离只是第一层信号，仍需验证主产区水分恢复速度、糖料作物长势和产业链节奏。</p>
-                            <div class="news-meta"><span class="news-badge">数据：季风 / 压榨</span><span class="news-badge">主题：白糖 / 甘蔗</span><span class="news-badge">属性：产业跟踪</span></div>
-                        </article>
-                        <article class="news-card">
-                            <div class="news-topline"><span class="news-badge text-gray-200 border-gray-400/20 bg-gray-400/10">验证清单</span><span class="text-[11px] text-gray-500">每周</span></div>
-                            <h4 class="news-title">大豆 / 玉米：美国作物进度、南美收获与物流窗口并行验证</h4>
-                            <p class="news-summary">美洲降雨改善墒情和扰动作业窗口可能同时存在，页面重点呈现产业链变量变化，不做方向性表达。</p>
-                            <div class="news-meta"><span class="news-badge">数据：USDA / 港口</span><span class="news-badge">主题：美豆 / 美玉米</span><span class="news-badge">属性：供需预估</span></div>
-                        </article>
-                        <article class="news-card">
-                            <div class="news-topline"><span class="news-badge text-amber-200 border-amber-400/20 bg-amber-400/10">验证清单</span><span class="text-[11px] text-gray-500">每旬</span></div>
-                            <h4 class="news-title">澳洲小麦 / 菜籽：秋播前土壤墒情和降雨恢复速度优先</h4>
-                            <p class="news-summary">若墒情恢复不足，播种窗口和后续灌浆阶段需要持续观察；若降雨回补，则影响信号可能减弱。</p>
-                            <div class="news-meta"><span class="news-badge">数据：降雨 / 墒情</span><span class="news-badge">主题：小麦 / 菜籽</span><span class="news-badge">属性：产业验证</span></div>
-                        </article>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1039,7 +1171,7 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
     <!-- Impact Modal -->
     <div id="impact-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6 transition-all duration-300 modal-hidden">
         <div class="immersive-modal-content w-full max-w-[860px] max-h-[85vh] flex flex-col relative overflow-hidden">
-            <div class="shrink-0 p-5 sm:p-6 pb-4 border-b border-[rgba(212,175,55,0.2)] bg-black/60 relative">
+            <div class="impact-modal-header shrink-0 p-5 sm:p-6 pb-4 border-b border-[rgba(212,175,55,0.2)] bg-black/60 relative">
                 <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-r from-transparent to-[var(--text-gold)] opacity-[0.03] pointer-events-none"></div>
                 <div class="flex items-center justify-between mb-4 relative z-10">
                     <div class="flex items-center gap-4">
@@ -1058,7 +1190,7 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
                         <i data-lucide="crosshair" class="w-3.5 h-3.5 text-[var(--text-gold)]"></i>
                         核心扰动源：<span class="text-white" id="impact-disturbance">扰动信息</span>
                     </span>
-                    <span class="status-light status-watch px-4 py-1.5"><i data-lucide="eye" class="w-3.5 h-3.5"></i>异常观察期</span>
+                    <span id="impact-status-label" class="status-light status-watch px-4 py-1.5"><i data-lucide="eye" class="w-3.5 h-3.5"></i>异常观察期</span>
                 </div>
             </div>
             
@@ -1083,43 +1215,45 @@ html.light-mode .enso-legend-item { background: rgba(15, 23, 42, 0.03); border-c
 
     <!-- Scripts -->
     <script>
-      var iconMap = {
+var iconMap = {
   '大豆': '🫘', '玉米': '🌽', '小麦': '🌾', '油菜籽': '🌼', '铁矿石': '🪨',
   '棉花': '☁️', '甘蔗': '🎋', '白糖': '🍬', '镍': '🔩', '棕榈油': '🌴',
   '铜': '🪙', '橡胶': '🛞', '红枣': '🍒', '苹果': '🍎', '花生': '🥜',
+  '稻米': '🌾', '油籽/食用油': '🫘',
+  '豆粕/油脂': '🫘', '咖啡': '☕', '航运/装船': '🚢', '出口/黑海物流': '🚢', '黑海物流': '🚢',
   '原油': '🛢️', '菜籽': '🌼'
 };
 
 var rawStringData = [
-  '中国|35|105|asia|棉花_mixed_高温降雨错配等待验证,玉米_mixed_东北墒情与播种窗口跟踪,小麦_neutral_产区分化进入观察,花生_mixed_生长期水分条件分阶段验证,苹果_neutral_花期和坐果期天气跟踪',
-  '印尼|-2|114|asia|棕榈油_up_降雨偏离影响增强,橡胶_mixed_割胶天数等待验证,镍_mixed_降雨与发运节奏跟踪',
-  '马来西亚|4|102|asia|棕榈油_up_水分恢复和单产滞后跟踪,橡胶_mixed_割胶天数等待验证',
-  '泰国|15|100|asia|白糖_up_甘蔗生长和压榨节奏进入观察窗口,橡胶_mixed_割胶天数等待验证',
-  '越南|14|108|asia|橡胶_mixed_降雨日数和割胶节奏等待验证',
-  '菲律宾|13|122|asia|镍_mixed_矿区降雨和发运效率跟踪',
-  '印度|21|78|asia|白糖_up_高温与季风前水分进入观察窗口,棉花_mixed_播种面积和苗情等待验证',
-  '巴西|-10|-55|south_america|大豆_mixed_收获与物流节奏等待验证,玉米_mixed_二茬生长窗口跟踪,白糖_mixed_压榨进度和降雨节奏交叉验证',
-  '阿根廷|-34|-64|south_america|大豆_down_墒情修复影响减弱,玉米_down_作物优良率等待验证',
-  '秘鲁|-10|-75|south_america|铜_mixed_降雨和矿区运输条件跟踪',
-  '智利|-35|-71|south_america|铜_mixed_水资源和矿区作业窗口跟踪',
-  '澳洲|-25|133|oceania|小麦_up_秋播墒情进入观察窗口,菜籽_up_降雨恢复速度等待验证',
-  '美国中西部|41|-93|north_america|玉米_mixed_春播窗口等待验证,大豆_mixed_土壤湿度与强对流跟踪,棉花_mixed_南部棉区降雨和苗情跟踪',
-  '加拿大|56|-106|north_america|菜籽_up_草原省墒情和播种窗口进入观察,小麦_mixed_春麦播种进度等待验证',
-  '欧洲|48|15|europe|小麦_mixed_冬麦墒情和热浪风险跟踪,菜籽_mixed_开花结荚期天气验证',
-  '乌克兰|49|31|europe|小麦_mixed_黑海产区墒情和作业窗口跟踪,玉米_mixed_播种进度等待验证',
-  '俄罗斯|60|90|europe|小麦_mixed_南部产区墒情和春季温度跟踪'
+  '中国|35|105|asia|棉花_mixed_高温、灌溉和蕾铃期天气跟踪,玉米_mixed_春播墒情与授粉期高温跟踪,小麦_mixed_灌浆期高温与收获期降雨跟踪,白糖_mixed_甘蔗生长期降雨和榨季糖分跟踪,花生_mixed_播种墒情与收获期天气跟踪,豆粕/油脂_mixed_海外天气传导与进口成本跟踪',
+  '印尼|-2|114|asia|棕榈油_mixed_降雨偏离与单产滞后跟踪,橡胶_mixed_割胶窗口与胶乳恢复跟踪,镍_mixed_矿区降雨与发运节奏跟踪',
+  '马来西亚|4|102|asia|棕榈油_mixed_降雨偏离与单产恢复跟踪,橡胶_mixed_割胶天数与出口节奏跟踪',
+  '泰国|15|100|asia|白糖_mixed_季风雨与糖分积累跟踪,橡胶_mixed_割胶天数与南部产区天气跟踪',
+  '越南|14|108|asia|咖啡_mixed_中部高原干旱与晾晒条件跟踪,橡胶_mixed_降雨偏多与割胶窗口跟踪,稻米_mixed_湄公河三角洲水分条件跟踪',
+  '菲律宾|13|122|asia|镍_mixed_矿区降雨与发运效率跟踪,航运/装船_mixed_台风路径与装船窗口跟踪',
+  '印度|21|78|asia|白糖_mixed_季风雨与灌溉水源跟踪,棉花_mixed_播种期降雨与苗情跟踪,稻米_mixed_季风推进与水库蓄水跟踪,油籽/食用油_mixed_播种降雨与进口预期跟踪',
+  '巴西|-10|-55|south_america|大豆_mixed_收获期降雨与物流节奏跟踪,玉米_mixed_二茬播种窗口与后续降雨跟踪,白糖_mixed_压榨进度和甘蔗降雨节奏跟踪,咖啡_mixed_开花坐果与收获天气跟踪',
+  '阿根廷|-34|-64|south_america|大豆_mixed_墒情修复与收获窗口跟踪,玉米_mixed_授粉与灌浆天气跟踪,小麦_mixed_播种墒情与返青节奏跟踪',
+  '秘鲁|-10|-75|south_america|铜_mixed_矿区降雨与港口发运跟踪,鱼粉/渔业_mixed_海温与捕捞窗口跟踪,农产品出口_mixed_沿海降雨与采收物流跟踪',
+  '智利|-35|-71|south_america|铜_mixed_山地降雪与水资源跟踪,水资源/冶炼链_mixed_水库水位与硫酸供应跟踪',
+  '澳洲|-25|133|oceania|小麦_mixed_秋播墒情和出苗进度跟踪,菜籽_mixed_降雨恢复和开花结荚跟踪',
+  '美国中西部|41|-93|north_america|玉米_mixed_春播窗口与土壤湿度跟踪,大豆_mixed_土壤水分与强对流跟踪,小麦_mixed_冬麦返青和灌浆跟踪',
+  '加拿大|56|-106|north_america|菜籽_mixed_草原三省墒情和春播窗口跟踪,小麦_mixed_春播进度与灌浆天气跟踪,豌豆/扁豆_mixed_播种水分与花期天气跟踪',
+  '欧洲|48|15|europe|小麦_mixed_冬麦返青和灌浆跟踪,菜籽_mixed_开花结荚和含油率跟踪',
+  '乌克兰|49|31|europe|小麦_mixed_黑海返青和收割天气跟踪,玉米_mixed_春播墒情和出口节奏跟踪',
+  '俄罗斯|60|90|europe|小麦_mixed_南部小麦带返青与出口节奏跟踪,出口/黑海物流_mixed_装船和政策节奏跟踪'
 ];
 
 var disturbanceMap = {
-  '中国': '南北降水分化 / 生长期错配', '印尼': '降雨偏离 / 棕榈油单产滞后',
-  '马来西亚': '降雨偏离 / 库存出口验证', '泰国': '季风降雨 / 甘蔗与橡胶窗口',
-  '越南': '降雨日数 / 割胶窗口', '菲律宾': '矿区降雨 / 发运窗口',
-  '印度': '季风强弱变化', '巴西': '降雨扰动 / 物流窗口',
-  '阿根廷': '墒情修复 / 收获窗口', '秘鲁': '降雨扰动 / 矿区运输',
-  '智利': '水资源 / 矿区作业', '澳洲': '秋播墒情 / 降雨恢复',
-  '美国中西部': '春播窗口 / 强对流', '加拿大': '草原省墒情 / 播种窗口',
-  '欧洲': '冬麦墒情 / 热浪风险', '乌克兰': '黑海作业窗口 / 墒情',
-  '俄罗斯': '南部小麦带 / 春季温度'
+  '中国': '降水带摆动 / 高温热浪 / 关键生长期错配', '印尼': '降雨偏离 / 棕榈油单产滞后 / 矿区发运扰动',
+  '马来西亚': '降雨偏离 / 棕榈油单产滞后 / 库存出口节奏', '泰国': '季风降雨偏离 / 甘蔗单产 / 橡胶割胶窗口',
+  '越南': '降雨偏离 / 咖啡收获晾晒 / 橡胶割胶窗口', '菲律宾': '矿区降雨 / 台风路径 / 镍矿装船窗口',
+  '印度': '季风偏弱 / 高温热浪 / 播种窗口扰动', '巴西': '降雨时点 / 收获物流 / 甘蔗压榨窗口',
+  '阿根廷': '墒情修复 / 过量降雨 / 收获窗口', '秘鲁': '沿海强降雨 / 矿区运输 / 渔业窗口',
+  '智利': '水资源 / 山地降雪 / 铜矿作业窗口', '澳洲': '秋播墒情 / 干旱风险 / 小麦与菜籽出苗',
+  '美国中西部': '春播窗口 / 土壤湿度 / 强对流天气', '加拿大': '草原三省墒情 / 春播窗口 / 菜籽开花期天气',
+  '欧洲': '冬麦返青 / 春季干旱 / 夏季热浪', '乌克兰': '黑海作业窗口 / 战事物流 / 春播墒情',
+  '俄罗斯': '南部小麦带 / 春季温度 / 出口节奏'
 };
 
 var countriesData = rawStringData.map(str => {
@@ -1143,37 +1277,40 @@ var continentsData = [
 ];
 
 var regionBrief = {
-  '中国': { anomaly: '南北降水分化和阶段性高温需要结合主产区物候期观察。', path: '影响路径：棉花苗情、玉米播种窗口、小麦灌浆、花生水分条件。', verify: ['农业气象旬报', '作物长势', '主产区降雨距平'] },
-  '印尼': { anomaly: '降雨偏离与水分恢复速度需要持续跟踪。', path: '影响路径：棕榈开花挂果、橡胶割胶天数、镍矿发运效率。', verify: ['印尼降雨距平', '棕榈油产量', '镍矿发运'] },
-  '马来西亚': { anomaly: '主产区降雨恢复速度和单产滞后链条需要验证。', path: '影响路径：棕榈油单产、库存、出口船期和劳工采收效率。', verify: ['MPOB 产量库存', '出口船期', '马来西亚降雨'] },
-  '泰国': { anomaly: '季风降雨节奏影响甘蔗水分条件和橡胶割胶窗口。', path: '影响路径：甘蔗生长、压榨节奏、割胶天数。', verify: ['甘蔗长势', '压榨进度', '橡胶产区降雨'] },
-  '越南': { anomaly: '降雨日数变化会影响橡胶割胶节奏。', path: '影响路径：割胶天数、原料收购、出口节奏。', verify: ['产区降雨日数', '橡胶原料价差', '出口数据'] },
-  '菲律宾': { anomaly: '矿区降雨和风暴路径可能改变镍矿发运效率。', path: '影响路径：矿区作业、港口装船、到港节奏。', verify: ['矿区降雨', '镍矿发运', '港口装船'] },
-  '印度': { anomaly: '高温、季风前水分和季风推进节奏进入观察窗口。', path: '影响路径：甘蔗含糖率、棉花播种、苗情和病虫害压力。', verify: ['季风推进', '甘蔗压榨', '棉花面积'] },
-  '巴西': { anomaly: '中南部降雨扰动可能改变收获、压榨和物流窗口。', path: '影响路径：田间作业天数、港口排队、甘蔗压榨效率。', verify: ['收获进度', '港口排队', '压榨数据'] },
-  '阿根廷': { anomaly: '墒情修复与过量降雨并存，需要看收获窗口。', path: '影响路径：作物优良率、收获进度、内陆物流。', verify: ['作物优良率', '收获进度', '降雨距平'] },
-  '秘鲁': { anomaly: '降雨扰动和山地交通条件可能影响铜矿运输。', path: '影响路径：矿区作业、道路运输、港口发运。', verify: ['矿区降雨', '道路通行', '铜矿发运'] },
-  '智利': { anomaly: '水资源和高温条件需要结合铜矿作业窗口跟踪。', path: '影响路径：矿区用水、作业效率、港口发运。', verify: ['水库水位', '矿区作业', '港口发运'] },
-  '澳洲': { anomaly: '秋播前土壤墒情与后续降雨恢复速度是核心变量。', path: '影响路径：播种窗口、出苗、抽穗和灌浆阶段。', verify: ['土壤墒情', '降雨恢复', '播种进度'] },
-  '美国中西部': { anomaly: '春播窗口、土壤湿度和强对流天气并行观察。', path: '影响路径：播种进度、出苗条件、作物优良率。', verify: ['USDA 作物进度', '土壤湿度', '强对流记录'] },
-  '加拿大': { anomaly: '草原省墒情和播种窗口对菜籽、春麦更敏感。', path: '影响路径：播种进度、出苗、开花和单产形成。', verify: ['草原省墒情', '播种进度', '菜籽长势'] },
-  '欧洲': { anomaly: '冬麦墒情、春季温度和阶段性热浪风险需要跟踪。', path: '影响路径：小麦灌浆、菜籽开花结荚、品质变量。', verify: ['冬麦长势', '热浪记录', '菜籽物候'] },
-  '乌克兰': { anomaly: '黑海产区作业窗口和墒情变化影响小麦、玉米生长节奏。', path: '影响路径：春播、冬麦返青、港口和内陆物流。', verify: ['黑海墒情', '播种进度', '物流数据'] },
-  '俄罗斯': { anomaly: '南部小麦带春季温度和墒情是观察重点。', path: '影响路径：冬麦返青、灌浆、品质和出口节奏。', verify: ['南部墒情', '小麦长势', '出口节奏'] }
+  '中国': { anomaly: '厄尔尼诺对中国商品的影响，不宜简单理解为统一利多或统一利空，更关键的是异常降雨和高温是否落在作物的关键生长期。', path: '主要路径：南方关注洪涝、台风和甘蔗生长；北方关注春播墒情、授粉期高温和秋收天气；新疆关注高温、灌溉和棉花品质。', verify: ['农业气象旬报', '主产区降雨距平', '土壤墒情', '作物长势', '灾情通报', '产量预估'] },
+  '印尼': { anomaly: '印尼影响分为两条线：一是农业端，重点看棕榈油和橡胶的降雨偏离、单产恢复与割胶窗口；二是矿业端，重点看镍矿区作业、道路运输和装船效率是否受天气扰动。', path: '影响路径：降雨偏离 → 油棕单产恢复放缓 / 橡胶割胶天数变化 / 镍矿发运效率波动 → 产量、库存、出口和冶炼原料预期调整。', verify: ['印尼降雨距平', '棕榈油产量', '棕榈油出口', '橡胶出口', '镍矿发运', '镍铁产量', '港口装船'] },
+  '马来西亚': { anomaly: '马来西亚的核心变量是棕榈油。厄尔尼诺带来的少雨和高温，可能先影响油棕花芽分化和单产恢复，随后通过产量、库存和出口数据体现出来。橡胶则重点看降雨对割胶天数的影响。', path: '影响路径：降雨偏离 → 油棕单产恢复放缓 / 橡胶割胶窗口变化 → 棕榈油产量、库存、出口和橡胶供应预期调整。', verify: ['MPOB产量', 'MPOB库存', '棕榈油出口船期', '马来西亚降雨距平', '橡胶割胶天数', '橡胶出口'] },
+  '泰国': { anomaly: '泰国影响的核心不只是降雨多少，而是季风降雨是否落在甘蔗生长、成熟和橡胶割胶的关键窗口。若前期少雨、后期集中降雨，可能同时扰动甘蔗单产、压榨节奏和橡胶割胶效率。', path: '影响路径：季风降雨偏离 → 甘蔗生长和糖分积累受扰 / 橡胶割胶天数变化 → 产量、出口和库存预期调整。', verify: ['泰国降雨距平', '甘蔗入榨量', '糖产量', '糖出口', '橡胶割胶天数', '橡胶出口'] },
+  '越南': { anomaly: '越南影响不应只看橡胶。对大宗商品而言，咖啡是更核心的天气敏感品种。干旱会影响咖啡树开花和果实发育，强降雨则可能扰动采摘、晾晒和交付节奏；橡胶则重点看雨季对割胶天数的影响。', path: '影响路径：降雨偏离 → 咖啡开花、成熟、采摘和晾晒节奏变化 / 橡胶割胶天数变化 / 稻米产区水分条件变化 → 产量、出口和交付预期调整。', verify: ['越南中部高原降雨', '咖啡收获进度', '咖啡出口', '橡胶割胶天数', '橡胶出口', '稻米出口'] },
+  '菲律宾': { anomaly: '菲律宾影响的核心在镍矿供应链，而不是农产品。降雨和台风可能影响矿区开采、矿石含水量、道路运输和港口装船效率，最终反映到镍矿发运、中国到港和港口库存变化上。', path: '影响路径：矿区降雨 / 台风扰动 → 露天矿作业、运输和装船效率变化 → 镍矿发运、到港和库存预期调整。', verify: ['菲律宾矿区降雨', '台风路径', '镍矿发运', '港口装船', '中国镍矿到港', '中国港口镍矿库存'] },
+  '印度': { anomaly: '印度商品影响的关键在西南季风，若季风推进偏慢、降雨不足或高温持续，可能影响甘蔗、棉花、稻米和油籽作物的播种、生长与单产预期。', path: '主要路径：弱季风 → 土壤墒情和水库蓄水下降 → 播种进度受扰 → 农产品产量与出口政策预期变化。', verify: ['季风推进', '降雨距平', '水库蓄水', '播种面积', '作物长势', '糖出口政策', '食用油进口预期'] },
+  '巴西': { anomaly: '巴西影响不能只看降雨增多或减少，更要看降雨落在哪个产区、哪个作物阶段。中西部大豆收获、二茬玉米播种，中南部甘蔗压榨，以及东南部咖啡收获，是最需要验证的窗口。', path: '影响路径：降雨时点变化 → 大豆收获和物流节奏变化 / 二茬玉米播种窗口变化 / 甘蔗压榨效率变化 / 咖啡品质变化 → 出口、库存和产量预期调整。', verify: ['巴西降雨距平', '大豆收获进度', '二茬玉米播种进度', '港口排队', '甘蔗压榨数据', '咖啡收获进度'] },
+  '阿根廷': { anomaly: '阿根廷的厄尔尼诺交易逻辑，与东南亚干旱逻辑不同。适度降雨有利于修复潘帕斯产区墒情，改善大豆、玉米单产预期；但若收获期降雨过多，则可能扰动收割进度、品质和内陆物流。', path: '影响路径：降雨改善 → 墒情修复和作物优良率回升；过量降雨 → 收获、烘干和内陆物流受扰 → 产量与出口节奏调整。', verify: ['阿根廷降雨距平', '作物优良率', '大豆收获进度', '玉米收获进度', '罗萨里奥谷物交易所预估', '出口装船'] },
+  '秘鲁': { anomaly: '秘鲁影响分为三条线：沿海强降雨影响农产品采收和物流；海温异常影响鳀鱼资源与鱼粉供应；山区降雨和道路条件影响铜矿运输与港口发运。', path: '影响路径：沿海降雨/海温异常 → 农产品采收、渔业窗口和矿区运输变化 → 出口、港口发运和供应预期调整。', verify: ['秘鲁沿海降雨', 'ENFEN预警', '鳀鱼捕捞配额', '鱼粉出口', '铜矿发运', '道路通行', '港口装船'] },
+  '智利': { anomaly: '智利影响的核心在铜矿供应链。厄尔尼诺可能通过降雨、山地降雪和水资源变化影响矿区作业窗口，但对铜价的传导还要结合矿山品位、检修、港口发运和硫酸等冶炼原料供应。', path: '影响路径：降雨/降雪变化 → 水资源、道路通行和矿区作业效率变化 → 铜矿产量、港口发运和精铜供应预期调整。', verify: ['智利矿区降雨', '安第斯降雪', '水库水位', '矿山产量', '港口发运', '硫酸供应'] },
+  '澳洲': { anomaly: '澳洲影响的核心在秋播窗口。若关键产区降雨不足、土壤墒情偏低，可能影响小麦和菜籽播种进度、出苗质量和后续单产预期；若后续降雨及时恢复，则需观察作物能否修复前期墒情压力。', path: '影响路径：降雨不足 → 土壤墒情偏低 → 秋播和出苗受扰 → 小麦、菜籽产量预期调整。', verify: ['澳洲主产区降雨', '土壤墒情', '播种进度', '出苗率', '小麦产量预估', '菜籽产量预估'] },
+  '美国中西部': { anomaly: '美国中西部重点看春播窗口、土壤湿度和强对流天气。ENSO对北美夏季影响不如冬季稳定，因此需要用USDA作物进度、优良率和土壤水分实况持续验证，而不是直接按厄尔尼诺给出方向判断。', path: '影响路径：土壤湿度变化 / 强对流天气 → 春播进度、出苗条件和作物优良率变化 → 玉米、大豆单产预期调整。', verify: ['USDA作物进度', 'USDA作物优良率', '土壤湿度', '强对流记录', '降雨距平', '玉米授粉期天气', '大豆结荚期天气'] },
+  '加拿大': { anomaly: '加拿大重点看草原三省的土壤水分和春播窗口。若春季墒情不足、后续降雨恢复偏慢，可能扰动菜籽、小麦出苗和单产形成；若7—8月开花、灌浆期遭遇高温干旱，作物品质和出口供应预期也会受到关注。', path: '影响路径：草原三省墒情变化 → 春播和出苗条件变化 → 菜籽开花、小麦灌浆和单产形成 → 产量、品质和出口供应预期调整。', verify: ['草原三省墒情', '播种进度', '作物长势', '菜籽开花期天气', '小麦灌浆期天气', '加拿大出口装船'] },
+  '欧洲': { anomaly: '欧洲影响的核心在“物候期是否撞上异常天气”。冬小麦返青、拔节和灌浆期若遇到干旱或热浪，可能影响单产和品质；菜籽开花结荚期若水分不足，则需关注结荚率和含油率变化。', path: '影响路径：春季干旱 / 夏季热浪 → 小麦灌浆和品质变化、菜籽开花结荚受扰 → 欧盟谷物与油籽产量预期调整。', verify: ['法国小麦长势', '欧盟作物监测', '热浪记录', '土壤墒情', '菜籽物候', '收割进度'] },
+  '乌克兰': { anomaly: '乌克兰影响不能只看天气，还要把黑海出口和内陆物流纳入观察。若春播墒情不足、收割期降雨偏多，可能影响小麦和玉米产量与品质；若叠加港口、铁路或黑海通道扰动，则对出口节奏的影响会被放大。', path: '影响路径：墒情变化 / 收割天气 → 小麦、玉米产量和品质变化 → 黑海港口、铁路与出口节奏验证。', verify: ['乌克兰墒情', '播种进度', '作物长势', '黑海港口装船', '铁路物流', '出口数据'] },
+  '俄罗斯': { anomaly: '俄罗斯重点看南部小麦带。春季温度影响冬麦返青和拔节，后续干旱或热浪可能影响灌浆、单产和品质；但对市场定价而言，出口报价、装船节奏和政策变化同样关键。', path: '影响路径：春季温度 / 干旱热浪 → 冬麦返青、灌浆和品质变化 → 产量预估、出口报价和装船节奏调整。', verify: ['南部产区墒情', '小麦长势', '干旱监测', '出口报价', '黑海装船', '出口政策'] }
 };
 
 
-      var weatherException = {
-        '印尼': { area: '东南亚', crops: '棕榈油、橡胶', detail: '降雨偏离与水分恢复速度是核心变量；影响路径为开花、挂果、割胶天数，需验证产量、库存和出口节奏。' },
-        '马来西亚': { area: '东南亚', crops: '棕榈油、橡胶', detail: '降雨偏离与水分恢复速度是核心变量；影响路径为开花、挂果、割胶天数，需验证产量、库存和出口节奏。' },
-        '泰国': { area: '东南亚', crops: '棕榈油、橡胶', detail: '降雨偏离与水分恢复速度是核心变量；影响路径为开花、挂果、割胶天数，需验证产量、库存和出口节奏。' },
-        '越南': { area: '东南亚', crops: '棕榈油、橡胶', detail: '降雨偏离与水分恢复速度是核心变量；影响路径为开花、挂果、割胶天数，需验证产量、库存和出口节奏。' },
-        '菲律宾': { area: '东南亚', crops: '棕榈油、橡胶', detail: '降雨偏离与水分恢复速度是核心变量；影响路径为开花、挂果、割胶天数，需验证产量、库存和出口节奏。' },
-        '印度': { area: '印度', crops: '白糖、棉花', detail: '高温与季风前土壤水分进入观察窗口；需验证降雨推进、播种节奏、甘蔗压榨和棉花种植面积。' },
-        '巴西': { area: '巴西', crops: '大豆、玉米、白糖', detail: '中南部降雨扰动影响收获、物流和甘蔗压榨；需验证港口排队、田间作业天数和压榨进度。' },
-        '阿根廷': { area: '阿根廷', crops: '大豆、玉米', detail: '偏湿背景可能改善墒情，但过量降雨会改变收获窗口；需验证作物优良率和收获进度。' },
-        '澳洲': { area: '澳洲', crops: '小麦、菜籽', detail: '秋播前墒情与后续降雨是主要验证项；历史上干旱年份对播种和灌浆阶段更敏感。' },
-        '美国中西部': { area: '美国中西部', crops: '玉米、大豆', detail: '春播窗口、土壤湿度和强对流天气同步跟踪；需验证 USDA 作物进度与优良率。' }
+var weatherException = {
+        '印尼': { area: '东南亚', crops: '棕榈油、橡胶、镍', detail: '农业端看棕榈油和橡胶的降雨偏离、单产恢复与割胶窗口；矿业端看镍矿区作业、道路运输和装船效率是否受天气扰动。' },
+        '马来西亚': { area: '东南亚', crops: '棕榈油、橡胶', detail: '棕榈油少雨和高温会先影响油棕花芽分化和单产恢复，橡胶则重点看降雨对割胶天数的影响。' },
+        '泰国': { area: '东南亚', crops: '白糖、橡胶', detail: '季风降雨是否落在甘蔗生长、成熟和橡胶割胶的关键窗口，决定单产、压榨节奏和割胶效率。' },
+        '越南': { area: '东南亚', crops: '咖啡、橡胶、稻米', detail: '中部高原关注干旱、强降雨和晾晒条件，异常天气可能影响咖啡产量与交付节奏；橡胶则重点看雨季对割胶天数的影响。' },
+        '菲律宾': { area: '东南亚', crops: '镍矿、航运', detail: '降雨和台风可能影响矿区开采、道路运输和港口装船效率，最终反映到镍矿发运、中国到港和港口库存变化上。' },
+        '印度': { area: '印度', crops: '白糖、棉花、稻米、油籽', detail: '西南季风推进、土壤墒情和水库蓄水是核心变量；需验证播种面积、作物长势、糖出口政策与食用油进口预期。' },
+        '巴西': { area: '巴西', crops: '大豆、玉米、白糖、咖啡', detail: '中西部大豆收获、二茬玉米播种、中南部甘蔗压榨和东南部咖啡收获，都是需要验证的关键窗口。' },
+        '阿根廷': { area: '阿根廷', crops: '大豆、玉米、小麦', detail: '适度降雨有利于修复潘帕斯产区墒情，但收获期过量降雨会扰动收割进度、品质和内陆物流。' },
+        '秘鲁': { area: '秘鲁', crops: '铜、鱼粉/渔业、农产品出口', detail: '沿海强降雨、海温异常和山区道路条件共同影响采收、渔业窗口、矿区运输与港口发运。' },
+        '智利': { area: '智利', crops: '铜、水资源/冶炼链', detail: '铜矿供应链更关注降雨、山地降雪和水资源变化，以及矿山运行、港口发运和硫酸供应。' },
+        '澳洲': { area: '澳洲', crops: '小麦、菜籽', detail: '秋播窗口若遇到降雨不足和土壤墒情偏低，可能影响播种进度、出苗质量和后续单产预期。' },
+        '美国中西部': { area: '美国中西部', crops: '玉米、大豆、小麦', detail: '春播窗口、土壤湿度和强对流天气决定了播种进度、出苗条件和作物优良率。' },
+        '加拿大': { area: '加拿大', crops: '菜籽、小麦、豌豆/扁豆', detail: '草原三省墒情和春播窗口对菜籽、小麦和豌豆/扁豆的出苗和单产形成更敏感。' }
       };
 
       // Utils
@@ -1275,32 +1412,38 @@ var regionBrief = {
       };
 
       // News Tabs Logic
+      const tabBtnLive = $('tab-btn-live');
       const tabBtnNews = $('tab-btn-news');
-      const tabBtnReports = $('tab-btn-reports');
+      const tabContentLive = $('tab-content-live');
       const tabContentNews = $('tab-content-news');
-      const tabContentReports = $('tab-content-reports');
 
-      tabBtnNews.onclick = () => {
-          // Update buttons
-          tabBtnNews.className = "pb-1.5 transition-all text-[15px] sm:text-lg font-bold border-b-2 text-[var(--text-gold)] border-[var(--text-gold)]";
-          tabBtnReports.className = "pb-1.5 transition-all text-[15px] sm:text-lg font-bold border-b-2 text-gray-400 hover:text-gray-200 border-transparent";
-          // Update content
-          tabContentNews.classList.remove('hidden');
-          tabContentNews.classList.add('flex');
-          tabContentReports.classList.add('hidden');
-          tabContentReports.classList.remove('flex');
+      const setNewsTab = (tabName) => {
+          const buttons = [
+              { btn: tabBtnLive, name: 'live' },
+              { btn: tabBtnNews, name: 'news' },
+          ];
+          const panels = [
+              { panel: tabContentLive, name: 'live' },
+              { panel: tabContentNews, name: 'news' },
+          ];
+          buttons.forEach(({ btn, name }) => {
+              if (!btn) return;
+              const active = name === tabName;
+              btn.className = active
+                  ? "pb-1.5 transition-all text-[15px] sm:text-lg font-bold border-b-2 text-[var(--text-gold)] border-[var(--text-gold)]"
+                  : "pb-1.5 transition-all text-[15px] sm:text-lg font-bold border-b-2 text-gray-400 hover:text-gray-200 border-transparent";
+          });
+          panels.forEach(({ panel, name }) => {
+              if (!panel) return;
+              const active = name === tabName;
+              panel.classList.toggle('hidden', !active);
+              panel.classList.toggle('flex', active);
+          });
       };
 
-      tabBtnReports.onclick = () => {
-          // Update buttons
-          tabBtnReports.className = "pb-1.5 transition-all text-[15px] sm:text-lg font-bold border-b-2 text-[var(--text-gold)] border-[var(--text-gold)]";
-          tabBtnNews.className = "pb-1.5 transition-all text-[15px] sm:text-lg font-bold border-b-2 text-gray-400 hover:text-gray-200 border-transparent";
-          // Update content
-          tabContentReports.classList.remove('hidden');
-          tabContentReports.classList.add('flex');
-          tabContentNews.classList.add('hidden');
-          tabContentNews.classList.remove('flex');
-      };
+      tabBtnLive.onclick = () => setNewsTab('live');
+      tabBtnNews.onclick = () => setNewsTab('news');
+      setNewsTab('live');
 
       // Heat Zone Tabs
       const heatZoneTabButtons = Array.from(document.querySelectorAll('[data-heat-tab]'));
@@ -1341,11 +1484,9 @@ var regionBrief = {
       };
 
       // Globe.gl Init
-      let globeActive = false;
       let viewLevel = 'CONTINENT';
       const mountMap = $('earth-mount');
       const box = $('globe-interactive-box');
-      const overlay = $('globe-overlay');
       const backBtn = $('back-btn');
 
       const globe = Globe()(mountMap)
@@ -1357,29 +1498,85 @@ var regionBrief = {
       globe.controls().enableZoom = false;
 
       function setGlobeActive(active) {
-          globeActive = active;
           box.classList.toggle('is-active', active);
-          overlay.classList.toggle('opacity-100', !active);
-          overlay.classList.toggle('opacity-0', active);
-          overlay.classList.add('pointer-events-none');
-          mountMap.style.pointerEvents = active ? 'auto' : 'none';
+          mountMap.style.pointerEvents = 'auto';
           globe.controls().autoRotate = false;
       }
+      const enterContinent = (continent) => {
+          const target = continentsData.find(c => c.id === continent);
+          if (!target) return;
+          viewLevel = 'COUNTRY';
+          box.classList.add('is-country-view');
+          globe.pointOfView({ lat: target.lat, lng: target.lng, altitude: target.alt }, 800);
+          setTimeout(() => {
+              renderMarkers('COUNTRY', target.id);
+              backBtn.classList.remove('hidden');
+          }, 380);
+      };
 
       function bindMarkerClick(el, handler) {
+          el.setAttribute('role', 'button');
+          el.tabIndex = 0;
+          el.style.pointerEvents = 'auto';
+          el.style.touchAction = 'manipulation';
+          el.style.cursor = 'pointer';
+          el.style.position = 'relative';
+          el.style.zIndex = '90';
           const stopMarkerEvent = (e) => {
               e.preventDefault();
               e.stopPropagation();
           };
-          el.addEventListener('pointerdown', stopMarkerEvent);
-          el.addEventListener('mousedown', stopMarkerEvent);
-          el.addEventListener('touchstart', stopMarkerEvent, { passive: false });
-          el.addEventListener('click', (e) => {
+          let activated = false;
+          const activate = (e) => {
+              if (activated) return;
+              activated = true;
               stopMarkerEvent(e);
               setGlobeActive(true);
               handler();
+              window.setTimeout(() => { activated = false; }, 0);
+          };
+          el.__markerActivate = activate;
+          el.addEventListener('pointerdown', stopMarkerEvent);
+          el.addEventListener('mousedown', stopMarkerEvent);
+          el.addEventListener('touchstart', stopMarkerEvent, { passive: false });
+          el.addEventListener('pointerdown', activate);
+          el.addEventListener('pointerup', activate);
+          el.addEventListener('click', activate);
+          el.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') activate(e);
           });
       }
+
+      mountMap.addEventListener('pointerup', (e) => {
+          if (e.defaultPrevented) return;
+          const targetEl = e.target instanceof Element ? e.target : null;
+          if (targetEl && targetEl.closest('.globe-marker-card')) return;
+          if (viewLevel === 'CONTINENT') {
+              const markers = Array.from(document.querySelectorAll('.globe-continent-marker'));
+              let nearest = null;
+              let nearestDistance = Infinity;
+              markers.forEach((marker) => {
+                  if (typeof marker.__markerActivate !== 'function') return;
+                  const rect = marker.getBoundingClientRect();
+                  if (rect.width === 0 || rect.height === 0) return;
+                  const centerX = rect.left + rect.width / 2;
+                  const centerY = rect.top + rect.height / 2;
+                  const distance = Math.hypot(centerX - e.clientX, centerY - e.clientY);
+                  if (distance < nearestDistance) {
+                      nearestDistance = distance;
+                      nearest = marker;
+                  }
+              });
+              if (nearest && nearestDistance < 260) {
+                  nearest.__markerActivate(e);
+                  return;
+              }
+          }
+          const topMarker = document.elementsFromPoint(e.clientX, e.clientY).find(node => node instanceof Element && node.classList.contains('globe-marker-card') && typeof node.__markerActivate === 'function');
+          if (topMarker) {
+              topMarker.__markerActivate(e);
+          }
+      }, true);
 
       function renderMarkers(level, continentId) {
           if (level === 'CONTINENT') {
@@ -1396,16 +1593,7 @@ var regionBrief = {
               el.className = 'globe-marker-card globe-continent-marker flex flex-col items-center justify-center gap-1';
               el.innerHTML = `<div class="text-[10px] tracking-[0.28em] text-gray-300 uppercase">点击进入</div>
                   <div class="text-lg sm:text-xl font-black mt-0.5" style="color: var(--text-gold); letter-spacing: 2px;">${d.name}</div>`;
-              bindMarkerClick(el, () => {
-                  viewLevel = 'COUNTRY';
-                  box.classList.add('is-country-view');
-                  globe.controls().autoRotate = false;
-                  globe.pointOfView({ lat: d.lat, lng: d.lng, altitude: d.alt }, 800);
-                  setTimeout(() => {
-                      renderMarkers('COUNTRY', d.id);
-                      backBtn.classList.remove('hidden');
-                  }, 380);
-              });
+              bindMarkerClick(el, () => enterContinent(d.id));
           } else {
               el.className = 'globe-marker-card globe-country-marker';
               const activeCount = d.impacts.length;
@@ -1413,7 +1601,6 @@ var regionBrief = {
                   <span class="country-name">${d.country}</span>
                   <span class="country-count">${activeCount}项</span>`;
               bindMarkerClick(el, () => {
-                  globe.controls().autoRotate = false;
                   globe.pointOfView({ lat: d.lat, lng: d.lng, altitude: 0.62 }, 800);
                   openImpactModal(d);
               });
@@ -1423,6 +1610,7 @@ var regionBrief = {
 
       renderMarkers('CONTINENT');
       globe.pointOfView({ lat: 20, lng: 100, altitude: 2.2 }, 0);
+      setGlobeActive(true);
 
       window.addEventListener('resize', () => {
           if (box.clientWidth > 0) {
@@ -1432,19 +1620,6 @@ var regionBrief = {
       });
       // trigger resize once after 100ms
       setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
-
-      box.onclick = (e) => {
-          if (!globeActive) {
-              e.stopPropagation();
-              setGlobeActive(true);
-          }
-      };
-
-      document.addEventListener('click', (e) => {
-          if (globeActive && !box.contains(e.target)) {
-              setGlobeActive(false);
-          }
-      });
 
       backBtn.onclick = (e) => {
           e.stopPropagation();
@@ -1460,31 +1635,889 @@ var regionBrief = {
       function openImpactModal(data) {
           $('impact-country-title').textContent = data.country;
           $('impact-disturbance').textContent = data.disturbance || '气候条件波动';
+          const statusLabel = $('impact-status-label');
+          if (statusLabel) {
+              const statusTextMap = {
+                  '中国': '夏秋关键观察期',
+                  '印度': '观察窗口：6—9月西南季风期',
+                  '巴西': '观察窗口：1—5月大豆收获与二茬玉米播种，4—11月甘蔗压榨，5—9月咖啡收获',
+                  '阿根廷': '观察窗口：10—12月播种期，1—3月灌浆期，3—6月收获期',
+                  '秘鲁': '观察窗口：12—4月沿海降雨期，全年跟踪铜矿运输和港口发运',
+                  '智利': '观察窗口：全年跟踪，重点关注南半球冬季降雪与矿区供水',
+                  '泰国': '观察窗口：5—10月季风期，11月后关注甘蔗压榨',
+                  '马来西亚': '观察窗口：全年跟踪，重点关注3—10月产量恢复期',
+                  '印尼': '观察窗口：5—10月干季，重点跟踪降雨和发运效率',
+                  '越南': '观察窗口：5—10月雨季，10月后关注咖啡收获与晾晒',
+                  '菲律宾': '观察窗口：5—10月雨季与台风季',
+                  '澳洲': '观察窗口：4—7月秋播与出苗期，8—10月关注生长和开花',
+                  '美国中西部': '观察窗口：4—6月春播与出苗期，7—8月关注授粉和结荚',
+                  '加拿大': '观察窗口：4—6月春播与出苗期，7—8月关注开花和灌浆',
+                  '欧洲': '观察窗口：3—6月返青、拔节和开花期，6—8月关注热浪与收割天气',
+                  '乌克兰': '观察窗口：3—6月春播和冬麦返青，6—9月关注收割与出口',
+                  '俄罗斯': '观察窗口：3—6月冬麦返青和拔节，6—8月关注收割与出口'
+              };
+              const statusText = statusTextMap[data.country] || '异常观察期';
+              statusLabel.innerHTML = `<i data-lucide="eye" class="w-3.5 h-3.5"></i>${statusText}`;
+              lucide.createIcons({ root: statusLabel });
+          }
           
           const cardContainer = $('impact-card-container');
           cardContainer.innerHTML = '';
-          data.impacts.forEach(imp => {
-              const div = document.createElement('div');
-              div.className = 'crop-card flex flex-col gap-3';
-              div.innerHTML = `
-                  <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)]">
-                      <div class="flex items-center gap-2">
-                          <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
-                          <span class="font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+          const twoCardCountries = new Set(['泰国', '马来西亚', '印尼', '菲律宾', '澳洲', '欧洲', '乌克兰', '俄罗斯', '智利']);
+          const threeCardCountries = new Set(['中国', '印度', '越南']);
+          cardContainer.className = twoCardCountries.has(data.country)
+              ? 'grid grid-cols-1 sm:grid-cols-2 gap-4'
+              : threeCardCountries.has(data.country)
+                  ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'
+                  : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4';
+          function renderImpactCards(items) {
+              items.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
                       </div>
-                      <span class="text-[11px] px-2 py-1 bg-white/10 rounded-md font-mono">${imp.change === 'up' ? '↗ 看涨' : imp.change === 'down' ? '↘ 看跌' : '→ 震荡'}</span>
-                  </div>
-                  <ul class="flex-1 space-y-2 text-[12px] text-gray-300 leading-relaxed list-disc pl-4 marker:text-[var(--text-gold)]">
-                      <li>${imp.text}</li>
-                  </ul>
-              `;
-              cardContainer.appendChild(div);
-          });
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          }
+          if (data.country === '中国') {
+              const chinaCards = [
+                  { item: '棉花', area: '新疆', vars: '高温、干热风、灌溉条件', path: '高温或阶段性干旱 → 影响蕾铃期与吐絮期 → 关注单产和品质变化', brief: '新疆棉区重点关注高温、灌溉和蕾铃期天气，干旱影响相对受滴灌缓冲，但品质和单产仍需跟踪。' },
+                  { item: '玉米', area: '东北、华北黄淮', vars: '春播墒情、授粉期高温、秋收降雨', path: '春播墒情不足 / 授粉期高温 → 影响出苗和结实 → 关注单产预期', brief: '东北、华北黄淮重点跟踪春播墒情、授粉期高温和秋收降雨，核心在于关键生长期是否遇到异常天气。' },
+                  { item: '小麦', area: '黄淮海、华北、西北', vars: '灌浆期高温、收获期降雨', path: '灌浆期高温 / 收获期连阴雨 → 影响千粒重、品质和收割进度', brief: '小麦重点看灌浆期高温和收获期降雨，异常天气可能影响单产、品质和收割节奏。' },
+                  { item: '白糖', area: '广西、云南', vars: '甘蔗生长期降雨、台风、榨季糖分', path: '降雨异常 / 台风扰动 → 影响甘蔗生长与糖分积累 → 关注产量和压榨节奏', brief: '甘蔗产区关注降雨、台风和糖分积累，后续影响更多体现在榨季产量与压榨节奏。' },
+                  { item: '花生', area: '山东、河南、河北、辽宁', vars: '播种期墒情、开花下针期降雨、收获期天气', path: '播种期缺墒 / 收获期降雨 → 影响出苗、单产和霉变风险', brief: '花生重点看播种墒情、开花下针期降雨和收获期天气，后期需关注单产与品质风险。' },
+                  { item: '豆粕/油脂', area: '进口传导', vars: '南美大豆、美国大豆、东南亚棕榈油', path: '海外主产区天气扰动 → 进口成本变化 → 传导至豆粕、豆油、棕榈油', brief: '国内豆粕和油脂更多受海外天气传导影响，重点跟踪南美、美豆和东南亚棕榈油产区天气。' }
+              ];
+              chinaCards.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          } else if (data.country === '印度') {
+              const indiaCards = [
+                  { item: '白糖', area: '甘蔗主产邦', vars: '季风雨、灌溉水源、糖分积累', path: '季风偏弱 / 降雨不足 → 影响甘蔗生长与糖分积累 → 关注新榨季产量预期', brief: '甘蔗主产邦关注季风雨、灌溉水源与糖分积累，弱季风可能影响新榨季甘蔗产量预期。' },
+                  { item: '棉花', area: '棉区', vars: '播种期降雨、苗情、病虫害压力', path: '播种期降雨不足 / 弱季风扰动 → 影响种植进度和苗情 → 关注单产预期', brief: '棉区关注播种期降雨、苗情和病虫害压力，弱季风可能扰动种植进度。' },
+                  { item: '稻米', area: '稻米主产区', vars: '季风推进、水库蓄水、播种面积', path: '季风推进偏慢 / 蓄水不足 → 影响播种面积与单产预期 → 关注出口政策', brief: '稻米主产区关注季风推进和水库蓄水，降雨不足可能影响播种面积与出口政策预期。' },
+                  { item: '油籽/食用油', area: '大豆、油菜籽', vars: '播种降雨、单产、进口需求', path: '油籽作物减产 / 播种受扰 → 改变食用油进口预期 → 关注进口节奏', brief: '大豆、油菜籽等油籽作物关注播种降雨与单产，弱季风可能改变印度食用油进口预期。' }
+              ];
+              indiaCards.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          } else if (data.country === '泰国') {
+              const thailandCards = [
+                  { item: '白糖', area: '泰国中部 / 东北部', vars: '季风雨、甘蔗单产、压榨节奏', path: '季风降雨影响甘蔗生长 → 关注入榨量、糖分和出口节奏', brief: '季风降雨影响甘蔗生长，后续关注甘蔗入榨量、糖分和出口节奏。' },
+                  { item: '橡胶', area: '泰国南部', vars: '降雨、割胶天数、胶乳恢复', path: '降雨偏多压缩割胶 / 干旱影响胶乳恢复 → 跟踪南部割胶窗口', brief: '降雨偏多会压缩割胶天数，干旱则影响胶乳恢复，重点跟踪南部产区割胶窗口。' }
+              ];
+              thailandCards.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          } else if (data.country === '马来西亚') {
+              const malaysiaCards = [
+                  { item: '棕榈油', area: '油棕种植带', vars: '降雨偏离、单产恢复、库存出口节奏', path: '降雨偏离可能先影响油棕花芽分化与单产恢复 → 观察产量、库存和出口', brief: '马来西亚的核心变量是棕榈油。少雨和高温可能先影响油棕花芽分化和单产恢复，随后通过产量、库存和出口数据体现。' },
+                  { item: '橡胶', area: '南部产区', vars: '降雨、割胶天数、出口节奏', path: '降雨和高温影响割胶窗口 → 观察割胶天数、胶乳恢复和出口节奏', brief: '橡胶重点看降雨对割胶天数的影响，需关注割胶窗口和出口节奏。' }
+              ];
+              malaysiaCards.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          } else if (data.country === '印尼') {
+              const indonesiaCards = [
+                  { item: '棕榈油', area: '主产区', vars: '降雨偏离、单产恢复、出口', path: '干旱可能影响油棕单产恢复 → 观察产量、库存和出口', brief: '干旱可能影响油棕单产恢复，影响通常存在滞后，需跟踪产量、库存和出口。' },
+                  { item: '橡胶', area: '主产区', vars: '降雨偏离、割胶天数、胶乳恢复', path: '降雨偏离影响割胶天数和胶乳恢复 → 关注天气与出口节奏', brief: '降雨偏离影响割胶天数和胶乳恢复，关注主产区天气与出口节奏。' },
+                  { item: '镍', area: '矿区', vars: '矿区降雨、道路运输、装船', path: '天气异常影响矿区作业和装船 → 需验证发运和冶炼端数据', brief: '降雨异常可能影响矿区作业、道路运输和装船节奏，需通过发运和冶炼端数据验证。' }
+              ];
+              indonesiaCards.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          } else if (data.country === '越南') {
+              const vietnamCards = [
+                  { item: '咖啡', area: '中部高原', vars: '干旱、强降雨、晾晒条件', path: '干旱影响开花和果实发育 / 强降雨扰动采摘与晾晒 → 关注罗布斯塔产量与交付', brief: '中部高原关注干旱、强降雨和晾晒条件，异常天气可能影响罗布斯塔产量与交付节奏。' },
+                  { item: '橡胶', area: '南部产区', vars: '降雨、割胶天数、胶乳恢复', path: '降雨偏多压缩割胶 / 干旱影响胶乳恢复 → 关注割胶窗口和出口节奏', brief: '降雨偏多压缩割胶天数，干旱则影响胶乳恢复，重点跟踪割胶窗口和出口节奏。' },
+                  { item: '稻米', area: '湄公河三角洲', vars: '降雨、灌溉、咸潮扰动', path: '降雨与咸潮扰动影响水分条件 → 关注产量与出口节奏', brief: '湄公河三角洲关注降雨、灌溉和咸潮扰动，需跟踪产量与出口节奏。' }
+              ];
+              vietnamCards.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          } else if (data.country === '菲律宾') {
+              const philippinesCards = [
+                  { item: '镍', area: '矿区', vars: '矿区降雨、道路运输、港口装船', path: '降雨和台风影响开采与运输 → 关注发运效率和港口库存', brief: '菲律宾影响的核心在镍矿供应链，而不是农产品。降雨和台风可能影响矿区开采、道路运输和港口装船效率。' },
+                  { item: '航运/装船', area: '港口', vars: '台风路径、装船窗口、到港节奏', path: '台风扰动装船窗口 / 到港节奏 → 验证中国港口库存变化', brief: '强降雨和台风路径可能扰动装船窗口和到港节奏，重点跟踪发运效率与港口库存。' }
+              ];
+              philippinesCards.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          } else if (data.country === '澳洲') {
+              const australiaCards = [
+                  { item: '小麦', area: '主产区', vars: '秋播墒情、出苗、分蘖条件', path: '降雨不足影响秋播和出苗 → 关注播种面积与单产预期', brief: '主产区关注秋播墒情、出苗和分蘖条件，若降雨恢复偏慢，可能影响播种面积和单产预期。' },
+                  { item: '菜籽', area: '主产区', vars: '播种期水分、开花期天气', path: '播种期水分和开花期天气影响出苗与结荚 → 关注降雨恢复和结荚条件', brief: '菜籽对播种期水分和开花期天气较敏感，重点跟踪降雨恢复、出苗率和后续开花结荚条件。' }
+              ];
+              australiaCards.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          } else if (data.country === '欧洲') {
+              const europeCards = [
+                  { item: '小麦', area: '法国、德国、波兰', vars: '冬麦返青、拔节、灌浆、热浪', path: '春季干旱或热浪影响单产和品质 → 关注欧盟谷物预期', brief: '法国、德国、波兰等主产区关注冬麦返青、拔节和灌浆期天气，热浪或干旱可能影响单产与品质。' },
+                  { item: '菜籽', area: '欧盟主产区', vars: '开花结荚、水分条件、含油率', path: '开花结荚期温度和水分不足 → 影响结荚率与含油率', brief: '菜籽关注开花结荚期温度和水分条件，异常高温或降雨不足可能影响结荚和含油率。' }
+              ];
+              europeCards.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          } else if (data.country === '乌克兰') {
+              const ukraineCards = [
+                  { item: '小麦', area: '黑海沿岸和中南部', vars: '返青、灌浆、收割天气、港口节奏', path: '收割天气与港口物流影响产量和出口 → 关注黑海出口节奏', brief: '黑海沿岸和中南部产区关注冬麦返青、灌浆和收割天气，产量之外还需跟踪港口与出口节奏。' },
+                  { item: '玉米', area: '春播区', vars: '春播进度、土壤墒情、秋季收割窗口', path: '墒情与收割天气影响产量和品质 → 物流和出口通道放大扰动', brief: '春播进度、土壤墒情和秋季收割窗口是关键变量，物流和出口通道会放大天气扰动。' }
+              ];
+              ukraineCards.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          } else if (data.country === '俄罗斯') {
+              const russiaCards = [
+                  { item: '小麦', area: '南部小麦带', vars: '返青、拔节、灌浆、收割天气', path: '春季温度影响返青和拔节 → 干旱热浪影响灌浆和品质', brief: '南部小麦带关注返青、拔节、灌浆和收割期天气，干旱或热浪可能影响单产和蛋白品质。' },
+                  { item: '出口/黑海物流', area: '黑海口岸', vars: '装船、出口报价、政策节奏', path: '天气影响出口节奏 / 口岸装船与报价 → 验证市场定价变化', brief: '俄罗斯是全球重要小麦出口国，天气影响需结合港口装船、出口报价和政策节奏验证。' }
+              ];
+              russiaCards.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)] gap-3">
+                          <div class="flex items-center gap-2 min-w-0">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <div class="min-w-0">
+                                  <span class="block font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                                  <span class="block text-[11px] text-gray-400 mt-0.5">${imp.area}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-[12px] leading-relaxed text-gray-300">
+                          <div class="mb-1"><span class="text-[#f7e7ce] font-bold">关注变量：</span>${imp.vars}</div>
+                          <div><span class="text-[#f7e7ce] font-bold">影响路径：</span>${imp.path}</div>
+                      </div>
+                      <p class="text-[12px] text-gray-300 leading-relaxed border-t border-white/10 pt-2">${imp.brief}</p>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          } else if (data.country === '加拿大') {
+              renderImpactCards([
+                  { item: '菜籽', area: '草原三省', vars: '春播墒情、出苗、开花期高温', path: '春播墒情不足 / 后续降雨恢复偏慢 → 影响出苗与单产形成', brief: '草原三省关注春播墒情、出苗和开花期高温，水分不足可能影响单产形成。' },
+                  { item: '小麦', area: '草原三省', vars: '播种进度、出苗条件、灌浆期天气', path: '春麦播种和灌浆期天气变化 → 影响单产与蛋白品质', brief: '春麦关注播种进度、出苗条件和灌浆期天气，干旱或高温可能影响单产与蛋白品质。' },
+                  { item: '豌豆/扁豆', area: '萨省、阿省', vars: '播种期水分、花期天气', path: '播种期缺水 / 花期异常天气 → 影响单产和出口供应', brief: '萨省、阿省关注播种期水分和花期天气，干旱可能影响单产与出口供应。' }
+              ]);
+          } else if (data.country === '美国中西部') {
+              renderImpactCards([
+                  { item: '玉米', area: '玉米带', vars: '春播进度、土壤湿度、授粉期天气', path: '春播窗口和7月授粉期天气 → 影响出苗和单产形成', brief: '玉米带关注春播进度、土壤湿度和7月授粉期天气，强对流或高温干旱可能影响出苗和单产形成。' },
+                  { item: '大豆', area: '中西部', vars: '播种窗口、土壤水分、结荚期天气', path: '播种与8月结荚鼓粒期天气时点 → 决定单产预期', brief: '大豆关注播种窗口、土壤水分和8月结荚鼓粒期天气，降雨时点比降雨总量更关键。' },
+                  { item: '小麦', area: '冬麦区 / 春麦区', vars: '返青、灌浆、收割天气', path: '返青和灌浆期天气 / 北部平原播种条件 → 影响产量和品质', brief: '冬麦区关注返青、灌浆和收割天气；春麦区关注北部平原播种和出苗条件。' }
+              ]);
+          } else if (data.country === '巴西') {
+              renderImpactCards([
+                  { item: '大豆', area: '中西部', vars: '收获期降雨、物流节奏', path: '收获期降雨过多 / 物流受阻 → 影响收割、烘干和港口排队', brief: '中西部关注收获期降雨和物流节奏，降雨过多可能扰动收割、烘干与港口排队。' },
+                  { item: '玉米', area: '中西部二茬', vars: '播种窗口、后续降雨', path: '二茬播种延后 / 后续降雨不足 → 压缩生长期并影响单产', brief: '二茬玉米关注播种窗口和后续降雨，播种延后可能压缩生长期并影响单产预期。' },
+                  { item: '白糖', area: '中南部甘蔗区', vars: '降雨、压榨节奏、糖分', path: '雨季拖延 / 压榨效率变化 → 影响入榨量和糖分兑现', brief: '中南部甘蔗区关注降雨、压榨节奏和糖分，雨季拖延可能影响入榨效率。' },
+                  { item: '咖啡', area: '东南部', vars: '开花、坐果、收获天气', path: '干旱或过量降雨 → 影响产量和品质 → 关注出口节奏', brief: '米纳斯吉拉斯、圣保罗等产区关注开花、坐果和收获天气，干旱或过量降雨都可能影响产量与品质。' }
+              ]);
+          } else if (data.country === '阿根廷') {
+              renderImpactCards([
+                  { item: '大豆', area: '潘帕斯', vars: '墒情修复、结荚鼓粒期降雨、收获天气', path: '适度降雨修复墒情 / 收获期过湿扰动作业 → 影响单产与出口节奏', brief: '潘帕斯产区关注墒情修复、结荚鼓粒期降雨和收获期天气，适度降雨有利单产修复。' },
+                  { item: '玉米', area: '早播 / 晚播', vars: '授粉、灌浆、水分、霜冻风险', path: '授粉与灌浆期天气 / 后续水分和霜冻风险 → 影响产量和品质', brief: '早播玉米关注授粉和灌浆天气，晚播玉米关注后续水分与霜冻风险。' },
+                  { item: '小麦', area: '冬小麦带', vars: '播种墒情、返青、出口节奏', path: '播种墒情改善 / 过湿影响田间作业 → 影响播种基础与出口节奏', brief: '冬小麦关注播种墒情、返青和出口节奏，降雨改善有利播种基础，但过湿会影响田间作业。' }
+              ]);
+          } else if (data.country === '智利') {
+              renderImpactCards([
+                  { item: '铜', area: '安第斯矿区', vars: '降雪、供水、道路通行', path: '降雪和供水变化 → 影响矿区作业、运输和港口发运', brief: '安第斯矿区关注降雪、供水和道路通行，异常天气可能影响矿区作业、矿石运输和港口发运。' },
+                  { item: '水资源/冶炼链', area: '矿山运行', vars: '水库水位、海水淡化、电力、硫酸供应', path: '水资源与冶炼原料变化 → 影响铜矿生产和精铜供应', brief: '铜矿生产需关注水库水位、海水淡化、电力和硫酸供应，天气扰动需结合矿山运行数据验证。' }
+              ]);
+          } else if (data.country === '秘鲁') {
+              renderImpactCards([
+                  { item: '铜', area: '矿区与港口', vars: '沿海降雨、矿区运输、道路通行', path: '矿区降雨和山地交通变化 → 影响铜矿运输与港口发运', brief: '矿区降雨和山地交通可能影响铜矿运输，重点跟踪道路通行、港口发运和矿山产量。' },
+                  { item: '鱼粉/渔业', area: '秘鲁沿海', vars: '海温、捕捞配额、开捕节奏', path: '海温异常 / 捕捞窗口变化 → 影响鳀鱼资源和鱼粉供应', brief: '海温变化可能影响秘鲁鳀鱼资源和捕鱼窗口，需关注捕捞配额、开捕节奏和鱼粉出口。' },
+                  { item: '农产品出口', area: '北部沿海', vars: '降雨、采收、物流', path: '强降雨影响采收和物流 → 影响水果出口和交付节奏', brief: '北部沿海强降雨可能扰动芒果、蓝莓、葡萄等出口水果的采收、品质和物流。' }
+              ]);
+          } else {
+              data.impacts.forEach(imp => {
+                  const div = document.createElement('div');
+                  div.className = 'crop-card flex flex-col gap-3';
+                  div.innerHTML = `
+                      <div class="flex items-center justify-between pb-2 border-b border-[rgba(255,255,255,0.08)]">
+                          <div class="flex items-center gap-2">
+                              <span class="text-[17px]">${iconMap[imp.item] || '🌱'}</span>
+                              <span class="font-bold text-[15px] tracking-widest text-[#f0f0f0]">${imp.item}</span>
+                          </div>
+                      </div>
+                      <ul class="flex-1 space-y-2 text-[12px] text-gray-300 leading-relaxed list-disc pl-4 marker:text-[var(--text-gold)]">
+                          <li>${imp.text}</li>
+                      </ul>
+                  `;
+                  cardContainer.appendChild(div);
+              });
+          }
 
           const analysisBox = $('impact-analysis-box');
           const briefInfo = regionBrief[data.country];
           const exceptionInfo = weatherException[data.country];
-          if (briefInfo || exceptionInfo) {
+          const renderAnalysisPanel = (title, anomaly, path, verify) => {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">${title}</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">异常核查</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">${anomaly}</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">影响路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">${path}</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${verify.map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          };
+          if (data.country === '中国') {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">气候影响梳理</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">核心结论</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">厄尔尼诺对中国商品的影响，不宜简单理解为统一利多或统一利空。更关键的是：异常降雨和高温是否落在作物的关键生长期。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">主要路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">南方关注洪涝、台风和甘蔗生长；北方关注春播墒情、授粉期高温和秋收天气；新疆关注高温、灌溉和棉花品质。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['农业气象旬报', '主产区降雨距平', '土壤墒情', '作物长势', '灾情通报', '产量预估'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          } else if (data.country === '印度') {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">气候影响梳理</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">核心结论</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">印度商品影响的关键在西南季风。若季风推进偏慢、降雨不足或高温持续，可能影响甘蔗、棉花、稻米和油籽作物的播种、生长与单产预期。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">主要路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">弱季风 → 土壤墒情和水库蓄水下降 → 播种进度受扰 → 农产品产量与出口政策预期变化。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">重点品种</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['白糖', '棉花', '稻米', '油籽/食用油'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="badge-check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['季风推进', '降雨距平', '水库蓄水', '播种面积', '作物长势', '糖出口政策', '食用油进口预期'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          } else if (data.country === '泰国') {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">气候影响梳理</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">异常核查</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">泰国影响的核心不只是降雨多少，而是季风降雨是否落在甘蔗生长、成熟和橡胶割胶的关键窗口。若前期少雨、后期集中降雨，可能同时扰动甘蔗单产、压榨节奏和橡胶割胶效率。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">影响路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">季风降雨偏离 → 甘蔗生长和糖分积累受扰 / 橡胶割胶天数变化 → 产量、出口和库存预期调整。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['泰国降雨距平', '甘蔗入榨量', '糖产量', '糖出口', '橡胶割胶天数', '橡胶出口'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          } else if (data.country === '马来西亚') {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">气候影响梳理</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">异常核查</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">马来西亚的核心变量是棕榈油。厄尔尼诺带来的少雨和高温，可能先影响油棕花芽分化和单产恢复，随后通过产量、库存和出口数据体现出来。橡胶则重点看降雨对割胶天数的影响。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">影响路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">降雨偏离 → 油棕单产恢复放缓 / 橡胶割胶窗口变化 → 棕榈油产量、库存、出口和橡胶供应预期调整。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['MPOB产量', 'MPOB库存', '棕榈油出口船期', '马来西亚降雨距平', '橡胶割胶天数', '橡胶出口'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          } else if (data.country === '印尼') {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">气候影响梳理</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">异常核查</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">印尼影响分为两条线：一是农业端，重点看棕榈油和橡胶的降雨偏离、单产恢复与割胶窗口；二是矿业端，重点看镍矿区作业、道路运输和装船效率是否受天气扰动。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">影响路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">降雨偏离 → 油棕单产恢复放缓 / 橡胶割胶天数变化 / 镍矿发运效率波动 → 产量、库存、出口和冶炼原料预期调整。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['印尼降雨距平', '棕榈油产量', '棕榈油出口', '橡胶出口', '镍矿发运', '镍铁产量', '港口装船'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          } else if (data.country === '越南') {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">气候影响梳理</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">异常核查</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">越南影响不应只看橡胶。对大宗商品而言，咖啡是更核心的天气敏感品种。干旱会影响咖啡树开花和果实发育，强降雨则可能扰动采摘、晾晒和交付节奏；橡胶则重点看雨季对割胶天数的影响。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">影响路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">降雨偏离 → 咖啡开花、成熟、采摘和晾晒节奏变化 / 橡胶割胶天数变化 / 稻米产区水分条件变化 → 产量、出口和交付预期调整。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['越南中部高原降雨', '咖啡收获进度', '咖啡出口', '橡胶割胶天数', '橡胶出口', '稻米出口'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          } else if (data.country === '菲律宾') {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">气候影响梳理</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">异常核查</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">菲律宾影响的核心在镍矿供应链，而不是农产品。降雨和台风可能影响矿区开采、矿石含水量、道路运输和港口装船效率，最终反映到镍矿发运、中国到港和港口库存变化上。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">影响路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">矿区降雨 / 台风扰动 → 露天矿作业、运输和装船效率变化 → 镍矿发运、到港和库存预期调整。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['菲律宾矿区降雨', '台风路径', '镍矿发运', '港口装船', '中国镍矿到港', '中国港口镍矿库存'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          } else if (data.country === '澳洲') {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">气候影响梳理</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">异常核查</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">澳洲影响的核心在秋播窗口。若关键产区降雨不足、土壤墒情偏低，可能影响小麦和菜籽播种进度、出苗质量和后续单产预期；若后续降雨及时恢复，则需观察作物能否修复前期墒情压力。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">影响路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">降雨不足 → 土壤墒情偏低 → 秋播和出苗受扰 → 小麦、菜籽产量预期调整。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['澳洲主产区降雨', '土壤墒情', '播种进度', '出苗率', '小麦产量预估', '菜籽产量预估'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          } else if (data.country === '欧洲') {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">气候影响梳理</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">异常核查</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">欧洲影响的核心在“物候期是否撞上异常天气”。冬小麦返青、拔节和灌浆期若遇到干旱或热浪，可能影响单产和品质；菜籽开花结荚期若水分不足，则需关注结荚率和含油率变化。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">影响路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">春季干旱 / 夏季热浪 → 小麦灌浆和品质变化、菜籽开花结荚受扰 → 欧盟谷物与油籽产量预期调整。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['法国小麦长势', '欧盟作物监测', '热浪记录', '土壤墒情', '菜籽物候', '收割进度'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          } else if (data.country === '乌克兰') {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">气候影响梳理</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">异常核查</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">乌克兰影响不能只看天气，还要把黑海出口和内陆物流纳入观察。若春播墒情不足、收割期降雨偏多，可能影响小麦和玉米产量与品质；若叠加港口、铁路或黑海通道扰动，则对出口节奏的影响会被放大。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">影响路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">墒情变化 / 收割天气 → 小麦、玉米产量和品质变化 → 黑海港口、铁路与出口节奏验证。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['乌克兰墒情', '播种进度', '作物长势', '黑海港口装船', '铁路物流', '出口数据'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          } else if (data.country === '俄罗斯') {
+              analysisBox.innerHTML = `
+                  <div class="flex items-center gap-2 mb-4">
+                      <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] flex items-center justify-center">
+                          <i data-lucide="activity" class="w-4 h-4 text-[var(--text-gold)]"></i>
+                      </div>
+                      <h4 class="text-[16px] font-bold text-white tracking-wider">气候影响梳理</h4>
+                  </div>
+                  <div class="brief-content flex flex-col gap-4">
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="sun-medium" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">异常核查</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">俄罗斯重点看南部小麦带。春季温度影响冬麦返青和拔节，后续干旱或热浪可能影响灌浆、单产和品质；但对市场定价而言，出口报价、装船节奏和政策变化同样关键。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="cloud-sun" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">影响路径</span>
+                          </div>
+                          <p class="text-[12px] text-gray-300 leading-relaxed">春季温度 / 干旱热浪 → 冬麦返青、灌浆和品质变化 → 产量预估、出口报价和装船节奏调整。</p>
+                      </div>
+                      <div class="p-3 bg-white/5 border border-white/10 rounded-xl">
+                          <div class="flex items-center gap-2 mb-2">
+                              <i data-lucide="check" class="w-4 h-4 text-sky-400"></i>
+                              <span class="text-[13px] font-bold text-white">验证指标</span>
+                          </div>
+                          <div class="flex flex-wrap gap-2">
+                              ${['南部产区墒情', '小麦长势', '干旱监测', '出口报价', '黑海装船', '出口政策'].map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
+                          </div>
+                      </div>
+                  </div>
+              `;
+              lucide.createIcons({ root: analysisBox });
+          } else if (data.country === '加拿大') {
+              renderAnalysisPanel(
+                  '气候影响梳理',
+                  '加拿大重点看草原三省的土壤水分和春播窗口。若春季墒情不足、后续降雨恢复偏慢，可能扰动菜籽、小麦出苗和单产形成；若7—8月开花、灌浆期遭遇高温干旱，作物品质和出口供应预期也会受到关注。',
+                  '草原三省墒情变化 → 春播和出苗条件变化 → 菜籽开花、小麦灌浆和单产形成 → 产量、品质和出口供应预期调整。',
+                  ['草原三省墒情', '播种进度', '作物长势', '菜籽开花期天气', '小麦灌浆期天气', '加拿大出口装船']
+              );
+          } else if (data.country === '美国中西部') {
+              renderAnalysisPanel(
+                  '气候影响梳理',
+                  '美国中西部重点看春播窗口、土壤湿度和强对流天气。ENSO对北美夏季影响不如冬季稳定，因此需要用USDA作物进度、优良率和土壤水分实况持续验证，而不是直接按厄尔尼诺给出方向判断。',
+                  '土壤湿度变化 / 强对流天气 → 春播进度、出苗条件和作物优良率变化 → 玉米、大豆单产预期调整。',
+                  ['USDA作物进度', 'USDA作物优良率', '土壤湿度', '强对流记录', '降雨距平', '玉米授粉期天气', '大豆结荚期天气']
+              );
+          } else if (data.country === '巴西') {
+              renderAnalysisPanel(
+                  '气候影响梳理',
+                  '巴西影响不能只看降雨增多或减少，更要看降雨落在哪个产区、哪个作物阶段。中西部大豆收获、二茬玉米播种，中南部甘蔗压榨，以及东南部咖啡收获，是最需要验证的窗口。',
+                  '降雨时点变化 → 大豆收获和物流节奏变化 / 二茬玉米播种窗口变化 / 甘蔗压榨效率变化 / 咖啡品质变化 → 出口、库存和产量预期调整。',
+                  ['巴西降雨距平', '大豆收获进度', '二茬玉米播种进度', '港口排队', '甘蔗压榨数据', '咖啡收获进度']
+              );
+          } else if (data.country === '阿根廷') {
+              renderAnalysisPanel(
+                  '气候影响梳理',
+                  '阿根廷的厄尔尼诺交易逻辑，与东南亚干旱逻辑不同。适度降雨有利于修复潘帕斯产区墒情，改善大豆、玉米单产预期；但若收获期降雨过多，则可能扰动收割进度、品质和内陆物流。',
+                  '降雨改善 → 墒情修复和作物优良率回升；过量降雨 → 收获、烘干和内陆物流受扰 → 产量与出口节奏调整。',
+                  ['阿根廷降雨距平', '作物优良率', '大豆收获进度', '玉米收获进度', '罗萨里奥谷物交易所预估', '出口装船']
+              );
+          } else if (data.country === '智利') {
+              renderAnalysisPanel(
+                  '气候影响梳理',
+                  '智利影响的核心在铜矿供应链。厄尔尼诺可能通过降雨、山地降雪和水资源变化影响矿区作业窗口，但对铜价的传导还要结合矿山品位、检修、港口发运和硫酸等冶炼原料供应。',
+                  '降雨/降雪变化 → 水资源、道路通行和矿区作业效率变化 → 铜矿产量、港口发运和精铜供应预期调整。',
+                  ['智利矿区降雨', '安第斯降雪', '水库水位', '矿山产量', '港口发运', '硫酸供应']
+              );
+          } else if (data.country === '秘鲁') {
+              renderAnalysisPanel(
+                  '气候影响梳理',
+                  '秘鲁影响分为三条线：沿海强降雨影响农产品采收和物流；海温异常影响鳀鱼资源与鱼粉供应；山区降雨和道路条件影响铜矿运输与港口发运。',
+                  '沿海降雨/海温异常 → 农产品采收、渔业窗口和矿区运输变化 → 出口、港口发运和供应预期调整。',
+                  ['秘鲁沿海降雨', 'ENFEN预警', '鳀鱼捕捞配额', '鱼粉出口', '铜矿发运', '道路通行', '港口装船']
+              );
+          } else if (briefInfo || exceptionInfo) {
               const p = analysisBox.querySelector('.brief-content');
               if (p) p.remove();
               const textDiv = document.createElement('div');
@@ -1507,8 +2540,8 @@ var regionBrief = {
               if (briefInfo) {
                   innerHTML += `
                   <div class="space-y-3">
-                      <p class="text-[13px] text-gray-300 leading-relaxed"><span class="text-[#f7e7ce] font-bold">异常研判：</span>${briefInfo.anomaly}</p>
-                      <p class="text-[13px] text-gray-300 leading-relaxed"><span class="text-[#f7e7ce] font-bold">影响路径：</span>${briefInfo.path}</p>
+                      <p class="text-[13px] text-gray-300 leading-relaxed"><span class="text-[#f7e7ce] font-bold">异常核查：</span>${briefInfo.anomaly}</p>
+                      <p class="text-[13px] text-gray-300 leading-relaxed">${briefInfo.path}</p>
                       <p class="text-[13px] text-gray-300 leading-relaxed flex flex-wrap gap-2 items-center"><span class="text-[#f7e7ce] font-bold">验证指标：</span>
                           ${briefInfo.verify.map(v => `<span class="bg-[#d4af37]/20 border border-[var(--text-gold)]/40 px-2 py-0.5 rounded text-[11px] text-[var(--text-gold)]">${v}</span>`).join('')}
                       </p>
