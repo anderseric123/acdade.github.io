@@ -420,6 +420,7 @@ html.light-mode .heat-zone-crop-card .crop-chip.red { color: #b91c1c; border-col
 
 #earth-mount { width: 100%; height: 100%; cursor: grab; touch-action: none; }
 #earth-mount:active { cursor: grabbing; }
+#globe-interactive-box, #globe-interactive-box canvas, #earth-mount canvas { touch-action: none; overscroll-behavior: contain; }
 
 .globe-marker-card {
   background: rgba(12, 16, 24, 0.84); backdrop-filter: blur(10px);
@@ -429,6 +430,7 @@ html.light-mode .heat-zone-crop-card .crop-chip.red { color: #b91c1c; border-col
   transition: opacity 0.35s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer; opacity: 1; min-width: 140px; max-width: 280px; position: relative; z-index: 80;
 }
+.globe-marker-card, .globe-marker-card * { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 .globe-continent-marker { min-width: 138px; padding: 12px 18px; text-align: center; }
 .globe-country-marker { min-width: 0; padding: 7px 9px; border-radius: 999px; background: rgba(10, 14, 22, 0.78); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; max-width: 132px; }
 .globe-country-marker .country-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--text-gold); box-shadow: 0 0 12px rgba(212, 175, 55, 0.75); flex-shrink: 0; }
@@ -473,8 +475,8 @@ html.light-mode .heat-zone-crop-card .crop-chip.red { color: #b91c1c; border-col
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.7); }
 
 .monitor-grid { display: block; }
-.globe-stage { min-height: 560px; max-height: 680px; }
-#globe-interactive-box { height: clamp(420px, 54dvh, 620px) !important; min-height: 0 !important; }
+.globe-stage { min-height: 620px; max-height: 760px; }
+#globe-interactive-box { height: clamp(470px, 58dvh, 700px) !important; min-height: 0 !important; }
 #globe-interactive-box.is-country-view #globe-heat-zone { opacity: 0; pointer-events: none; transform: translateY(-6px); }
 .monitor-cell { min-height: 82px; border-radius: 16px; padding: 12px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025)); border: 1px solid rgba(255, 255, 255, 0.075); position: relative; overflow: hidden; }
 .monitor-cell::after { content: ""; position: absolute; inset: auto -20% -55% 35%; height: 70px; background: radial-gradient(circle, rgba(212, 175, 55, 0.18), transparent 68%); pointer-events: none; }
@@ -690,8 +692,8 @@ html.light-mode .enso-season.is-active .enso-bar::after { color: #0f172a !import
   .monitor-summary-grid { grid-template-columns: 1fr; }
   .commodity-board { grid-template-columns: 1fr; }
   .source-row, .weather-region, .rule-item { grid-template-columns: 1fr; }
-  .globe-stage { min-height: 470px; max-height: none; }
-  #globe-interactive-box { height: 430px !important; }
+  .globe-stage { min-height: 520px; max-height: none; }
+  #globe-interactive-box { height: 470px !important; }
 }
 
 @media (max-width: 640px) {
@@ -707,7 +709,7 @@ html.light-mode .enso-season.is-active .enso-bar::after { color: #0f172a !import
   #part1-globe > header { padding-top: 0.95rem; padding-bottom: 0.35rem; padding-left: 0.75rem; padding-right: 0.75rem; }
   #part1-globe h1 { font-size: 1.55rem; line-height: 1.08; }
   .section-chip { font-size: 10px; padding: 5px 8px; }
-  #part2-details { padding-left: 0.75rem; padding-right: 0.75rem; padding-top: 2rem; padding-bottom: 8.5rem; gap: 1.25rem; }
+  #part2-details { padding-left: 0.75rem; padding-right: 0.75rem; padding-top: 2rem; padding-bottom: 5.75rem; gap: 1.25rem; }
   .module-tag { padding: 6px 10px; font-size: 10px; letter-spacing: 0.12em; }
   .news-card { padding: 12px; border-radius: 14px; }
   .news-title { font-size: 13px; line-height: 1.5; }
@@ -726,8 +728,8 @@ html.light-mode .enso-season.is-active .enso-bar::after { color: #0f172a !import
   .globe-country-marker { min-width: 0; max-width: 108px; padding: 6px 8px; }
   .globe-country-marker .country-name { font-size: 11px; }
   .globe-country-marker .country-count { font-size: 9px; }
-  .globe-stage { min-height: 405px; }
-  #globe-interactive-box { height: 370px !important; }
+  .globe-stage { min-height: 455px; }
+  #globe-interactive-box { height: 430px !important; }
 }
 
     </style>
@@ -784,7 +786,7 @@ html.light-mode .enso-season.is-active .enso-bar::after { color: #0f172a !import
                     <div class="enso-chart-head">
                         <div class="min-w-0">
                             <div class="enso-chart-title">美国气候预测中心厄尔尼诺-南方涛动 概率图（2026年4月）</div>
-                            <div class="enso-chart-subtitle">基于 ERSSTv5 相对 Niño-3.4 指数的 -0.5°C / +0.5°C 阈值。</div>
+                            <div class="enso-chart-subtitle">根据关键海温区变化，判断当前气候处于拉尼娜、中性或厄尔尼诺状态。</div>
                         </div>
                         <div class="enso-chart-source">
                             资料来源：NOAA 气候预测中心<br />
@@ -936,12 +938,23 @@ html.light-mode .enso-season.is-active .enso-bar::after { color: #0f172a !import
     </section>
 
     <!-- Details Section -->
-    <div id="part2-details" class="max-w-[980px] mx-auto px-4 py-8 pb-40 flex flex-col gap-8 z-10 relative">
+    <div id="part2-details" class="max-w-[980px] mx-auto px-4 py-8 pb-16 flex flex-col gap-4 sm:gap-5 z-10 relative">
       <!-- 历史相似年份 -->
       <section class="panel-card rounded-3xl border border-[rgba(212,175,55,0.18)] bg-black/35 p-4 sm:p-5 fade-in-up">
         <div class="module-head">
           <div class="module-head-left">
-            <h2 class="section-divider-title">历史上的厄尔尼诺</h2>
+            <div class="help-tooltip relative inline-flex items-center gap-2">
+              <h2 class="section-divider-title">历史上的厄尔尼诺</h2>
+              <div data-tooltip-trigger class="w-5 h-5 rounded-full border border-gray-400 text-gray-400 flex items-center justify-center text-[10px] cursor-pointer hover:text-[var(--text-gold)] hover:border-[var(--text-gold)] transition-colors shrink-0">?</div>
+              <div class="tooltip-panel absolute left-0 top-full mt-2 w-[360px] sm:w-[420px] max-w-[calc(100vw-1rem)] bg-[rgba(15,23,42,0.95)] border border-[rgba(212,175,55,0.4)] rounded-xl p-3 sm:p-4 text-xs text-gray-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-all z-50 backdrop-blur-xl">
+                <div class="space-y-2 leading-relaxed">
+                  <div><strong class="text-[#f7e7ce]">注意事项：</strong> 历史相似不代表未来重复。</div>
+                  <div>相似年份仅用于理解气候—产业链变量的历史传导关系，不能替代实时天气、产量、库存、物流等数据验证。</div>
+                  <div>历史上，强厄尔尼诺若叠加减产与低库存，农产品涨幅通常在 50%–150%；若仅有天气扰动而无供给缺口，涨幅往往不超过 30%。</div>
+                  <div><strong class="text-[#f7e7ce]">核心三要素：</strong> 是否打到关键窗口、是否形成全球性供给缺口、库存是否配合。</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -1023,12 +1036,15 @@ html.light-mode .enso-season.is-active .enso-bar::after { color: #0f172a !import
       </section>
     </div>
 
+    <div class="max-w-[980px] mx-auto px-4 pb-[calc(5.75rem+env(safe-area-inset-bottom))]">
+        <div class="history-disclaimer-note text-[12px] sm:text-[13px] leading-relaxed text-gray-400 px-1 text-center">
+            本页面内容基于公开气象、产业及市场数据整理，仅用于展示厄尔尼诺/拉尼娜状态、全球产区天气变化与相关商品产业链变量之间的历史传导关系，不涉及对任何期货、现货或场外合约未来价格走势的判断，不构成投资建议、交易建议或收益承诺。
+        </div>
+    </div>
+
     <!-- Footer -->
     <div class="fixed bottom-0 left-0 w-full z-[40] footer-immersive pt-3 pb-2 px-4 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
-        <div class="max-w-2xl mx-auto flex flex-col gap-3">
-            <div class="history-disclaimer-note text-[12px] sm:text-[13px] leading-relaxed text-gray-400 px-1 text-center">
-                本页面内容基于公开气象、产业及市场数据整理，仅用于展示厄尔尼诺/拉尼娜状态、全球产区天气变化与相关商品产业链变量之间的历史传导关系，不涉及对任何期货、现货或场外合约未来价格走势的判断，不构成投资建议、交易建议或收益承诺。
-            </div>
+        <div class="max-w-2xl mx-auto flex flex-col gap-2">
             <div class="flex gap-3 items-center">
                 <a 
                     id="download-btn" 
@@ -1036,7 +1052,7 @@ html.light-mode .enso-season.is-active .enso-bar::after { color: #0f172a !import
                     target="_blank" 
                     class="flex-1 h-12 rounded-xl flex items-center justify-center font-bold active:scale-95 transition-transform btn-gold text-[#0a0c10]"
                 >
-                    <span class="text-sm">下载金十期货APP</span>
+                    <span class="text-sm">去APP追踪气候异动</span>
                 </a>
             </div>
         </div>
@@ -1636,6 +1652,20 @@ var weatherException = {
       globe.controls().dampingFactor = 0.08;
       globe.controls().rotateSpeed = 0.55;
       globe.controls().zoomSpeed = 0.55;
+      const syncGlobeTouchAction = () => {
+          box.style.touchAction = 'none';
+          mountMap.style.touchAction = 'none';
+          const globeCanvas = mountMap.querySelector('canvas');
+          if (globeCanvas) {
+              globeCanvas.style.touchAction = 'none';
+              globeCanvas.style.webkitUserSelect = 'none';
+              globeCanvas.style.userSelect = 'none';
+              globeCanvas.style.webkitTouchCallout = 'none';
+          }
+      };
+      syncGlobeTouchAction();
+      setTimeout(syncGlobeTouchAction, 100);
+      window.addEventListener('resize', syncGlobeTouchAction);
 
       function setGlobeActive(active) {
           box.classList.toggle('is-active', active);
@@ -1692,7 +1722,7 @@ var weatherException = {
           el.setAttribute('role', 'button');
           el.tabIndex = 0;
           el.style.pointerEvents = 'auto';
-          el.style.touchAction = 'manipulation';
+          el.style.touchAction = 'none';
           el.style.cursor = 'pointer';
           el.style.position = 'relative';
           el.style.zIndex = '90';
@@ -1714,6 +1744,7 @@ var weatherException = {
           el.__markerActivate = activate;
           el.addEventListener('pointerdown', (e) => {
               stopMarkerEvent(e);
+              try { el.setPointerCapture?.(e.pointerId); } catch (_) {}
               downPos = { x: e.clientX, y: e.clientY };
               downTime = performance.now();
               mountMap.__suppressMarkerFallback = true;
@@ -1731,7 +1762,15 @@ var weatherException = {
               stopMarkerEvent(e);
               mountMap.__suppressMarkerFallback = true;
               dispatchPointerToMount('pointerup', e);
+              try { el.releasePointerCapture?.(e.pointerId); } catch (_) {}
               if (moved <= 12 && elapsed <= 400) activate(e);
+          });
+          el.addEventListener('pointercancel', (e) => {
+              downPos = null;
+              stopMarkerEvent(e);
+              mountMap.__suppressMarkerFallback = true;
+              dispatchPointerToMount('pointercancel', e);
+              try { el.releasePointerCapture?.(e.pointerId); } catch (_) {}
           });
           el.addEventListener('click', (e) => {
               if (downPos) {
