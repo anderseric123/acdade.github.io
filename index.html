@@ -1496,22 +1496,37 @@ var weatherException = {
       
       globe.controls().autoRotate = false;
       globe.controls().enableZoom = false;
+      globe.controls().enableDamping = true;
+      globe.controls().dampingFactor = 0.08;
+      globe.controls().rotateSpeed = 0.55;
+      globe.controls().zoomSpeed = 0.55;
 
       function setGlobeActive(active) {
           box.classList.toggle('is-active', active);
           mountMap.style.pointerEvents = 'auto';
           globe.controls().autoRotate = false;
       }
+      let globePointerDown = null;
+      let continentTransitionTimer = null;
       const enterContinent = (continent) => {
           const target = continentsData.find(c => c.id === continent);
           if (!target) return;
+          if (continentTransitionTimer) {
+              window.clearTimeout(continentTransitionTimer);
+              continentTransitionTimer = null;
+          }
           viewLevel = 'COUNTRY';
           box.classList.add('is-country-view');
-          globe.pointOfView({ lat: target.lat, lng: target.lng, altitude: target.alt }, 800);
-          setTimeout(() => {
+          box.classList.add('is-transitioning');
+          mountMap.style.pointerEvents = 'none';
+          globe.pointOfView({ lat: target.lat, lng: target.lng, altitude: target.alt }, 1200);
+          continentTransitionTimer = window.setTimeout(() => {
               renderMarkers('COUNTRY', target.id);
               backBtn.classList.remove('hidden');
-          }, 380);
+              mountMap.style.pointerEvents = 'auto';
+              box.classList.remove('is-transitioning');
+              continentTransitionTimer = null;
+          }, 980);
       };
 
       function bindMarkerClick(el, handler) {
@@ -1526,6 +1541,7 @@ var weatherException = {
               e.preventDefault();
               e.stopPropagation();
           };
+          let downPos = null;
           let activated = false;
           const activate = (e) => {
               if (activated) return;
@@ -1536,19 +1552,41 @@ var weatherException = {
               window.setTimeout(() => { activated = false; }, 0);
           };
           el.__markerActivate = activate;
-          el.addEventListener('pointerdown', stopMarkerEvent);
+          el.addEventListener('pointerdown', (e) => {
+              stopMarkerEvent(e);
+              downPos = { x: e.clientX, y: e.clientY };
+          });
           el.addEventListener('mousedown', stopMarkerEvent);
           el.addEventListener('touchstart', stopMarkerEvent, { passive: false });
-          el.addEventListener('pointerdown', activate);
-          el.addEventListener('pointerup', activate);
-          el.addEventListener('click', activate);
+          el.addEventListener('pointerup', (e) => {
+              const moved = downPos ? Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y) : Infinity;
+              downPos = null;
+              if (moved <= 10) activate(e);
+          });
+          el.addEventListener('click', (e) => {
+              if (downPos) {
+                  const moved = Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y);
+                  downPos = null;
+                  if (moved > 10) return;
+              }
+              activate(e);
+          });
           el.addEventListener('keydown', (e) => {
               if (e.key === 'Enter' || e.key === ' ') activate(e);
           });
       }
 
+      mountMap.addEventListener('pointerdown', (e) => {
+          globePointerDown = { x: e.clientX, y: e.clientY, t: performance.now() };
+      }, true);
       mountMap.addEventListener('pointerup', (e) => {
           if (e.defaultPrevented) return;
+          if (globePointerDown) {
+              const moved = Math.hypot(e.clientX - globePointerDown.x, e.clientY - globePointerDown.y);
+              const elapsed = performance.now() - globePointerDown.t;
+              globePointerDown = null;
+              if (moved > 12 || elapsed > 700) return;
+          }
           const targetEl = e.target instanceof Element ? e.target : null;
           if (targetEl && targetEl.closest('.globe-marker-card')) return;
           if (viewLevel === 'CONTINENT') {
@@ -1567,7 +1605,7 @@ var weatherException = {
                       nearest = marker;
                   }
               });
-              if (nearest && nearestDistance < 260) {
+              if (nearest && nearestDistance < 200) {
                   nearest.__markerActivate(e);
                   return;
               }
@@ -1625,6 +1663,8 @@ var weatherException = {
           e.stopPropagation();
           viewLevel = 'CONTINENT';
           box.classList.remove('is-country-view');
+          box.classList.remove('is-transitioning');
+          mountMap.style.pointerEvents = 'auto';
           renderMarkers('CONTINENT');
           globe.pointOfView({ lat: 20, lng: 100, altitude: 2.2 }, 1000);
           backBtn.classList.add('hidden');
